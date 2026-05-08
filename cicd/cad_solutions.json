@@ -1,0 +1,298 @@
+{
+  "screeningSolutions": [
+    {
+      "cancer": "Pancreatic Cancer",
+      "incidence": 64000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Ovarian Cancer",
+      "incidence": 19700,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Brain Tumors (Glioma)",
+      "incidence": 25000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Esophageal Cancer",
+      "incidence": 21500,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Stomach Cancer",
+      "incidence": 26500,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Liver Cancer (HCC)",
+      "incidence": 41200,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Kidney Cancer",
+      "incidence": 81800,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Bladder Cancer",
+      "incidence": 83200,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Sarcomas",
+      "incidence": 13500,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Neuroendocrine Tumors",
+      "incidence": 12000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Cholangiocarcinoma",
+      "incidence": 8000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Mesothelioma",
+      "incidence": 3000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Thyroid Cancer",
+      "incidence": 44000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    },
+    {
+      "cancer": "Head & Neck Cancers",
+      "incidence": 66000,
+      "solution": {
+        "proposedScreening": "Liquid biopsy + AI imaging"
+      }
+    }
+  ],
+  "treatmentSolutions": [
+    {
+      "cancer": "Small Cell Lung Cancer",
+      "currentTx": "Platinum + Etoposide + PD-L1",
+      "solution": {
+        "proposedTherapy": "DLL3-targeting ADCs, PARP inhibitors"
+      }
+    },
+    {
+      "cancer": "Triple-Negative Breast Cancer",
+      "currentTx": "Chemo + Immunotherapy",
+      "solution": {
+        "proposedTherapy": "TROP2 ADCs, AKT inhibitors, AR targeting"
+      }
+    },
+    {
+      "cancer": "Pancreatic Ductal Adenocarcinoma",
+      "currentTx": "FOLFIRINOX, Gemcitabine",
+      "solution": {
+        "proposedTherapy": "KRAS G12D inhibitors in trials"
+      }
+    },
+    {
+      "cancer": "Glioblastoma",
+      "currentTx": "TMZ + Radiation",
+      "solution": {
+        "proposedTherapy": "CAR-T, oncolytic virus, tumor treating fields"
+      }
+    },
+    {
+      "cancer": "Gastric Cancer (HER2-)",
+      "currentTx": "FOLFOX, Immunotherapy",
+      "solution": {
+        "proposedTherapy": "CLDN18.2 targeting, FGFR inhibitors"
+      }
+    },
+    {
+      "cancer": "Uterine Serous Carcinoma",
+      "currentTx": "Carboplatin + Paclitaxel",
+      "solution": {
+        "proposedTherapy": "HER2 targeting, PARP if HRD"
+      }
+    },
+    {
+      "cancer": "Gallbladder Cancer",
+      "currentTx": "Gemcitabine + Cisplatin",
+      "solution": {
+        "proposedTherapy": "FGFR, IDH inhibitors if mutated"
+      }
+    },
+    {
+      "cancer": "Anaplastic Thyroid Cancer",
+      "currentTx": "Dabrafenib/Trametinib if BRAF+",
+      "solution": {
+        "proposedTherapy": "Immunotherapy combinations"
+      }
+    },
+    {
+      "cancer": "Adrenocortical Carcinoma",
+      "currentTx": "Mitotane + Chemo",
+      "solution": {
+        "proposedTherapy": "IGF-1R inhibitors, immunotherapy"
+      }
+    },
+    {
+      "cancer": "Merkel Cell Carcinoma",
+      "currentTx": "Immunotherapy",
+      "solution": {
+        "proposedTherapy": "Virus-specific T cells if MCPyV+"
+      }
+    }
+  ],
+  "rareCancerSolutions": [
+    {
+      "cancer": "Ewing Sarcoma",
+      "incidence": 200,
+      "target": "EWS-FLI1 fusion",
+      "solution": {
+        "proposedTherapy": "LSD1 inhibitors, mithramycin analogs, CAR-T"
+      }
+    },
+    {
+      "cancer": "Osteosarcoma",
+      "incidence": 1000,
+      "target": "Complex karyotype",
+      "solution": {
+        "proposedTherapy": "HER2 CAR-T, GD2 CAR-T, immunotherapy"
+      }
+    },
+    {
+      "cancer": "Rhabdomyosarcoma",
+      "incidence": 350,
+      "target": "PAX-FOXO1 fusion",
+      "solution": {
+        "proposedTherapy": "IGF-1R inhibitors, immunotherapy"
+      }
+    },
+    {
+      "cancer": "DIPG (Diffuse Intrinsic Pontine Glioma)",
+      "incidence": 300,
+      "target": "H3K27M mutation",
+      "solution": {
+        "proposedTherapy": "ONC201, H3K27M CAR-T, CED delivery"
+      }
+    },
+    {
+      "cancer": "Neuroblastoma (High-Risk)",
+      "incidence": 800,
+      "target": "MYCN amplification",
+      "solution": {
+        "proposedTherapy": "GD2 CAR-T, ALK inhibitors, anti-GD2 Ab"
+      }
+    },
+    {
+      "cancer": "Medulloblastoma",
+      "incidence": 500,
+      "target": "SHH, WNT, Group 3/4",
+      "solution": {
+        "proposedTherapy": "SHH inhibitors, GD2 CAR-T"
+      }
+    },
+    {
+      "cancer": "Synovial Sarcoma",
+      "incidence": 800,
+      "target": "SS18-SSX fusion",
+      "solution": {
+        "proposedTherapy": "NY-ESO-1 TCR-T, epigenetic therapy"
+      }
+    },
+    {
+      "cancer": "Chordoma",
+      "incidence": 300,
+      "target": "Brachyury",
+      "solution": {
+        "proposedTherapy": "Brachyury vaccine, CDK4/6 inhibitors"
+      }
+    },
+    {
+      "cancer": "Desmoplastic Small Round Cell Tumor",
+      "incidence": 100,
+      "target": "EWSR1-WT1 fusion",
+      "solution": {
+        "proposedTherapy": "Multi-agent chemo, immunotherapy trials"
+      }
+    },
+    {
+      "cancer": "Epithelioid Sarcoma",
+      "incidence": 200,
+      "target": "INI1 loss",
+      "solution": {
+        "proposedTherapy": "Tazemetostat, immunotherapy"
+      }
+    },
+    {
+      "cancer": "Alveolar Soft Part Sarcoma",
+      "incidence": 100,
+      "target": "ASPL-TFE3 fusion",
+      "solution": {
+        "proposedTherapy": "MET inhibitors, immunotherapy"
+      }
+    },
+    {
+      "cancer": "Clear Cell Sarcoma",
+      "incidence": 100,
+      "target": "EWSR1-ATF1 fusion",
+      "solution": {
+        "proposedTherapy": "Immunotherapy, crizotinib in some"
+      }
+    },
+    {
+      "cancer": "PEComa",
+      "incidence": 200,
+      "target": "TSC1/TSC2 loss",
+      "solution": {
+        "proposedTherapy": "Nab-sirolimus (approved 2021)"
+      }
+    },
+    {
+      "cancer": "Angiosarcoma",
+      "incidence": 300,
+      "target": "VEGF pathway",
+      "solution": {
+        "proposedTherapy": "Paclitaxel, pazopanib, immunotherapy"
+      }
+    },
+    {
+      "cancer": "Leiomyosarcoma",
+      "incidence": 1500,
+      "target": "Complex",
+      "solution": {
+        "proposedTherapy": "Trabectedin, eribulin, immunotherapy"
+      }
+    }
+  ],
+  "fdaProposals": [],
+  "timestamp": "2026-01-25T17:13:46.483Z"
+}

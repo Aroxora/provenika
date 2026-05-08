@@ -1,0 +1,116 @@
+{
+  "name": "cancer-core-agentic-framework",
+  "version": "1.0.0",
+  "description": "AI-powered agentic framework for cancer research, drug discovery, and clinical analysis",
+  "cancer-core": {
+    "rulebookSchema": "src/contracts/schemas/agent-rules.schema.json"
+  },
+  "main": "dist/bin/cancer-cli.js",
+  "exports": {
+    ".": "./dist/bin/cancer-cli.js",
+    "./lean": "./dist/leanAgent.js",
+    "./capabilities": "./dist/capabilities/index.js",
+    "./orchestration": "./dist/orchestration/index.js",
+    "./domain": "./dist/domain/index.js",
+    "./datasources": "./dist/datasources/index.js"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "agents",
+    "LICENSE"
+  ],
+  "bin": {
+    "cancer-cli": "dist/bin/cancer-cli.js",
+    "cancer": "dist/bin/cancer-cli.js",
+    "lean": "dist/bin/lean.js"
+  },
+  "scripts": {
+    "postinstall": "node -e \"const fs=require('fs');['dist/bin/cancer-cli.js','dist/bin/lean.js'].forEach(f=>{try{fs.chmodSync(f,0o755)}catch{}})\"",
+    "prebuild": "npm run clean",
+    "clean": "node -e \"const { rmSync } = require('fs'); for (const target of ['dist', '.tsbuildinfo']) { try { rmSync(target, { recursive: true, force: true, maxRetries: 10 }); } catch (error) { console.warn('Clean warning:', error.code, 'for', target); } }\"",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "build:prod": "NODE_ENV=production MINIFY=true npm run build",
+    "optimize": "node scripts/optimize-build.mjs",
+    "release": "chmod +x scripts/create-release.sh && scripts/create-release.sh patch",
+    "release:minor": "chmod +x scripts/create-release.sh && scripts/create-release.sh minor",
+    "release:major": "chmod +x scripts/create-release.sh && scripts/create-release.sh major",
+    "prepublishOnly": "npm run build",
+    "pretest": "npm run build",
+    "postbuild": "node scripts/postbuild.mjs",
+    "cli": "node dist/bin/cancer-cli.js",
+    "cancer-cli": "node dist/bin/cancer-cli.js",
+    "lean": "node dist/bin/lean.js",
+    "lean:dev": "node --loader ts-node/esm src/bin/lean.ts",
+    "dev": "node --loader ts-node/esm src/bin/cancer-cli.ts",
+    "dev:watch": "node --watch --loader ts-node/esm src/bin/cancer-cli.ts",
+    "start": "node dist/bin/cancer-cli.js",
+    "test": "jest --config jest.config.cjs",
+    "test:watch": "jest --config jest.config.cjs --watch",
+    "test:coverage": "jest --config jest.config.cjs --coverage",
+    "lint": "eslint src/**/*.ts --max-warnings 200",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "ai",
+    "cancer-research",
+    "drug-discovery",
+    "genomics",
+    "clinical-trials",
+    "bioinformatics",
+    "llm",
+    "agent",
+    "pubmed",
+    "protein-analysis",
+    "pathway-analysis",
+    "personalized-medicine"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cancer-core/agentic-framework.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cancer-core/agentic-framework/issues"
+  },
+  "homepage": "https://github.com/cancer-core/agentic-framework#readme",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-typescript": "^7.28.5",
+    "@eslint/js": "^9.39.2",
+    "@types/glob": "^8.1.0",
+    "@types/gradient-string": "^1.1.6",
+    "@types/jest": "30.0.0",
+    "@types/node": "25.0.2",
+    "@typescript-eslint/eslint-plugin": "8.49.0",
+    "@typescript-eslint/parser": "8.49.0",
+    "babel-jest": "^30.2.0",
+    "eslint": "9.39.2",
+    "eslint-plugin-import": "^2.32.0",
+    "jest": "30.2.0",
+    "ts-jest": "29.4.6",
+    "ts-node": "^10.9.2",
+    "typescript-eslint": "^8.50.0"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.71.2",
+    "@google/genai": "^1.33.0",
+    "boxen": "^8.0.1",
+    "chalk": "^5.6.2",
+    "cli-spinners": "^3.3.0",
+    "gradient-string": "^3.0.0",
+    "nanospinner": "1.2.2",
+    "nodemailer": "^6.10.0",
+    "openai": "^6.10.0",
+    "ora": "^9.0.0",
+    "typescript": "5.9.3"
+  }
+}

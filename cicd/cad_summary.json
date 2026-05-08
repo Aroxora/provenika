@@ -1,0 +1,88 @@
+{
+  "timestamp": "2026-01-25T18:00:50.518Z",
+  "oralDrugs": {
+    "total": 36,
+    "approved": 12,
+    "pipeline": 14
+  },
+  "chemoConversions": {
+    "total": 24,
+    "approved": 12
+  },
+  "coverage": {
+    "cancersWithOral": 20,
+    "cancersNeedingOral": 21,
+    "gaps": [
+      "Brain Tumors (Glioma)",
+      "Esophageal Cancer",
+      "Stomach Cancer",
+      "Kidney Cancer",
+      "Bladder Cancer",
+      "Sarcomas",
+      "Neuroendocrine Tumors",
+      "Cholangiocarcinoma",
+      "Mesothelioma",
+      "Thyroid Cancer",
+      "Head & Neck Cancers",
+      "Uterine Serous Carcinoma",
+      "Gallbladder Cancer",
+      "Adrenocortical Carcinoma",
+      "Osteosarcoma",
+      "Rhabdomyosarcoma",
+      "DIPG (Diffuse Intrinsic Pontine Glioma)",
+      "Desmoplastic Small Round Cell Tumor",
+      "Clear Cell Sarcoma",
+      "Angiosarcoma",
+      "Leiomyosarcoma"
+    ]
+  },
+  "topPipelineDrugs": [
+    {
+      "drug": "Dacomitinib",
+      "cancer": "Glioblastoma",
+      "target": "EGFR amplification",
+      "phase": "Phase II",
+      "approval": "2026-2027"
+    },
+    {
+      "drug": "Talazoparib (Talzenna)",
+      "cancer": "Small Cell Lung Cancer",
+      "target": "PARP/DNA damage",
+      "phase": "Phase III (ES-SCLC)",
+      "approval": "2026"
+    },
+    {
+      "drug": "Alisertib",
+      "cancer": "Small Cell Lung Cancer",
+      "target": "Aurora kinase",
+      "phase": "Phase II",
+      "approval": "2026-2027"
+    },
+    {
+      "drug": "Enzalutamide (Xtandi)",
+      "cancer": "Triple-Negative Breast Cancer",
+      "target": "Androgen receptor",
+      "phase": "Phase II",
+      "approval": "2026"
+    },
+    {
+      "drug": "Ipatasertib",
+      "cancer": "Triple-Negative Breast Cancer",
+      "target": "AKT pathway",
+      "phase": "Phase III",
+      "approval": "2025-2026"
+    }
+  ],
+  "recentApprovals": [
+    {
+      "drug": "Vorasidenib (Servier)",
+      "cancer": "Glioblastoma",
+      "approval": "APPROVED 2024"
+    },
+    {
+      "drug": "Selpercatinib (Retevmo)",
+      "cancer": "Anaplastic Thyroid Cancer",
+      "approval": "APPROVED 2022"
+    }
+  ]
+}
