@@ -3,6 +3,8 @@ import { DecimalPipe } from '@angular/common';
 import { DossierService } from '../../core/dossier.service';
 import { TriageService } from '../../core/triage.service';
 import { CostBenefitService, MODALITY_MULT } from '../../core/cost-benefit.service';
+import { EuropePmcService, Article } from '../../core/europepmc.service';
+import { TrialsService } from '../../core/trials.service';
 import { TargetStore } from '../../core/target-store';
 import { Dossier, TriageHit, CostBenefit } from '../../core/models';
 
@@ -56,6 +58,21 @@ import { Dossier, TriageHit, CostBenefit } from '../../core/models';
             }
           </ol>
         </div>
+        <div class="sec">
+          <h4>Evidence</h4>
+          <ul>
+            <li>{{ trialCount() === null ? '—' : (trialCount() | number) }} registered clinical trials reference this term (ClinicalTrials.gov)</li>
+            @if (literature().length) {
+              <li>Top-cited literature (Europe PMC):
+                <ul>
+                  @for (a of literature(); track a.id) {
+                    <li><a [href]="a.url" target="_blank" rel="noopener">{{ a.title }}</a> <span class="muted">({{ a.year }}, cited {{ a.citedBy | number }})</span></li>
+                  }
+                </ul>
+              </li>
+            }
+          </ul>
+        </div>
         @if (cb(); as c) {
           <div class="sec">
             <h4>Cost-benefit ({{ c.modality }} @ {{ c.phase }})</h4>
@@ -86,6 +103,8 @@ export class Report {
   private dossierSvc = inject(DossierService);
   private triageSvc = inject(TriageService);
   private cbSvc = inject(CostBenefitService);
+  private pmcSvc = inject(EuropePmcService);
+  private trialsSvc = inject(TrialsService);
   private store = inject(TargetStore);
   readonly target = this.store.target;
 
@@ -99,18 +118,24 @@ export class Report {
   readonly dossier = signal<Dossier | null>(null);
   readonly topHits = signal<TriageHit[]>([]);
   readonly cb = signal<CostBenefit | null>(null);
+  readonly literature = signal<Article[]>([]);
+  readonly trialCount = signal<number | null>(null);
 
   async generate() {
     const name = this.store.target();
     this.loading.set(true);
     this.error.set('');
     try {
-      const [d, t] = await Promise.all([
+      const [d, t, lit, trials] = await Promise.all([
         this.dossierSvc.build(name),
         this.triageSvc.run({ target: name, minPchembl: 7, limit: 5 }).catch(() => ({ hits: [] as TriageHit[] })),
+        this.pmcSvc.search(name, 'cited', 3).catch(() => [] as Article[]),
+        this.trialsSvc.count(name).catch(() => null),
       ]);
       this.dossier.set(d);
       this.topHits.set(t.hits.slice(0, 5));
+      this.literature.set(lit);
+      this.trialCount.set(trials);
       this.cb.set(this.cbSvc.analyze({
         modality: this.modality(), phase: this.phase(), incidence: 50000, price: 150000,
       }));
@@ -135,6 +160,9 @@ export class Report {
       `- Potent ChEMBL activities: ${d.potentActivityCount} · known mechanism drugs: ${d.knownDrugs.length}`,
       '', '## Top ligand candidates',
       ...this.topHits().map((h, i) => `${i + 1}. ${h.chembl_id} — pChEMBL ${h.best_pchembl.toFixed(1)}, DL ${h.drug_likeness.toFixed(2)}, ${h.dev_phase}`),
+      '', '## Evidence',
+      `- Registered clinical trials referencing term: ${this.trialCount() ?? 'n/a'}`,
+      ...this.literature().map((a) => `- ${a.title} (${a.year}, cited ${a.citedBy}) — ${a.url}`),
     ];
     if (c) md.push('', `## Cost-benefit (${c.modality} @ ${c.phase})`,
       `- P(approval): ${(c.probabilityOfApproval * 100).toFixed(1)}%; expected cost $${c.expectedCostMusd}M over ${c.expectedTimeYears} yr`,

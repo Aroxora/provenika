@@ -10,6 +10,14 @@ const BASE = 'https://clinicaltrials.gov/api/v2/studies';
 export class TrialsService {
   private http = inject(HttpClient);
 
+  /** Total number of registered studies matching a term (accurate count). */
+  async count(term: string): Promise<number> {
+    const data: any = await firstValueFrom(
+      this.http.get(BASE, { params: { 'query.term': term, countTotal: 'true', pageSize: 1, format: 'json' } }),
+    );
+    return data?.totalCount ?? 0;
+  }
+
   async search(term: string, pageSize = 25): Promise<Trial[]> {
     const data: any = await firstValueFrom(
       this.http.get(BASE, { params: { 'query.term': term, pageSize, format: 'json' } }),
