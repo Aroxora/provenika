@@ -19,7 +19,7 @@ limits of each stage.
 | 3. Structure acquisition | Get a 3-D receptor structure (or a confident model) | RCSB PDB + AlphaFold DB | **implemented** — `cad/fetch_structure.py` |
 | 4. Binding-site detection | Find/score druggable pockets | fpocket, P2Rank | documented |
 | 5. Structure-based docking | Generate poses + scores for candidates vs. the pocket | AutoDock Vina + Open Babel | **implemented** — `cad/dock.py` (gated on the real binaries) |
-| 6. ADMET / liability flags | Absorption, metabolism, tox / PAINS / reactive-group flags | RDKit filters, ADMET-AI, SwissADME | documented |
+| 6. Cheminformatics filtering / liabilities | Drug-likeness rule sets + PAINS/Brenk structural alerts + scaffold + similarity | RDKit | **implemented** — `cad/cheminformatics.py` |
 | 7. Triage report | Combine evidence into a ranked, cited shortlist | this repo | **implemented** — `cad/run_pipeline.py` → `SUMMARY.md` |
 
 **Strategy add-ons:** `cad/cost_benefit.py` scores a proposed program's approval probability,

@@ -52,6 +52,12 @@ jobs:
           python3 cad/fetch_structure.py --help >/dev/null
           python3 cad/dock.py --help >/dev/null
           python3 cad/news_update.py --help >/dev/null
+          python3 cad/cheminformatics.py --help >/dev/null
+      - name: Cheminformatics (real RDKit, deterministic offline)
+        run: |
+          pip install --quiet rdkit
+          python3 cad/cheminformatics.py --smiles "CC(=O)Oc1ccccc1C(=O)O" --json \
+            | python3 -c "import sys,json; r=json.load(sys.stdin)['results'][0]; assert r['lipinski_ok'] and 170<r['mw']<190, r; print('cheminformatics OK:', r['mw'], r['qed'])"
 
   web-build:
     name: Build web app (Angular)
