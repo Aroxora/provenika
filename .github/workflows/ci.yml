@@ -14,6 +14,7 @@ jobs:
   build-test:
     name: Build, type-check & test (Node)
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -26,7 +27,9 @@ jobs:
       - name: Type-check
         run: npx tsc --noEmit
       - name: Test
-        run: npm test
+        # --ci + --forceExit because the suite has a known teardown handle leak
+        # (a worker doesn't exit gracefully); tests themselves pass.
+        run: npm test -- --ci --forceExit
 
   cad-tools:
     name: CAD tools (Python)
