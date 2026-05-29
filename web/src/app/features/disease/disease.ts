@@ -3,10 +3,11 @@ import { DecimalPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { OpenTargetsService, DiseaseTargets } from '../../core/opentargets.service';
 import { TargetStore } from '../../core/target-store';
+import { InfoTip } from '../../shared/info-tip';
 
 @Component({
   selector: 'app-disease',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, InfoTip],
   template: `
     <h2>Disease → targets <span class="muted">— start from any disease</span></h2>
     <p class="muted intro">
@@ -37,7 +38,7 @@ import { TargetStore } from '../../core/target-store';
       </div>
       <div class="card tablewrap">
         <table>
-          <thead><tr><th>Target</th><th>Association</th><th>Name</th><th></th></tr></thead>
+          <thead><tr><th>Target</th><th><app-tip term="Open Targets association score" label="Association" /></th><th>Name</th><th></th></tr></thead>
           <tbody>
             @for (t of r.targets; track t.symbol) {
               <tr>

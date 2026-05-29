@@ -5,10 +5,11 @@ import { DossierService } from '../../core/dossier.service';
 import { OpenTargetsService, Tractability } from '../../core/opentargets.service';
 import { TargetStore } from '../../core/target-store';
 import { Dossier as DossierModel } from '../../core/models';
+import { InfoTip } from '../../shared/info-tip';
 
 @Component({
   selector: 'app-dossier',
-  imports: [RouterLink, DecimalPipe],
+  imports: [RouterLink, DecimalPipe, InfoTip],
   template: `
     <h2>① Target dossier <span class="muted">— is this target worth pursuing?</span></h2>
     <p class="muted intro">
@@ -57,7 +58,7 @@ import { Dossier as DossierModel } from '../../core/models';
 
       @if (tractability().length) {
         <div class="card tract">
-          <strong>Druggability tractability</strong> <span class="muted">(Open Targets · highest bucket across all indications, not disease-specific)</span>
+          <strong><app-tip term="Target tractability" label="Druggability tractability" /></strong> <span class="muted">(Open Targets · highest bucket across all indications, not disease-specific)</span>
           <div class="tlist">
             @for (t of tractability(); track t.modality) {
               <span class="pill" [class.green]="t.tier === 'approved'" [class.blue]="t.tier === 'clinical'"
