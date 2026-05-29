@@ -6,6 +6,7 @@ interface Glyph { color: string; inner: string; }
 const BG = '#0a0e14';
 const G: Record<string, Glyph> = {
   overview: { color: '#3ddc97', inner: t('⬡') },
+  disease: { color: '#3ddc97', inner: `<circle cx="32" cy="32" r="16" fill="none" stroke="#3ddc97" stroke-width="4"/><line x1="32" y1="23" x2="32" y2="41" stroke="#3ddc97" stroke-width="4"/><line x1="23" y1="32" x2="41" y2="32" stroke="#3ddc97" stroke-width="4"/>` },
   dossier: { color: '#3ddc97', inner: `<circle cx="32" cy="32" r="16" fill="none" stroke="#3ddc97" stroke-width="4"/><circle cx="32" cy="32" r="6" fill="#3ddc97"/>` },
   triage: { color: '#4aa8ff', inner: dots() },
   structure: { color: '#4aa8ff', inner: hexMol() },

@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'overview' },
   { path: 'overview', loadComponent: () => import('./features/overview/overview').then((m) => m.Overview) },
+  { path: 'disease', loadComponent: () => import('./features/disease/disease').then((m) => m.Disease) },
   { path: 'dossier', loadComponent: () => import('./features/dossier/dossier').then((m) => m.Dossier) },
   { path: 'triage', loadComponent: () => import('./features/triage/triage').then((m) => m.Triage) },
   { path: 'structure', loadComponent: () => import('./features/structure/structure').then((m) => m.Structure) },

@@ -64,6 +64,7 @@ calls these directly (every one returns `Access-Control-Allow-Origin: *`):
 
 | Source | Used for | Web service | Python client |
 |--------|----------|-------------|---------------|
+| Open Targets | disease → druggable targets (assoc. scores) | `core/opentargets.service.ts` | — |
 | ChEMBL (EBI) | bioactivity, drug props, molecule SVG | `core/chembl.service.ts` | `src/datasources/drug/chemblClient.ts` |
 | UniProt | protein function, PDB xrefs | `core/uniprot.service.ts` | `src/datasources/protein/uniprotClient.ts` |
 | RCSB PDB | 3-D structures, Mol* viewer | `features/structure/structure.ts` (iframe) | `src/datasources/protein/pdbClient.ts` |
