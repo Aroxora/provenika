@@ -7,6 +7,7 @@ import {
   accumulationRatio, aucSingle, Pt,
   tumorVolume, doublingTime, survivalExp, hazardRatioExp, GrowthModel, michaelisMenten,
   combinationIndex, synergyVerdict, hillFraction, blissExpected,
+  humanEquivalentDose, KM_FACTORS,
 } from '../../core/math-models';
 
 function geometric(min: number, max: number, n: number): number[] {
@@ -173,6 +174,25 @@ function linspace(min: number, max: number, n: number): number[] {
       <p class="muted cap">The line is dose additivity; a point <em>below</em> it (CI&lt;1) indicates synergy, on it = additive, above = antagonism.</p>
     </div>
 
+    <!-- 8. Allometric HED -->
+    <div class="card">
+      <h3>Human-equivalent dose (allometric scaling)</h3>
+      <p class="muted sub">HED (mg/kg) = animal dose × (K<sub>m,animal</sub> / K<sub>m,human</sub>); K<sub>m,human</sub>=37. FDA 2005 guidance.</p>
+      <div class="hed">
+        <label>Animal dose (mg/kg) <input type="number" min="0" step="0.5" [value]="animalDose()" (input)="animalDose.set(+$any($event.target).value)" /></label>
+        <label>Species
+          <select [value]="species()" (change)="species.set($any($event.target).value)">
+            @for (s of speciesList; track s) { <option [value]="s">{{ s }}</option> }
+          </select>
+        </label>
+        <div class="readout">
+          HED ≈ <b class="mono">{{ hed() | number:'1.2-2' }} mg/kg</b>
+          <span class="muted">(scaling factor K<sub>m</sub> {{ kmFactors[species()] }}/37 = {{ kmFactors[species()]/37 | number:'1.3-3' }})</span>
+        </div>
+      </div>
+      <p class="muted cap">Body-surface-area scaling for first-in-human starting-dose estimation. Apply a safety factor; not a clinical dose.</p>
+    </div>
+
     <p class="disclaimer">Educational models from public literature. Not clinical dosing/prognosis advice; real PK/PD, tumor dynamics, and survival require patient data and validated models.</p>
   `,
   styles: [`
@@ -192,6 +212,10 @@ function linspace(min: number, max: number, n: number): number[] {
     .eq { font-size: 1.4rem; color: var(--accent); }
     .cp { display: flex; align-items: flex-end; gap: 0.8rem; padding-left: 1rem; border-left: 1px solid var(--border); flex-wrap: wrap; }
     .cp input { width: 90px; }
+    .hed { display: flex; align-items: flex-end; gap: 1rem; flex-wrap: wrap; }
+    .hed label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.82rem; color: var(--text-dim); }
+    .hed input, .hed select { width: 140px; }
+    .cap { font-size: 0.8rem; margin: 0.6rem 0 0; }
     h3 sub, p sub, .readout sub, label sub { font-size: 0.75em; }
   `],
 })
@@ -301,4 +325,11 @@ export class MathPage {
     { color: '#8b9bb0', pts: [{ x: this.ic50A(), y: 0 }, { x: 0, y: this.ic50B() }] }, // additivity line
   ]);
   readonly isoMarkers = computed<Marker[]>(() => [{ x: this.dA(), y: this.dB(), label: `CI ${this.ci().toFixed(2)}` }]);
+
+  // 8. Allometric HED
+  readonly kmFactors = KM_FACTORS;
+  readonly speciesList = Object.keys(KM_FACTORS).filter((s) => s !== 'Human');
+  readonly animalDose = signal(10);
+  readonly species = signal('Mouse');
+  readonly hed = computed(() => humanEquivalentDose(this.animalDose(), this.species()));
 }

@@ -101,6 +101,7 @@ export class Overview {
   readonly glossary = GLOSSARY;
 
   readonly stages = [
+    { id: 'disease', label: 'Disease → targets', source: 'Open Targets', route: 'disease' },
     { id: 'dossier', label: 'Target dossier', source: 'UniProt · ChEMBL · PDB', route: 'dossier' },
     { id: 'triage', label: 'Ligand triage', source: 'ChEMBL bioactivity', route: 'triage' },
     { id: 'structure', label: 'Structure', source: 'RCSB PDB · AlphaFold', route: 'structure' },
