@@ -19,6 +19,19 @@ export class DossierService {
       this.uniprot.summary(name),
     ]);
 
+    // Enrich the known modulators with human-readable drug names + development phase.
+    const topDrugs = drugs.slice(0, 12);
+    let enriched = topDrugs;
+    try {
+      const props = await this.chembl.fetchMoleculeProps(topDrugs.map((d) => d.molecule_chembl_id));
+      enriched = topDrugs.map((d) => {
+        const p = props.get(d.molecule_chembl_id);
+        return { ...d, name: p?.name, devPhase: p?.dev_phase };
+      });
+    } catch {
+      /* names are supplementary — fall back to IDs */
+    }
+
     const bits: string[] = [];
     bits.push(count > 500 ? 'rich ligand data' : count > 50 ? 'moderate ligand data' : 'sparse ligand data');
     if (uni?.pdb_count) bits.push('structure available for docking');
@@ -28,7 +41,7 @@ export class DossierService {
       target,
       uniprot: uni,
       potentActivityCount: count,
-      knownDrugs: drugs,
+      knownDrugs: enriched,
       readout: bits.join('; ') + '.',
     };
   }

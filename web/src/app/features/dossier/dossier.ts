@@ -79,11 +79,12 @@ import { Dossier as DossierModel } from '../../core/models';
         <div class="card">
           <h3>Known modulators <span class="muted">(repurposing / SAR start points)</span></h3>
           <table>
-            <thead><tr><th>ChEMBL ID</th><th>Action</th><th>Mechanism</th></tr></thead>
+            <thead><tr><th>Drug</th><th>Phase</th><th>Action</th><th>Mechanism</th></tr></thead>
             <tbody>
               @for (m of d.knownDrugs.slice(0, 12); track m.molecule_chembl_id) {
                 <tr>
-                  <td><a href="https://www.ebi.ac.uk/chembl/compound_report_card/{{ m.molecule_chembl_id }}/" target="_blank" rel="noopener" class="mono">{{ m.molecule_chembl_id }}</a></td>
+                  <td><a href="https://www.ebi.ac.uk/chembl/compound_report_card/{{ m.molecule_chembl_id }}/" target="_blank" rel="noopener">{{ m.name || m.molecule_chembl_id }}</a></td>
+                  <td>@if (m.devPhase) { <span class="pill" [class.green]="m.devPhase === 'approved drug'">{{ m.devPhase }}</span> }</td>
                   <td>{{ m.action_type }}</td>
                   <td>{{ m.mechanism }}</td>
                 </tr>

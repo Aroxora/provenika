@@ -44,7 +44,7 @@ export interface Dossier {
   target: ChemblTarget;
   uniprot: UniprotSummary | null;
   potentActivityCount: number;
-  knownDrugs: { molecule_chembl_id: string; action_type: string; mechanism: string }[];
+  knownDrugs: { molecule_chembl_id: string; action_type: string; mechanism: string; name?: string; devPhase?: string }[];
   readout: string;
 }
 
