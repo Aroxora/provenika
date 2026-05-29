@@ -1,6 +1,8 @@
 import { Component, effect, inject, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { filter } from 'rxjs';
 import { TargetStore } from './core/target-store';
+import { FaviconService } from './core/favicon.service';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +14,7 @@ export class App {
   private store = inject(TargetStore);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
+  private favicon = inject(FaviconService);
   readonly target = this.store.target;
   readonly draft = signal(this.store.target());
 
@@ -30,6 +33,11 @@ export class App {
       if (this.route.snapshot.queryParamMap.get('t') !== t) {
         this.router.navigate([], { queryParams: { t }, queryParamsHandling: 'merge', replaceUrl: true });
       }
+    });
+    // Dynamic favicon: depict the section the user is currently in.
+    this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((e) => {
+      const seg = (e as NavigationEnd).urlAfterRedirects.split('?')[0].split('/').filter(Boolean)[0] || 'overview';
+      this.favicon.setActivity(seg);
     });
   }
 
