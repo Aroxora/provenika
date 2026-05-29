@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: 'triage', loadComponent: () => import('./features/triage/triage').then((m) => m.Triage) },
   { path: 'structure', loadComponent: () => import('./features/structure/structure').then((m) => m.Structure) },
   { path: 'cost-benefit', loadComponent: () => import('./features/cost-benefit/cost-benefit').then((m) => m.CostBenefitPage) },
+  { path: 'models', loadComponent: () => import('./features/math/math').then((m) => m.MathPage) },
   { path: 'literature', loadComponent: () => import('./features/literature/literature').then((m) => m.Literature) },
   { path: 'pathways', loadComponent: () => import('./features/pathways/pathways').then((m) => m.Pathways) },
   { path: 'trials', loadComponent: () => import('./features/trials/trials').then((m) => m.Trials) },
