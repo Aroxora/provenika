@@ -6,6 +6,15 @@ dist/
 *.tsbuildinfo
 .tsbuildinfo
 
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# CI/CD run logs
+cicd/logs/
+
 # Test coverage
 coverage/
 

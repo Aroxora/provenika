@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """
-Run CAD (Computational-Aided Drug Discovery) for ALL unmet cancer needs.
+Run CAD (Candidate Aggregation & Documentation) across all documented unmet
+cancer needs.
 
-Generates FDA IND proposals for:
-- 14 cancers without approved screening
-- 10 cancers without targeted therapy
-- 15 rare cancers with unmet needs
+For each gap, assembles a structured IND-application *outline* from curated
+public reference data — a research-organisation scaffold, NOT a submission-ready
+proposal and NOT a discovered therapy:
+- 14 cancers without a routine screening test
+- 10 cancers with limited targeted therapy
+- 15 rare / orphan cancers
 """
 
 import subprocess
@@ -315,7 +318,7 @@ def generate_solutions_readme(solutions):
 
 def main():
     print("=" * 70)
-    print(" CAD (Computational-Aided Drug Discovery) - Full Unmet Needs Analysis")
+    print(" CAD (Candidate Aggregation & Documentation) - Unmet Needs Landscape")
     print("=" * 70)
 
     solutions = run_cad()

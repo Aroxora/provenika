@@ -1,15 +1,26 @@
 /**
- * Oral Drug Development Pipeline
+ * Oral Drug Development Pipeline (curated reference dataset)
  *
- * CAD-driven development of oral pills for ALL cancer types.
- * Converts IV therapies, CAR-T, and ADCs to small molecule pills.
+ * A hand-curated catalogue of publicly reported, oral small-molecule oncology
+ * drugs — both FDA-approved and investigational — drawn from FDA labels,
+ * company pipeline disclosures, and ClinicalTrials.gov. These drugs were
+ * developed by their named sponsors; this repository only aggregates and
+ * cross-references the public record. Nothing here is discovered, designed, or
+ * predicted by this software.
+ *
+ * `phase` and `projectedApproval` reflect the status reported at the time the
+ * entry was curated and may be out of date; treat them as pointers to verify,
+ * not as facts. `replacesChemo` names the standard-of-care regimen a drug is
+ * being *studied against* in its trials — it is NOT a claim that the drug should
+ * replace that regimen in practice.
  */
 
 import type { ToolDefinition } from '../../../core/toolRuntime.js';
 
 /**
- * ORAL DRUG CANDIDATES FOR ALL UNMET NEEDS
- * Each entry represents a CAD-designed oral pill to replace complex therapies
+ * Oral drug candidates relevant to high-unmet-need cancers.
+ * Each entry is a publicly reported program; verify status against the sponsor
+ * and ClinicalTrials.gov before relying on it.
  */
 
 // Oral drugs in development for screening-gap cancers
@@ -822,7 +833,7 @@ export function createOralDrugPipelineTools(): ToolDefinition[] {
   return [
     {
       name: 'ListAllOralDrugCandidates',
-      description: 'List all CAD-designed oral drug candidates for unmet cancer needs',
+      description: 'List curated, publicly reported oral oncology drug candidates (approved and investigational) relevant to high-unmet-need cancers. Reference data — verify status against ClinicalTrials.gov and FDA labels.',
       parameters: {
         type: 'object',
         properties: {

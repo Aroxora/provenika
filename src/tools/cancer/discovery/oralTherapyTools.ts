@@ -1,7 +1,18 @@
 /**
- * Oral Targeted Therapy Tools
+ * Oral Targeted Therapy Reference Tools
  *
- * Pills that replace chemotherapy - FDA approved and emerging
+ * Read-only reference data on FDA-approved oral targeted therapies, indexed by
+ * molecular target and biomarker. These agents are biomarker-selected and are
+ * used per their FDA label and current NCCN/ESMO guidelines — depending on the
+ * indication and line of therapy they may be given instead of, alongside, or
+ * after cytotoxic chemotherapy. Nothing here is a treatment recommendation;
+ * therapy selection is the responsibility of a qualified oncologist.
+ *
+ * Efficacy figures (response rate, median PFS) are approximate values drawn from
+ * each drug's registrational trial(s) in a specific population and line of
+ * therapy. They are NOT comparable across drugs and do not predict outcomes for
+ * an individual patient. Verify against the current FDA label and primary
+ * literature before any use.
  */
 
 import type { ToolDefinition } from '../../../core/toolRuntime.js';
@@ -447,12 +458,13 @@ function findOralTherapy(params: {
 
   const output: string[] = [];
   output.push(`# Oral Targeted Therapies for ${params.cancerType}`);
-  if (mutation) output.push(`## Mutation: ${mutation}`);
-  output.push(`\n**${matches.length} pills found that can replace chemo**\n`);
+  if (mutation) output.push(`## Biomarker: ${mutation}`);
+  output.push(`\n**${matches.length} FDA-approved oral targeted therapies match this profile**`);
+  output.push('_Reference data only — not a treatment recommendation. Verify against the current FDA label and discuss with an oncologist._\n');
 
   if (matches.length === 0) {
-    output.push('No FDA-approved oral targeted therapy found for this combination.');
-    output.push('Consider genomic testing to identify targetable mutations.');
+    output.push('No FDA-approved oral targeted therapy in this dataset matches that combination.');
+    output.push('Comprehensive genomic profiling may identify other actionable alterations.');
     return output.join('\n');
   }
 
@@ -472,8 +484,8 @@ function findOralTherapy(params: {
     output.push(`- **Dosing:** ${m.dosing}`);
     output.push(`- **Response Rate:** ${m.responseRate}%`);
     output.push(`- **Median PFS:** ${typeof m.medianPFS === 'number' ? m.medianPFS + ' months' : m.medianPFS}`);
-    output.push(`- **Side Effects:** ${m.sideEffects.join(', ')}`);
-    output.push(`- **Replaces Chemo:** ✅ Yes`);
+    output.push(`- **Common Adverse Effects:** ${m.sideEffects.join(', ')}`);
+    output.push(`- **Requires biomarker confirmation:** ${m.target}`);
     output.push('');
   }
 
@@ -510,25 +522,28 @@ function getOralTherapyByTarget(params: { target: string }): string {
 }
 
 /**
- * Generate replacement plan - replace chemo with pills
+ * Compile a research brief on oral targeted therapies whose label biomarker
+ * matches a given cancer type. This is an evidence-gathering aid for clinicians
+ * and researchers — it is NOT a treatment plan and does not recommend stopping
+ * or substituting any therapy.
  */
-async function generateChemoReplacementPlan(params: {
+async function compileTargetedTherapyBrief(params: {
   cancerType: string;
-  currentChemo: string;
+  currentRegimen?: string;
   genomicProfile?: Record<string, string>;
   apiKey?: string;
 }): Promise<string> {
   const client = getClient(params.apiKey);
 
-  // Search for alternatives
+  // Pull recent literature to contextualise the reference data
   const searchResult = await client.search(
-    `${params.cancerType} ${params.currentChemo} alternative oral targeted therapy replace 2024 2025`,
+    `${params.cancerType} oral targeted therapy biomarker NCCN guideline ${params.currentRegimen ?? ''} 2024 2025`,
     { searchDepth: 'advanced', maxResults: 5 }
   );
 
   const cancer = params.cancerType.toLowerCase();
 
-  // Find matching oral therapies
+  // Find oral targeted therapies labelled for this cancer type
   const matches = OralTargetedTherapies.filter(t =>
     t.cancers.some(c =>
       c.toLowerCase().includes(cancer) ||
@@ -537,57 +552,59 @@ async function generateChemoReplacementPlan(params: {
   );
 
   const output: string[] = [];
-  output.push('# Chemotherapy Replacement Plan\n');
-  output.push(`## Current: ${params.currentChemo}`);
-  output.push(`## Cancer: ${params.cancerType}\n`);
+  output.push('# Oral Targeted Therapy Research Brief\n');
+  output.push(`## Cancer: ${params.cancerType}`);
+  if (params.currentRegimen) output.push(`## Current regimen on record: ${params.currentRegimen}`);
+  output.push('\n> Reference and evidence-gathering aid only. Not a treatment recommendation.');
+  output.push('> Whether a targeted agent is appropriate — and whether it is used instead of,');
+  output.push('> alongside, or after chemotherapy — depends on the biomarker, line of therapy,');
+  output.push('> the current FDA label, and guideline recommendations. Decisions require an oncologist.\n');
 
   if (params.genomicProfile) {
-    output.push('## Genomic Profile');
+    output.push('## Genomic profile provided');
     for (const [gene, status] of Object.entries(params.genomicProfile)) {
       output.push(`- **${gene}:** ${status}`);
     }
     output.push('');
   }
 
-  output.push('## Recommended Oral Alternatives\n');
+  output.push('## Label-matched oral targeted therapies\n');
 
   if (matches.length > 0) {
-    // Sort by response rate
+    // Sort by reported response rate for readability (not a ranking of clinical preference)
     const sorted = [...matches].sort((a, b) => b.responseRate - a.responseRate);
-
-    output.push('### First-Line Oral Options (Pills to Replace Chemo)\n');
 
     for (const m of sorted.slice(0, 3)) {
       output.push(`**${m.brand} (${m.name})**`);
-      output.push(`- Take: ${m.dosing}`);
-      output.push(`- Targets: ${m.target}`);
-      output.push(`- Response: ${m.responseRate}% (vs ~30% for standard chemo)`);
-      output.push(`- PFS: ${typeof m.medianPFS === 'number' ? m.medianPFS + ' months' : m.medianPFS}`);
-      output.push(`- Side effects: ${m.sideEffects.slice(0, 3).join(', ')} (milder than chemo)`);
+      output.push(`- Label biomarker: ${m.target}`);
+      output.push(`- Approved dosing: ${m.dosing}`);
+      output.push(`- Registrational ORR (approx): ${m.responseRate}% in its trial population`);
+      output.push(`- Reported median PFS: ${typeof m.medianPFS === 'number' ? m.medianPFS + ' months' : m.medianPFS}`);
+      output.push(`- Common adverse effects: ${m.sideEffects.slice(0, 3).join(', ')}`);
       output.push('');
     }
 
-    output.push('### Required Testing Before Starting');
+    output.push('### Biomarker confirmation typically required before use');
     const targets = new Set(sorted.map(m => m.target.split(' ')[0]));
     for (const t of targets) {
-      output.push(`- Test for ${t} mutation/alteration`);
+      output.push(`- ${t} status (validated assay)`);
     }
   } else {
-    output.push('No direct oral replacement found. Consider:');
-    output.push('- Comprehensive genomic profiling (Foundation Medicine, Tempus)');
-    output.push('- Clinical trial search for emerging oral therapies');
+    output.push('No label-matched oral targeted therapy in this dataset. Avenues to explore:');
+    output.push('- Comprehensive genomic profiling for actionable alterations');
+    output.push('- Open clinical trials (ClinicalTrials.gov)');
   }
 
-  output.push('\n## Latest Research\n');
+  output.push('\n## Recent literature context\n');
   if (searchResult.answer) {
     output.push(searchResult.answer);
   }
 
-  output.push('\n## Important Notes');
-  output.push('- Genomic testing required to confirm eligibility');
-  output.push('- Oral therapies have different (often milder) side effects than chemo');
-  output.push('- Many oral therapies can be taken at home');
-  output.push('- Some may be combined with immunotherapy');
+  output.push('\n## Notes');
+  output.push('- Eligibility depends on validated biomarker testing and the current FDA label.');
+  output.push('- Adverse-effect profiles differ from cytotoxic chemotherapy but are not uniformly milder.');
+  output.push('- Targeted agents are frequently combined with, or sequenced after, other modalities.');
+  output.push('- This brief does not establish that any agent should replace an existing therapy.');
 
   return output.join('\n');
 }
@@ -597,8 +614,9 @@ async function generateChemoReplacementPlan(params: {
  */
 function listAllOralTherapies(): string {
   const output: string[] = [];
-  output.push('# FDA-Approved Oral Targeted Therapies (Pills That Replace Chemo)\n');
-  output.push(`**Total: ${OralTargetedTherapies.length} oral medications**\n`);
+  output.push('# FDA-Approved Oral Targeted Therapies (reference index)\n');
+  output.push(`**Total: ${OralTargetedTherapies.length} agents, grouped by molecular target**`);
+  output.push('_Biomarker-selected agents used per FDA label and guidelines. Response rates are approximate, population-specific, and not cross-comparable._\n');
 
   // Group by target class
   const groups: Record<string, typeof OralTargetedTherapies> = {
@@ -643,12 +661,12 @@ export function createOralTherapyTools(apiKey?: string): ToolDefinition[] {
   return [
     {
       name: 'FindOralTherapy',
-      description: 'Find FDA-approved oral pills that can replace chemotherapy for a specific cancer and mutation.',
+      description: 'Look up FDA-approved oral targeted therapies whose label biomarker matches a given cancer type and/or molecular alteration. Reference data only — not a treatment recommendation.',
       parameters: {
         type: 'object',
         properties: {
           cancerType: { type: 'string', description: 'Cancer type (e.g., NSCLC, breast, colorectal)' },
-          mutation: { type: 'string', description: 'Specific mutation (e.g., KRAS G12C, EGFR, BRAF V600E)' },
+          mutation: { type: 'string', description: 'Specific biomarker/alteration (e.g., KRAS G12C, EGFR, BRAF V600E)' },
         },
         required: ['cancerType'],
       },
@@ -656,7 +674,7 @@ export function createOralTherapyTools(apiKey?: string): ToolDefinition[] {
     },
     {
       name: 'GetOralTherapyByTarget',
-      description: 'Get all oral therapies that target a specific mutation or pathway.',
+      description: 'List FDA-approved oral targeted therapies for a specific molecular target or pathway. Reference data only.',
       parameters: {
         type: 'object',
         properties: {
@@ -667,22 +685,22 @@ export function createOralTherapyTools(apiKey?: string): ToolDefinition[] {
       handler: async (params) => getOralTherapyByTarget(params as Parameters<typeof getOralTherapyByTarget>[0]),
     },
     {
-      name: 'GenerateChemoReplacementPlan',
-      description: 'Generate a plan to replace chemotherapy with oral targeted therapy pills.',
+      name: 'CompileTargetedTherapyBrief',
+      description: 'Compile an evidence-gathering brief on label-matched oral targeted therapies for a cancer type, combining reference data with recent literature. Decision-support aid for clinicians/researchers — does not recommend replacing any therapy.',
       parameters: {
         type: 'object',
         properties: {
           cancerType: { type: 'string', description: 'Cancer type' },
-          currentChemo: { type: 'string', description: 'Current chemotherapy regimen' },
+          currentRegimen: { type: 'string', description: 'Current regimen on record (for literature context only)' },
           genomicProfile: { type: 'object', description: 'Genomic testing results' },
         },
-        required: ['cancerType', 'currentChemo'],
+        required: ['cancerType'],
       },
-      handler: async (params) => generateChemoReplacementPlan(params as Parameters<typeof generateChemoReplacementPlan>[0]),
+      handler: async (params) => compileTargetedTherapyBrief(params as Parameters<typeof compileTargetedTherapyBrief>[0]),
     },
     {
       name: 'ListAllOralTherapies',
-      description: 'List all FDA-approved oral targeted therapies (pills) that can replace chemotherapy.',
+      description: 'List all FDA-approved oral targeted therapies in the reference dataset, grouped by molecular target.',
       parameters: { type: 'object', properties: {} },
       handler: async () => listAllOralTherapies(),
     },

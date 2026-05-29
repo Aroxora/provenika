@@ -32,10 +32,7 @@ def run_matching(
     project_root = Path(__file__).parent.parent
 
     if tavily_key is None:
-        tavily_key = os.environ.get(
-            "TAVILY_API_KEY",
-            "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"
-        )
+        tavily_key = os.environ.get("TAVILY_API_KEY", "")
 
     if prior_therapies is None:
         prior_therapies = []
@@ -95,7 +92,7 @@ def print_results(results: dict):
     protocol = results["protocol"]
 
     print("\n" + "╔" + "═" * 68 + "╗")
-    print("║" + " CURATIVE THERAPY MATCHING RESULTS ".center(68) + "║")
+    print("║" + " CANDIDATE THERAPY MATCHING RESULTS ".center(68) + "║")
     print("╚" + "═" * 68 + "╝")
 
     print(f"\n  Cancer: {assessment['cancerType']}")
@@ -148,8 +145,9 @@ def print_results(results: dict):
 def interactive_mode():
     """Interactive patient matching."""
     print("\n" + "╔" + "═" * 68 + "╗")
-    print("║" + " CANCER CURE MATCHING - INTERACTIVE MODE ".center(68) + "║")
+    print("║" + " THERAPY-MATCHING RESEARCH TOOL - INTERACTIVE MODE ".center(68) + "║")
     print("╚" + "═" * 68 + "╝")
+    print("  Research/educational decision support. Not medical advice.")
 
     print("\n  Supported Cancer Types:")
     print("  ─────────────────────────────────────────")

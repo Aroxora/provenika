@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """
-CAD Discovery Pipeline - Runs on Every Commit
+CAD (Candidate Aggregation & Documentation) Pipeline - Runs on Every Commit
 
-Discovers new oral drug candidates, validates existing solutions,
-and updates the framework with latest clinical trial data.
+Summarises the curated oral-oncology drug reference dataset (approved +
+investigational) and reports where documented unmet needs still lack an oral
+option. Aggregates the public record — it does not discover or validate drugs.
 """
 
 import subprocess

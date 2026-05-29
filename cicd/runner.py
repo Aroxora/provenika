@@ -209,7 +209,7 @@ def create_test_pipeline() -> Pipeline:
 
 
 def create_cad_pipeline() -> Pipeline:
-    """Create the CAD (Computational-Aided Drug Discovery) pipeline."""
+    """Create the CAD (Candidate Aggregation & Documentation) pipeline."""
     return Pipeline(
         name="cad",
         steps=[
@@ -374,7 +374,10 @@ def main():
         cancer_type = sys.argv[2]
         stage = sys.argv[3]
         biomarkers = json.loads(sys.argv[4])
-        tavily_key = os.environ.get("TAVILY_API_KEY", "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")
+        tavily_key = os.environ.get("TAVILY_API_KEY")
+        if not tavily_key:
+            print("Error: set TAVILY_API_KEY in your environment to run literature search.")
+            sys.exit(1)
 
         success = run_patient_match(project_root, cancer_type, stage, biomarkers, tavily_key)
         sys.exit(0 if success else 1)

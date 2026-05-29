@@ -1,8 +1,16 @@
 /**
- * Computational-Aided Drug Discovery (CAD) Tools
+ * Candidate Aggregation & Documentation (CAD) Tools
  *
- * AI-powered discovery of novel curative therapies for cancers
- * without FDA-approved options. Generates FDA submission proposals.
+ * These tools organise the *public, published* record on therapeutic targets and
+ * drug modalities for high-unmet-need cancers, and assemble structured working
+ * documents (e.g. a CAR-T construct outline or an IND application skeleton) from
+ * curated reference data plus live literature search.
+ *
+ * What these tools do NOT do: they do not perform computer-aided drug design
+ * (no docking, QSAR, molecular dynamics, or generative chemistry), they do not
+ * discover or invent therapies, and their output is not regulatory-ready. Every
+ * document produced is a starting template that requires design, preclinical
+ * data, and review by qualified scientists and regulatory-affairs professionals.
  */
 
 import type { ToolDefinition } from '../../../core/toolRuntime.js';
@@ -425,7 +433,7 @@ export function createCADTools(apiKey?: string): ToolDefinition[] {
   return [
     {
       name: 'IdentifyTherapeuticTargets',
-      description: 'Identify novel therapeutic targets for cancers without FDA-approved curative options. Combines known targets with real-time literature search.',
+      description: 'Summarise published, druggable therapeutic targets for a cancer type from curated reference data plus live literature search. Aggregates known targets — it does not discover new ones.',
       parameters: {
         type: 'object',
         properties: {
@@ -437,7 +445,7 @@ export function createCADTools(apiKey?: string): ToolDefinition[] {
     },
     {
       name: 'DesignCARTTherapy',
-      description: 'Design a novel CAR-T cell therapy construct for a specific cancer target. Generates full construct specifications.',
+      description: 'Assemble a CAR-T construct design template (domains, manufacturing steps, preclinical checklist) from established CAR architecture conventions. An educational scaffold, not a validated or novel construct.',
       parameters: {
         type: 'object',
         properties: {
@@ -451,7 +459,7 @@ export function createCADTools(apiKey?: string): ToolDefinition[] {
     },
     {
       name: 'DesignmRNAVaccine',
-      description: 'Design a personalized mRNA cancer vaccine for a specific cancer type. Includes neoantigen selection pipeline.',
+      description: 'Assemble a personalised mRNA-vaccine design template, including a standard neoantigen-selection pipeline outline. An educational scaffold — it does not select real neoantigens or generate a usable construct.',
       parameters: {
         type: 'object',
         properties: {
@@ -465,7 +473,7 @@ export function createCADTools(apiKey?: string): ToolDefinition[] {
     },
     {
       name: 'GenerateFDAProposal',
-      description: 'Generate an FDA IND application proposal for a novel curative therapy. Includes regulatory pathway guidance.',
+      description: 'Assemble a structured IND-application outline (section skeleton + regulatory-pathway notes) to organise a real submission effort. Not a complete or submission-ready application; requires authoring and review by regulatory-affairs professionals.',
       parameters: {
         type: 'object',
         properties: {

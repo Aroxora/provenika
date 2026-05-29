@@ -1,7 +1,10 @@
 /**
- * Computational-Aided Drug Discovery Module
+ * Candidate Aggregation & Documentation Module
  *
- * AI-powered discovery of novel curative therapies
+ * Curated reference datasets and document-template generators covering
+ * therapeutic targets, oral targeted therapies, treatment/screening gaps, and
+ * the oral oncology drug pipeline. Aggregates the public record; does not
+ * discover, design, or recommend therapies.
  */
 
 export * from './cadTools.js';

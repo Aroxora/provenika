@@ -1,9 +1,12 @@
 /**
- * Cancer Screening & Cure Gap Analysis Tools
+ * Cancer Screening & Treatment Gap Analysis Tools
  *
- * Identifies shortcomings in cancer detection and treatment
- * across ALL cancer types including rare and complex cases.
- * Proposes CAD solutions for unmet needs.
+ * Curated reference data describing where cancer detection and treatment have
+ * documented unmet needs (cancers lacking a recommended screening test,
+ * cancers with limited targeted options, and rare/orphan cancers), together
+ * with the candidate approaches reported in the literature and development
+ * pipeline for each. This is a landscape/orientation aid built from the public
+ * record — it does not design, validate, or recommend any test or therapy.
  */
 
 import type { ToolDefinition } from '../../../core/toolRuntime.js';
@@ -559,7 +562,7 @@ export function createGapAnalysisTools(apiKey?: string): ToolDefinition[] {
     },
     {
       name: 'ProposeCADSolution',
-      description: 'Propose CAD-designed screening test or treatment for a specific cancer gap.',
+      description: 'Summarise candidate screening or treatment approaches reported in the literature/pipeline for a specific cancer gap, as a research starting point. Aggregates published approaches — it does not design or validate a new test or therapy.',
       parameters: {
         type: 'object',
         properties: {
