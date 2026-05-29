@@ -17,6 +17,7 @@ export interface MoleculeProps {
   hbd: number | null;
   hba: number | null;
   psa: number | null;
+  rtb: number | null;
   ro5_violations: number | null;
   qed: number | null;
   smiles: string | null;

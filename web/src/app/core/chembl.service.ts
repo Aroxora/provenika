@@ -88,6 +88,7 @@ export class ChemblService {
           hbd: numOrNull(p.hbd),
           hba: numOrNull(p.hba),
           psa: numOrNull(p.psa),
+          rtb: numOrNull(p.rtb),
           ro5_violations: numOrNull(p.num_ro5_violations),
           qed: numOrNull(p.qed_weighted),
           smiles: s.canonical_smiles ?? null,

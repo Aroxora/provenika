@@ -124,6 +124,13 @@ import { InfoTip } from '../../shared/info-tip';
             <div><span class="muted">TPSA</span> <b class="mono">{{ h.psa | number:'1.0-0' }}</b></div>
             <div><span class="muted">Phase</span> <b>{{ h.dev_phase }}</b></div>
           </div>
+          <div class="flags">
+            <span class="pill" [class.green]="lipinskiOk(h)" title="≤1 Lipinski rule-of-five violation (Lipinski 1997)">Lipinski {{ lipinskiOk(h) ? 'pass' : 'fail' }}</span>
+            <span class="pill" [class.green]="veberOk(h) === true" [class.warn]="veberOk(h) === false"
+                  title="Oral bioavailability: rotatable bonds ≤10 and TPSA ≤140 Å² (Veber 2002)">Veber {{ veberOk(h) === null ? 'n/a' : veberOk(h) ? 'pass' : 'fail' }}</span>
+            <span class="pill" [class.blue]="bbbLikely(h) === true"
+                  title="CNS-penetration heuristic: TPSA &lt;90 Å² and MW &lt;450 Da">BBB {{ bbbLikely(h) === null ? 'n/a' : bbbLikely(h) ? 'likely' : 'unlikely' }}</span>
+          </div>
           @if (h.smiles) { <div class="smiles mono">{{ h.smiles }}</div> }
           <div class="drawer-actions">
             <a routerLink="/models" (click)="close()"><button class="primary">Model this potency →</button></a>
@@ -158,6 +165,7 @@ import { InfoTip } from '../../shared/info-tip';
     .close { position: absolute; top: 0.8rem; right: 0.8rem; padding: 0.3rem 0.55rem; }
     .depiction { width: 100%; max-width: 340px; background: #fff; border-radius: 8px; margin: 0.5rem 0 1rem; }
     .props { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; font-size: 0.88rem; }
+    .flags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.8rem; }
     .smiles { font-size: 0.75rem; word-break: break-all; margin: 1rem 0; padding: 0.5rem; background: var(--bg); border-radius: 6px; }
     .ext { display: inline-block; margin-top: 0.5rem; }
     .drawer-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
@@ -269,6 +277,17 @@ export class Triage {
 
   depiction(id: string): string {
     return `https://www.ebi.ac.uk/chembl/api/data/image/${id}.svg`;
+  }
+
+  // Developability rules of thumb (citable, computed from ChEMBL properties).
+  lipinskiOk(h: TriageHit): boolean { return (h.ro5_violations ?? 9) <= 1; }
+  veberOk(h: TriageHit): boolean | null {
+    if (h.rtb == null || h.psa == null) return null;
+    return h.rtb <= 10 && h.psa <= 140;
+  }
+  bbbLikely(h: TriageHit): boolean | null {
+    if (h.psa == null || h.mw == null) return null;
+    return h.psa < 90 && h.mw < 450;
   }
 
   sortBy(k: keyof TriageHit) {
