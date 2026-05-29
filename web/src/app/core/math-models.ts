@@ -72,3 +72,35 @@ export function humanEquivalentDose(animalMgPerKg: number, species: string): num
   const km = KM_FACTORS[species] ?? 37;
   return animalMgPerKg * (km / KM_FACTORS['Human']);
 }
+
+/**
+ * Tumor-growth volume at time t (days) for common models.
+ *  exponential: V = V0·e^(r·t)
+ *  logistic:    V = K / (1 + ((K−V0)/V0)·e^(−r·t))
+ *  gompertz:    V = K·exp(ln(V0/K)·e^(−r·t))   (Laird 1964; Norton 1988)
+ * V0,K in mm³; r in /day.
+ */
+export type GrowthModel = 'exponential' | 'logistic' | 'gompertz';
+export function tumorVolume(model: GrowthModel, t: number, v0: number, r: number, k: number): number {
+  switch (model) {
+    case 'logistic': return k / (1 + ((k - v0) / v0) * Math.exp(-r * t));
+    case 'gompertz': return k * Math.exp(Math.log(v0 / k) * Math.exp(-r * t));
+    default: return v0 * Math.exp(r * t);
+  }
+}
+/** Exponential-phase volume doubling time (days). */
+export function doublingTime(r: number): number {
+  return Math.LN2 / r;
+}
+
+/**
+ * Parametric (exponential) survival: S(t) = 0.5^(t/median); hazard λ = ln2/median.
+ * For exponential survival the hazard ratio = median_reference / median_test.
+ * Ref: standard survival analysis (Collett, Modelling Survival Data in Medical Research).
+ */
+export function survivalExp(t: number, medianMonths: number): number {
+  return Math.pow(0.5, t / medianMonths);
+}
+export function hazardRatioExp(medianRef: number, medianTest: number): number {
+  return medianRef / medianTest;
+}

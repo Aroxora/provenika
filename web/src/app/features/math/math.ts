@@ -4,6 +4,7 @@ import { LinePlot, Series, Marker } from './line-plot';
 import {
   hill, nMtoP, pTonM, chengPrusoff, keFromHalfLife, multiDoseConc,
   accumulationRatio, aucSingle, Pt,
+  tumorVolume, doublingTime, survivalExp, hazardRatioExp, GrowthModel,
 } from '../../core/math-models';
 
 function geometric(min: number, max: number, n: number): number[] {
@@ -80,7 +81,51 @@ function linspace(min: number, max: number, n: number): number[] {
       </div>
     </div>
 
-    <p class="disclaimer">Educational models from public literature. Not clinical dosing advice; real PK/PD requires patient data and validated models.</p>
+    <!-- 4. Tumor growth -->
+    <div class="card">
+      <h3>Tumor growth</h3>
+      <p class="muted sub">Exponential / logistic / Gompertz (Laird 1964; Norton 1988). V₀,K in mm³, r in /day.</p>
+      <div class="grid">
+        <div class="inputs">
+          <label>Model
+            <select [value]="growth()" (change)="growth.set($any($event.target).value)">
+              <option value="gompertz">Gompertz</option>
+              <option value="logistic">Logistic</option>
+              <option value="exponential">Exponential</option>
+            </select>
+          </label>
+          <label>V₀ (mm³) <input type="number" min="1" [value]="v0()" (input)="v0.set(+$any($event.target).value)" /></label>
+          <label>Growth rate r (/day) <input type="number" min="0.001" step="0.01" [value]="rate()" (input)="rate.set(+$any($event.target).value)" /></label>
+          <label>Carrying capacity K (mm³) <input type="number" min="100" [value]="kcap()" (input)="kcap.set(+$any($event.target).value)" /></label>
+          <div class="readout">Exponential-phase doubling time ≈ <b class="mono">{{ doubling() | number:'1.1-1' }} days</b>.</div>
+        </div>
+        <app-line-plot [series]="growthSeries()" [logX]="false"
+          [xmin]="0" [xmax]="growthDays" [ymin]="0" [ymax]="kcap()*1.05"
+          xLabel="time (days)" yLabel="volume (mm³)" />
+      </div>
+    </div>
+
+    <!-- 5. Survival -->
+    <div class="card">
+      <h3>Parametric survival comparator</h3>
+      <p class="muted sub">Exponential S(t)=0.5^(t/median); hazard ratio = median<sub>ctrl</sub>/median<sub>exp</sub>. Educational — true trials use Kaplan–Meier on event data.</p>
+      <div class="grid">
+        <div class="inputs">
+          <label>Control median OS (months) <input type="number" min="1" [value]="medCtrl()" (input)="medCtrl.set(+$any($event.target).value)" /></label>
+          <label>Experimental median OS (months) <input type="number" min="1" [value]="medExp()" (input)="medExp.set(+$any($event.target).value)" /></label>
+          <div class="readout">
+            Hazard ratio ≈ <b class="mono">{{ hr() | number:'1.2-2' }}</b>
+            ({{ hr() < 1 ? 'experimental favored' : hr() > 1 ? 'control favored' : 'no difference' }}).<br />
+            <span class="muted">Median gain {{ medExp() - medCtrl() | number:'1.0-1' }} mo.</span>
+          </div>
+        </div>
+        <app-line-plot [series]="survSeries()" [logX]="false"
+          [xmin]="0" [xmax]="survMonths" [ymin]="0" [ymax]="1"
+          xLabel="time (months)" yLabel="surviving fraction" />
+      </div>
+    </div>
+
+    <p class="disclaimer">Educational models from public literature. Not clinical dosing/prognosis advice; real PK/PD, tumor dynamics, and survival require patient data and validated models.</p>
   `,
   styles: [`
     .intro { max-width: 66ch; }
@@ -139,4 +184,30 @@ export class MathPage {
   readonly troughSs = computed(() => this.cmaxSs() * Math.exp(-this.ke() * this.tau()));
   readonly accum = computed(() => accumulationRatio(this.ke(), this.tau()));
   readonly auc = computed(() => aucSingle(this.dose(), this.vd(), this.ke()));
+
+  // 4. Tumor growth
+  readonly growthDays = 180;
+  readonly growth = signal<GrowthModel>('gompertz');
+  readonly v0 = signal(100);
+  readonly rate = signal(0.05);
+  readonly kcap = signal(100000);
+  readonly doubling = computed(() => doublingTime(this.rate()));
+  readonly growthSeries = computed<Series[]>(() => {
+    const m = this.growth(), v = this.v0(), r = this.rate(), k = this.kcap();
+    const pts: Pt[] = linspace(0, this.growthDays, 120).map((t) => ({ x: t, y: tumorVolume(m, t, v, r, k) }));
+    return [{ color: '#ff6b6b', pts }];
+  });
+
+  // 5. Survival
+  readonly survMonths = 60;
+  readonly medCtrl = signal(12);
+  readonly medExp = signal(20);
+  readonly hr = computed(() => hazardRatioExp(this.medCtrl(), this.medExp()));
+  readonly survSeries = computed<Series[]>(() => {
+    const ts = linspace(0, this.survMonths, 120);
+    return [
+      { color: '#8b9bb0', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medCtrl()) })) },
+      { color: '#3ddc97', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medExp()) })) },
+    ];
+  });
 }

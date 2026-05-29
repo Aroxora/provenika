@@ -18,6 +18,7 @@ import { GLOSSARY } from '../../core/glossary';
       </p>
       <div class="cta">
         <a routerLink="/dossier"><button class="primary">Start: dossier for {{ target() }} →</button></a>
+        <a routerLink="/models"><button>∫ Interactive models →</button></a>
         <a routerLink="/report"><button>Jump to report →</button></a>
       </div>
     </section>
