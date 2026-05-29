@@ -28,6 +28,13 @@ const W = 600, H = 340, PAD = 50;
       <text [attr.x]="W / 2" [attr.y]="H - 6" class="al" text-anchor="middle">{{ xLabel() }}</text>
       <text [attr.x]="14" [attr.y]="H / 2" class="al" text-anchor="middle" [attr.transform]="'rotate(-90 14 ' + (H / 2) + ')'">{{ yLabel() }}</text>
     </svg>
+    @if (labelled().length) {
+      <div class="legend">
+        @for (s of labelled(); track s.i) {
+          <span><i [style.background]="seriesColor(s.i)"></i>{{ s.label }}</span>
+        }
+      </div>
+    }
   `,
   styles: [`
     .lp { width: 100%; height: auto; background: var(--bg); border-radius: 8px; }
@@ -35,6 +42,8 @@ const W = 600, H = 340, PAD = 50;
     .t { fill: var(--text-dim); font-size: 10px; font-family: var(--mono); }
     .al { fill: var(--text-dim); font-size: 12px; }
     .m { fill: var(--warn); font-size: 10px; font-family: var(--mono); }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.8rem; color: var(--text-dim); margin-top: 0.3rem; }
+    .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 0.3rem; vertical-align: middle; }
   `],
 })
 export class LinePlot {
@@ -48,7 +57,13 @@ export class LinePlot {
   readonly W = W; readonly H = H; readonly PAD = PAD;
   private palette = ['#3ddc97', '#4aa8ff', '#ffb454', '#ff6b6b'];
   seriesColor(i: number) { return this.series()[i]?.color || this.palette[i % this.palette.length]; }
-  aria = computed(() => `${this.yLabel()} versus ${this.xLabel()} line chart`);
+  readonly labelled = computed(() =>
+    this.series().map((s, i) => ({ i, label: s.label })).filter((s) => !!s.label) as { i: number; label: string }[]);
+  aria = computed(() => {
+    const named = this.labelled().map((s) => s.label);
+    const base = `${this.yLabel()} versus ${this.xLabel()} line chart`;
+    return named.length ? `${base}; series: ${named.join(', ')}` : base;
+  });
 
   private tx(x: number): number {
     const lo = this.logX() ? Math.log10(this.xmin()) : this.xmin();

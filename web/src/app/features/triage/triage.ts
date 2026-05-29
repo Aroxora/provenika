@@ -237,6 +237,7 @@ export class Triage {
 
   async rerun() {
     const name = this.store.target();
+    const stale = () => this.store.target() !== name;
     this.loading.set(true);
     this.error.set('');
     this.selected.set(null);
@@ -247,13 +248,15 @@ export class Triage {
         limit: this.limit(),
         excludeApproved: this.excludeApproved(),
       });
+      if (stale()) return;
       this.targetName.set(res.targetName);
       this.hits.set(res.hits);
     } catch (e: any) {
+      if (stale()) return;
       this.hits.set([]);
       this.error.set(e?.message ?? 'Triage failed.');
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 

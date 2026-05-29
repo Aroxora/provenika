@@ -52,15 +52,20 @@ export class Trials {
   }
 
   private async fetch() {
+    const t = this.store.target();
+    const stale = () => this.store.target() !== t;
     this.loading.set(true);
     this.error.set('');
     try {
-      this.trials.set(await this.svc.search(this.store.target(), 25));
+      const r = await this.svc.search(t, 25);
+      if (stale()) return;
+      this.trials.set(r);
     } catch (e: any) {
+      if (stale()) return;
       this.trials.set([]);
       this.error.set(e?.message ?? 'Trial search failed.');
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 }

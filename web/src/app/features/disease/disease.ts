@@ -25,6 +25,7 @@ import { TargetStore } from '../../core/target-store';
       @for (d of examples; track d) { <button class="chip" (click)="query.set(d); search()">{{ d }}</button> }
     </div>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Querying Open Targets…</div>
     } @else if (error()) {
@@ -52,6 +53,7 @@ import { TargetStore } from '../../core/target-store';
       <p class="muted foot">Association score (0–1) aggregates genetic, genomic, transcriptomic,
         drug, pathway &amp; literature evidence. Source: Open Targets Platform.</p>
     }
+    </div>
   `,
   styles: [`
     .intro { max-width: 64ch; }
@@ -84,17 +86,20 @@ export class Disease {
   async search() {
     const q = this.query().trim();
     if (!q) return;
+    const stale = () => this.query().trim() !== q;
     this.loading.set(true);
     this.error.set('');
     try {
       const r = await this.svc.targetsForDisease(q, 25);
+      if (stale()) return;
       if (!r) { this.error.set(`No disease found for "${q}".`); this.result.set(null); }
       else this.result.set(r);
     } catch (e: any) {
+      if (stale()) return;
       this.error.set(e?.message ?? 'Open Targets query failed.');
       this.result.set(null);
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 

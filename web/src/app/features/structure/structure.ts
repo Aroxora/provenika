@@ -77,17 +77,21 @@ export class Structure {
   }
 
   private async fetch() {
+    const t = this.store.target();
+    const stale = () => this.store.target() !== t;
     this.loading.set(true);
     this.error.set('');
     try {
-      const u = await this.svc.summary(this.store.target());
+      const u = await this.svc.summary(t);
+      if (stale()) return;
       this.uni.set(u);
       this.selected.set(u?.pdbs?.[0]?.id ?? '');
     } catch (e: any) {
+      if (stale()) return;
       this.uni.set(null);
       this.error.set(e?.message ?? 'Structure lookup failed.');
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 

@@ -55,7 +55,11 @@ input, select {
   padding: 0.55rem 0.7rem;
   font-size: 0.95rem;
 }
-input:focus, select:focus { outline: none; border-color: var(--accent-2); }
+input:focus, select:focus { border-color: var(--accent-2); }
+input:focus-visible, select:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--accent-2);
+  outline-offset: 2px;
+}
 
 .card {
   background: var(--bg-elev);

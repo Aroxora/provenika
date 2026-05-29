@@ -57,7 +57,7 @@ import { Dossier as DossierModel } from '../../core/models';
 
       @if (tractability().length) {
         <div class="card tract">
-          <strong>Druggability tractability</strong> <span class="muted">(Open Targets)</span>
+          <strong>Druggability tractability</strong> <span class="muted">(Open Targets · highest bucket across all indications, not disease-specific)</span>
           <div class="tlist">
             @for (t of tractability(); track t.modality) {
               <span class="pill" [class.green]="t.tier === 'approved'" [class.blue]="t.tier === 'clinical'"
@@ -129,18 +129,25 @@ export class Dossier {
   }
 
   private async fetch(name: string) {
+    const requested = name; // discard results if the target changes mid-flight
+    const stale = () => this.store.target() !== requested;
     this.loading.set(true);
     this.error.set('');
     this.tractability.set([]);
     // Tractability is supplementary — fetch in parallel, don't block/fail the dossier on it.
-    this.ot.tractability(name).then((t) => this.tractability.set(t)).catch(() => this.tractability.set([]));
+    this.ot.tractability(name)
+      .then((t) => { if (!stale()) this.tractability.set(t); })
+      .catch(() => { if (!stale()) this.tractability.set([]); });
     try {
-      this.data.set(await this.svc.build(name));
+      const d = await this.svc.build(name);
+      if (stale()) return;
+      this.data.set(d);
     } catch (e: any) {
+      if (stale()) return;
       this.data.set(null);
       this.error.set(e?.message ?? 'Lookup failed.');
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 }

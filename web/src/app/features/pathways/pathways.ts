@@ -55,15 +55,20 @@ export class Pathways {
   }
 
   private async fetch() {
+    const t = this.store.target();
+    const stale = () => this.store.target() !== t;
     this.loading.set(true);
     this.error.set('');
     try {
-      this.pathways.set(await this.svc.pathways(this.store.target()));
+      const p = await this.svc.pathways(t);
+      if (stale()) return;
+      this.pathways.set(p);
     } catch (e: any) {
+      if (stale()) return;
       this.pathways.set([]);
       this.error.set(e?.message ?? 'Pathway search failed.');
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 }

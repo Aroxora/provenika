@@ -296,8 +296,8 @@ export class MathPage {
   readonly survSeries = computed<Series[]>(() => {
     const ts = linspace(0, this.survMonths, 120);
     return [
-      { color: '#8b9bb0', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medCtrl()) })) },
-      { color: '#3ddc97', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medExp()) })) },
+      { color: '#8b9bb0', label: 'Control', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medCtrl()) })) },
+      { color: '#3ddc97', label: 'Experimental', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medExp()) })) },
     ];
   });
 

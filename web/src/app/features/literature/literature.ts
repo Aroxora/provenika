@@ -66,15 +66,20 @@ export class Literature {
   setSort(s: 'recent' | 'cited') { this.sort.set(s); }
 
   private async fetch() {
+    const t = this.store.target(), s = this.sort();
+    const stale = () => this.store.target() !== t || this.sort() !== s;
     this.loading.set(true);
     this.error.set('');
     try {
-      this.articles.set(await this.svc.search(this.store.target(), this.sort(), 20));
+      const a = await this.svc.search(t, s, 20);
+      if (stale()) return;
+      this.articles.set(a);
     } catch (e: any) {
+      if (stale()) return;
       this.articles.set([]);
       this.error.set(e?.message ?? 'Literature search failed.');
     } finally {
-      this.loading.set(false);
+      if (!stale()) this.loading.set(false);
     }
   }
 }
