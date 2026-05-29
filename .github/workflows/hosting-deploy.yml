@@ -1,0 +1,51 @@
+name: Deploy web (Firebase Hosting)
+
+# Manual deploy. Builds the Angular app and deploys to Firebase Hosting only when
+# the required secrets are present, so it never fails for forks/unconfigured repos.
+# Configure once:
+#   gh secret set FIREBASE_PROJECT_ID --repo Aroxora/cancer-cure-agent
+#   gh secret set FIREBASE_SERVICE_ACCOUNT --repo Aroxora/cancer-cure-agent < service-account.json
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npx ng build --configuration production
+        working-directory: web
+
+      - name: Check deploy credentials
+        id: creds
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          if [ -n "$SA" ] && [ -n "$PID" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Set FIREBASE_SERVICE_ACCOUNT and FIREBASE_PROJECT_ID secrets to enable deploy."
+          fi
+
+      - name: Deploy to Firebase Hosting (live)
+        if: steps.creds.outputs.ready == 'true'
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          projectId: ${{ secrets.FIREBASE_PROJECT_ID }}
+          channelId: live

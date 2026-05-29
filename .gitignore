@@ -21,6 +21,16 @@ structures/
 docking/
 *.pdbqt
 
+# Web app (Angular) build & deps
+web/node_modules/
+web/dist/
+web/.angular/
+
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
 # Test coverage
 coverage/
 

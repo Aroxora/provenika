@@ -1,0 +1,46 @@
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">⬡</span>
+    <div>
+      <div class="title">Oncology CADD&nbsp;·&nbsp;OSINT</div>
+      <div class="sub muted">Interactive drug-discovery triage on public data</div>
+    </div>
+  </div>
+
+  <form class="search" (submit)="submit(draft()); $event.preventDefault()">
+    <span class="search-label muted">Target</span>
+    <input
+      [value]="draft()"
+      (input)="draft.set($any($event.target).value)"
+      placeholder="e.g. EGFR, BTK, KRAS G12C"
+      aria-label="Protein target" />
+    <button class="primary" type="submit">Analyze</button>
+  </form>
+</header>
+
+<div class="examples">
+  <span class="muted">Try:</span>
+  @for (e of examples; track e) {
+    <button class="chip" (click)="pick(e)">{{ e }}</button>
+  }
+  <span class="active-target">Active: <strong class="mono">{{ target() }}</strong></span>
+</div>
+
+<nav class="tabs">
+  <a routerLink="/dossier" routerLinkActive="active">① Dossier</a>
+  <a routerLink="/triage" routerLinkActive="active">② Ligand triage</a>
+  <a routerLink="/structure" routerLinkActive="active">③ Structure</a>
+  <a routerLink="/cost-benefit" routerLinkActive="active">④ Cost-benefit</a>
+  <a routerLink="/trials" routerLinkActive="active">Trials</a>
+</nav>
+
+<main>
+  <router-outlet />
+</main>
+
+<footer class="disclaimer">
+  Research / decision-support only — <strong>not medical advice</strong> and not a treatment
+  recommendation. Live data from PubMed, ClinicalTrials.gov, ChEMBL, UniProt &amp; RCSB PDB;
+  every figure is a lead to verify at the primary source. Computational triage is hypothesis
+  generation, not validation.
+</footer>
