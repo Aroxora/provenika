@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { LinePlot, Series, Marker } from './line-plot';
 import { TargetStore } from '../../core/target-store';
+import { InfoTip } from '../../shared/info-tip';
 import {
   hill, nMtoP, pTonM, chengPrusoff, keFromHalfLife, multiDoseConc,
   accumulationRatio, aucSingle, Pt,
@@ -20,7 +21,7 @@ function linspace(min: number, max: number, n: number): number[] {
 
 @Component({
   selector: 'app-math',
-  imports: [DecimalPipe, LinePlot],
+  imports: [DecimalPipe, LinePlot, InfoTip],
   template: `
     <h2>Interactive models <span class="muted">— quantitative pharmacology you can play with</span></h2>
     <p class="muted intro">
@@ -125,7 +126,7 @@ function linspace(min: number, max: number, n: number): number[] {
           <label>Control median OS (months) <input type="number" min="1" [value]="medCtrl()" (input)="medCtrl.set(+$any($event.target).value)" /></label>
           <label>Experimental median OS (months) <input type="number" min="1" [value]="medExp()" (input)="medExp.set(+$any($event.target).value)" /></label>
           <div class="readout">
-            Hazard ratio ≈ <b class="mono">{{ hr() | number:'1.2-2' }}</b>
+            <app-tip term="Hazard ratio (HR)" label="Hazard ratio" /> ≈ <b class="mono">{{ hr() | number:'1.2-2' }}</b>
             ({{ hr() < 1 ? 'experimental favored' : hr() > 1 ? 'control favored' : 'no difference' }}).<br />
             <span class="muted">Median gain {{ medExp() - medCtrl() | number:'1.0-1' }} mo.</span>
           </div>
@@ -163,7 +164,7 @@ function linspace(min: number, max: number, n: number): number[] {
           <label>Combination dose A <input type="number" min="0" step="0.5" [value]="dA()" (input)="dA.set(+$any($event.target).value)" /></label>
           <label>Combination dose B <input type="number" min="0" step="0.5" [value]="dB()" (input)="dB.set(+$any($event.target).value)" /></label>
           <div class="readout">
-            CI ≈ <b class="mono" [style.color]="ciColor()">{{ ci() | number:'1.2-2' }}</b> → <b>{{ verdict() }}</b><br />
+            <app-tip term="Combination index (Chou-Talalay)" label="CI" /> ≈ <b class="mono" [style.color]="ciColor()">{{ ci() | number:'1.2-2' }}</b> → <b>{{ verdict() }}</b><br />
             <span class="muted">Bliss-expected combined inhibition ≈ {{ bliss()*100 | number:'1.0-0' }}%.</span>
           </div>
         </div>
