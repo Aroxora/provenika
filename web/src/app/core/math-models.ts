@@ -112,3 +112,28 @@ export function hazardRatioExp(medianRef: number, medianTest: number): number {
 export function michaelisMenten(s: number, vmax: number, km: number): number {
   return (vmax * s) / (km + s);
 }
+
+/**
+ * Drug-combination synergy.
+ * Loewe combination index (Chou–Talalay): CI = dA/Dx_A + dB/Dx_B, where dA,dB are the
+ * doses in the mixture and Dx_A,Dx_B are the single-agent doses giving the same effect.
+ * CI < 1 synergy, = 1 additive, > 1 antagonism. Ref: Chou, Pharmacol Rev 2006;58:621.
+ */
+export function combinationIndex(dA: number, dB: number, dxA: number, dxB: number): number {
+  return dA / dxA + dB / dxB;
+}
+export function synergyVerdict(ci: number): string {
+  if (ci < 0.9) return 'synergy';
+  if (ci <= 1.1) return 'additive';
+  return 'antagonism';
+}
+/** Fractional effect of a single agent via simple Hill (Emax=1): f = d^n/(IC50^n+d^n). */
+export function hillFraction(dose: number, ic50: number, n = 1): number {
+  if (dose <= 0) return 0;
+  const dn = Math.pow(dose, n);
+  return dn / (Math.pow(ic50, n) + dn);
+}
+/** Bliss independence expected combined effect: E = fa + fb − fa·fb. Bliss, Ann Appl Biol 1939. */
+export function blissExpected(fa: number, fb: number): number {
+  return fa + fb - fa * fb;
+}

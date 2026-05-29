@@ -6,6 +6,7 @@ import {
   hill, nMtoP, pTonM, chengPrusoff, keFromHalfLife, multiDoseConc,
   accumulationRatio, aucSingle, Pt,
   tumorVolume, doublingTime, survivalExp, hazardRatioExp, GrowthModel, michaelisMenten,
+  combinationIndex, synergyVerdict, hillFraction, blissExpected,
 } from '../../core/math-models';
 
 function geometric(min: number, max: number, n: number): number[] {
@@ -150,6 +151,28 @@ function linspace(min: number, max: number, n: number): number[] {
       </div>
     </div>
 
+    <!-- 7. Drug synergy -->
+    <div class="card">
+      <h3>Drug combination synergy</h3>
+      <p class="muted sub">Loewe isobologram + combination index CI = d<sub>A</sub>/Dx<sub>A</sub> + d<sub>B</sub>/Dx<sub>B</sub> (Chou–Talalay 2006); Bliss independence (1939).</p>
+      <div class="grid">
+        <div class="inputs">
+          <label>IC₅₀ drug A <input type="number" min="0.1" step="0.5" [value]="ic50A()" (input)="ic50A.set(+$any($event.target).value)" /></label>
+          <label>IC₅₀ drug B <input type="number" min="0.1" step="0.5" [value]="ic50B()" (input)="ic50B.set(+$any($event.target).value)" /></label>
+          <label>Combination dose A <input type="number" min="0" step="0.5" [value]="dA()" (input)="dA.set(+$any($event.target).value)" /></label>
+          <label>Combination dose B <input type="number" min="0" step="0.5" [value]="dB()" (input)="dB.set(+$any($event.target).value)" /></label>
+          <div class="readout">
+            CI ≈ <b class="mono" [style.color]="ciColor()">{{ ci() | number:'1.2-2' }}</b> → <b>{{ verdict() }}</b><br />
+            <span class="muted">Bliss-expected combined inhibition ≈ {{ bliss()*100 | number:'1.0-0' }}%.</span>
+          </div>
+        </div>
+        <app-line-plot [series]="isoSeries()" [markers]="isoMarkers()" [logX]="false"
+          [xmin]="0" [xmax]="ic50A()*1.3" [ymin]="0" [ymax]="ic50B()*1.3"
+          xLabel="dose A" yLabel="dose B" />
+      </div>
+      <p class="muted cap">The line is dose additivity; a point <em>below</em> it (CI&lt;1) indicates synergy, on it = additive, above = antagonism.</p>
+    </div>
+
     <p class="disclaimer">Educational models from public literature. Not clinical dosing/prognosis advice; real PK/PD, tumor dynamics, and survival require patient data and validated models.</p>
   `,
   styles: [`
@@ -263,4 +286,19 @@ export class MathPage {
     return [{ color: '#ffb454', pts }];
   });
   readonly mmMarkers = computed<Marker[]>(() => [{ x: this.kmMM(), y: this.vmax() / 2, label: 'Kₘ' }]);
+
+  // 7. Drug synergy
+  readonly ic50A = signal(10);
+  readonly ic50B = signal(8);
+  readonly dA = signal(4);
+  readonly dB = signal(2);
+  readonly ci = computed(() => combinationIndex(this.dA(), this.dB(), this.ic50A(), this.ic50B()));
+  readonly verdict = computed(() => synergyVerdict(this.ci()));
+  readonly ciColor = computed(() => this.ci() < 0.9 ? 'var(--accent)' : this.ci() <= 1.1 ? 'var(--warn)' : 'var(--danger)');
+  readonly bliss = computed(() =>
+    blissExpected(hillFraction(this.dA(), this.ic50A()), hillFraction(this.dB(), this.ic50B())));
+  readonly isoSeries = computed<Series[]>(() => [
+    { color: '#8b9bb0', pts: [{ x: this.ic50A(), y: 0 }, { x: 0, y: this.ic50B() }] }, // additivity line
+  ]);
+  readonly isoMarkers = computed<Marker[]>(() => [{ x: this.dA(), y: this.dB(), label: `CI ${this.ci().toFixed(2)}` }]);
 }
