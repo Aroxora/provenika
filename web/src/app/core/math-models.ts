@@ -104,3 +104,11 @@ export function survivalExp(t: number, medianMonths: number): number {
 export function hazardRatioExp(medianRef: number, medianTest: number): number {
   return medianRef / medianTest;
 }
+
+/**
+ * Michaelis–Menten enzyme kinetics: v = Vmax·[S] / (Km + [S]).
+ * v = Vmax/2 when [S] = Km. Ref: Michaelis & Menten 1913; Johnson & Goody 2011.
+ */
+export function michaelisMenten(s: number, vmax: number, km: number): number {
+  return (vmax * s) / (km + s);
+}

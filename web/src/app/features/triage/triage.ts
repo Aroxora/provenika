@@ -1,5 +1,6 @@
 import { Component, ElementRef, computed, effect, inject, signal, untracked, viewChild } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { TriageService } from '../../core/triage.service';
 import { TargetStore } from '../../core/target-store';
 import { TriageHit } from '../../core/models';
@@ -9,7 +10,7 @@ import { InfoTip } from '../../shared/info-tip';
 @Component({
   selector: 'app-triage',
   host: { '(document:keydown.escape)': 'close()' },
-  imports: [DecimalPipe, Scatter, InfoTip],
+  imports: [DecimalPipe, Scatter, InfoTip, RouterLink],
   template: `
     <h2>② Ligand triage <span class="muted">— rank real ChEMBL ligands</span></h2>
     <p class="muted intro">
@@ -124,7 +125,10 @@ import { InfoTip } from '../../shared/info-tip';
             <div><span class="muted">Phase</span> <b>{{ h.dev_phase }}</b></div>
           </div>
           @if (h.smiles) { <div class="smiles mono">{{ h.smiles }}</div> }
-          <a class="ext" [href]="h.chembl_url" target="_blank" rel="noopener">Open in ChEMBL ↗</a>
+          <div class="drawer-actions">
+            <a routerLink="/models" (click)="close()"><button class="primary">Model this potency →</button></a>
+            <a class="ext" [href]="h.chembl_url" target="_blank" rel="noopener">Open in ChEMBL ↗</a>
+          </div>
         </div>
       </aside>
     }
@@ -156,6 +160,7 @@ import { InfoTip } from '../../shared/info-tip';
     .props { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; font-size: 0.88rem; }
     .smiles { font-size: 0.75rem; word-break: break-all; margin: 1rem 0; padding: 0.5rem; background: var(--bg); border-radius: 6px; }
     .ext { display: inline-block; margin-top: 0.5rem; }
+    .drawer-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
   `],
 })
 export class Triage {
@@ -255,6 +260,8 @@ export class Triage {
   pick(h: TriageHit) {
     this.prevFocus = document.activeElement as HTMLElement;
     this.selected.set(h);
+    // Make this compound's potency available to the ∫ Models tab.
+    this.store.setFocusLigand({ id: h.chembl_id, pchembl: h.best_pchembl, name: h.name });
   }
 
   depiction(id: string): string {

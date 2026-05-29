@@ -1,10 +1,11 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { LinePlot, Series, Marker } from './line-plot';
+import { TargetStore } from '../../core/target-store';
 import {
   hill, nMtoP, pTonM, chengPrusoff, keFromHalfLife, multiDoseConc,
   accumulationRatio, aucSingle, Pt,
-  tumorVolume, doublingTime, survivalExp, hazardRatioExp, GrowthModel,
+  tumorVolume, doublingTime, survivalExp, hazardRatioExp, GrowthModel, michaelisMenten,
 } from '../../core/math-models';
 
 function geometric(min: number, max: number, n: number): number[] {
@@ -25,6 +26,14 @@ function linspace(min: number, max: number, n: number): number[] {
       formulas are documented in <code class="mono">core/math-models.ts</code>.
       Educational — not clinical dosing guidance.
     </p>
+
+    @if (focus(); as f) {
+      <div class="card prefill">
+        Prefilled potency from triage hit <strong class="mono">{{ f.id }}</strong>
+        (pChEMBL {{ f.pchembl | number:'1.1-1' }} → IC₅₀ {{ focusNm() | number:'1.2-2' }} nM).
+        Adjust below to explore.
+      </div>
+    }
 
     <!-- 1. Dose–response -->
     <div class="card">
@@ -125,10 +134,28 @@ function linspace(min: number, max: number, n: number): number[] {
       </div>
     </div>
 
+    <!-- 6. Michaelis–Menten -->
+    <div class="card">
+      <h3>Enzyme kinetics (Michaelis–Menten)</h3>
+      <p class="muted sub">v = V<sub>max</sub>·[S] / (K<sub>m</sub> + [S]); v = V<sub>max</sub>/2 at [S]=K<sub>m</sub>. Michaelis &amp; Menten 1913.</p>
+      <div class="grid">
+        <div class="inputs">
+          <label>V<sub>max</sub> <input type="number" min="1" [value]="vmax()" (input)="vmax.set(+$any($event.target).value)" /></label>
+          <label>K<sub>m</sub> <input type="number" min="0.1" step="0.5" [value]="kmMM()" (input)="kmMM.set(+$any($event.target).value)" /></label>
+          <div class="readout">At [S]=K<sub>m</sub>, v = <b class="mono">{{ vmax()/2 | number:'1.0-1' }}</b> (½ V<sub>max</sub>).</div>
+        </div>
+        <app-line-plot [series]="mmSeries()" [markers]="mmMarkers()" [logX]="false"
+          [xmin]="0" [xmax]="kmMM()*8" [ymin]="0" [ymax]="vmax()*1.05"
+          xLabel="[substrate]" yLabel="reaction rate v" />
+      </div>
+    </div>
+
     <p class="disclaimer">Educational models from public literature. Not clinical dosing/prognosis advice; real PK/PD, tumor dynamics, and survival require patient data and validated models.</p>
   `,
   styles: [`
     .intro { max-width: 66ch; }
+    .prefill { border-left: 3px solid var(--accent); font-size: 0.88rem; }
+    .prefill strong { color: var(--accent); }
     .sub { font-size: 0.8rem; margin: 0 0 0.7rem; }
     .grid { display: grid; grid-template-columns: 260px 1fr; gap: 1rem; align-items: start; }
     @media (max-width: 740px) { .grid { grid-template-columns: 1fr; } }
@@ -146,6 +173,22 @@ function linspace(min: number, max: number, n: number): number[] {
   `],
 })
 export class MathPage {
+  private store = inject(TargetStore);
+  // Cross-link: a ligand selected in triage prefills the potency-based models.
+  readonly focus = this.store.focusLigand;
+  readonly focusNm = computed(() => { const f = this.focus(); return f ? pTonM(f.pchembl) : 0; });
+
+  constructor() {
+    effect(() => {
+      const f = this.focus();
+      if (f) {
+        const nm = pTonM(f.pchembl);
+        this.ec50.set(Math.round(nm * 100) / 100);
+        this.ic50.set(Math.round(nm * 100) / 100);
+      }
+    });
+  }
+
   // 1. Dose-response
   readonly emax = signal(100);
   readonly ec50 = signal(50);
@@ -210,4 +253,14 @@ export class MathPage {
       { color: '#3ddc97', pts: ts.map((t) => ({ x: t, y: survivalExp(t, this.medExp()) })) },
     ];
   });
+
+  // 6. Michaelis–Menten
+  readonly vmax = signal(100);
+  readonly kmMM = signal(10);
+  readonly mmSeries = computed<Series[]>(() => {
+    const vm = this.vmax(), km = this.kmMM();
+    const pts: Pt[] = linspace(0, km * 8, 120).map((s) => ({ x: s, y: michaelisMenten(s, vm, km) }));
+    return [{ color: '#ffb454', pts }];
+  });
+  readonly mmMarkers = computed<Marker[]>(() => [{ x: this.kmMM(), y: this.vmax() / 2, label: 'Kₘ' }]);
 }
