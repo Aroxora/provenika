@@ -63,6 +63,9 @@ python3 cad/news_update.py --days 7
 ```bash
 gh secret set TAVILY_API_KEY --repo Aroxora/cancer-cure-agent   # paste key at the prompt
 ```
+## Docs
+- **[`docs/IMPLEMENTATION.md`](docs/IMPLEMENTATION.md)** — architecture, how to run/extend the CAD pipeline & web app, add a model/tab/data source, CI/CD, and deploy.
+- **[`docs/REAL-CAD-ROADMAP.md`](docs/REAL-CAD-ROADMAP.md)** — the CADD pipeline stages (implemented vs. documented) and validity caveats.
 ## Notes
 - **Triage ≠ validation.** Scores rank hypotheses; docking/ADMET/wet-lab confirm them.
 - **Cite the source.** Every figure points to a public record — verify it there.

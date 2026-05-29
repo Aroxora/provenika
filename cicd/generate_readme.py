@@ -133,6 +133,12 @@ def generate_readme(data):
       "gh secret set TAVILY_API_KEY --repo Aroxora/cancer-cure-agent   # paste key at the prompt\n"
       "```\n")
 
+    a("## Docs\n")
+    a("- **[`docs/IMPLEMENTATION.md`](docs/IMPLEMENTATION.md)** — architecture, how to run/extend "
+      "the CAD pipeline & web app, add a model/tab/data source, CI/CD, and deploy.\n"
+      "- **[`docs/REAL-CAD-ROADMAP.md`](docs/REAL-CAD-ROADMAP.md)** — the CADD pipeline stages "
+      "(implemented vs. documented) and validity caveats.\n")
+
     a("## Notes\n")
     a("- **Triage ≠ validation.** Scores rank hypotheses; docking/ADMET/wet-lab confirm them.\n"
       "- **Cite the source.** Every figure points to a public record — verify it there.\n"
