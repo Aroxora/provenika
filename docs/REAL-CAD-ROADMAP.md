@@ -17,7 +17,7 @@ limits of each stage.
 | 1. Target selection & evidence | Confirm the target is real, druggable, disease-linked; count structures & known drugs | UniProt + ChEMBL + PDB | **implemented** — `cad/target_report.py` |
 | 2. Ligand-based virtual triage | Rank known/active chemotypes by potency + drug-likeness; similarity; novelty filter; CSV export | ChEMBL REST; RDKit (descriptors, ECFP4 Tanimoto) | **implemented** — `cad/virtual_triage.py` |
 | 3. Structure acquisition | Get a 3-D receptor structure (or a confident model) | RCSB PDB + AlphaFold DB | **implemented** — `cad/fetch_structure.py` |
-| 4. Binding-site detection | Find/score druggable pockets | fpocket, P2Rank | documented |
+| 4. Binding-site / docking box | Box from the co-crystal ligand envelope (center+size for Vina) | stdlib PDB parse | **implemented** — `cad/binding_site.py` (fpocket/P2Rank still optional for apo targets) |
 | 5. Structure-based docking | Generate poses + scores for candidates vs. the pocket | AutoDock Vina + Open Babel | **implemented** — `cad/dock.py` (gated on the real binaries) |
 | 6. Cheminformatics filtering / liabilities | Drug-likeness rule sets + PAINS/Brenk structural alerts + scaffold + similarity | RDKit | **implemented** — `cad/cheminformatics.py` |
 | 7. Triage report | Combine evidence into a ranked, cited shortlist | this repo | **implemented** — `cad/run_pipeline.py` → `SUMMARY.md` |

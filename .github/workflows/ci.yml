@@ -53,6 +53,8 @@ jobs:
           python3 cad/dock.py --help >/dev/null
           python3 cad/news_update.py --help >/dev/null
           python3 cad/cheminformatics.py --help >/dev/null
+          python3 cad/binding_site.py --help >/dev/null
+          python3 cad/precompute_site_data.py --help >/dev/null
       - name: Cheminformatics (real RDKit, deterministic offline)
         run: |
           pip install --quiet rdkit

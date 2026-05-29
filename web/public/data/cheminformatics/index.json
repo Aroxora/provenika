@@ -24,6 +24,24 @@
       "slug": "BRAF",
       "file": "BRAF.json",
       "count": 25
+    },
+    {
+      "target": "KRAS G12C",
+      "slug": "KRAS_G12C",
+      "file": "KRAS_G12C.json",
+      "count": 25
+    },
+    {
+      "target": "PARP1",
+      "slug": "PARP1",
+      "file": "PARP1.json",
+      "count": 25
+    },
+    {
+      "target": "CDK4",
+      "slug": "CDK4",
+      "file": "CDK4.json",
+      "count": 25
     }
   ]
 }
