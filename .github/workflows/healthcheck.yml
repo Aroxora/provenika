@@ -1,0 +1,45 @@
+name: Health check
+
+# Verifies the live site and every upstream public API the web app depends on.
+# Fails (and surfaces in the Actions tab) if anything the app relies on goes down.
+
+on:
+  schedule:
+    - cron: "30 6 * * 3"     # weekly, Wednesday 06:30 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check live site + upstream APIs
+        run: |
+          set -u
+          fail=0
+          check() {  # name url
+            code=$(curl -s -o /dev/null -m 25 -w '%{http_code}' "$2")
+            printf '%-22s %s\n' "$1" "$code"
+            case "$code" in 2*|3*) ;; *) echo "::error::$1 returned $code ($2)"; fail=1 ;; esac
+          }
+          check_post() {  # name url json
+            code=$(curl -s -o /dev/null -m 25 -w '%{http_code}' -X POST "$2" -H 'Content-Type: application/json' --data "$3")
+            printf '%-22s %s\n' "$1" "$code"
+            case "$code" in 2*) ;; *) echo "::error::$1 returned $code ($2)"; fail=1 ;; esac
+          }
+
+          check "live site"      "https://cancer-cure-osint.web.app/"
+          check "og.svg"         "https://cancer-cure-osint.web.app/og.svg"
+          check "ChEMBL target"  "https://www.ebi.ac.uk/chembl/api/data/target/search?q=EGFR&format=json&limit=1"
+          check "ChEMBL image"   "https://www.ebi.ac.uk/chembl/api/data/image/CHEMBL25.svg"
+          check "UniProt"        "https://rest.uniprot.org/uniprotkb/search?query=gene:EGFR&format=json&size=1"
+          check "RCSB PDB"       "https://data.rcsb.org/rest/v1/core/entry/1M17"
+          check "ClinicalTrials" "https://clinicaltrials.gov/api/v2/studies?query.term=EGFR&pageSize=1"
+          check "Europe PMC"     "https://www.ebi.ac.uk/europepmc/webservices/rest/search?query=EGFR&format=json&pageSize=1"
+          check "Reactome"       "https://reactome.org/ContentService/search/query?query=EGFR&types=Pathway"
+          check_post "Open Targets" "https://api.platform.opentargets.org/api/v4/graphql" '{"query":"{search(queryString:\"EGFR\",entityNames:[\"target\"]){hits{id}}}"}'
+
+          exit $fail
