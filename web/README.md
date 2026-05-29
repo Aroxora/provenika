@@ -4,15 +4,21 @@ Interactive, single-page Angular app that runs the CADD/OSINT triage **entirely 
 browser** against free public APIs (ChEMBL, UniProt, RCSB PDB, ClinicalTrials.gov — all
 CORS-enabled, no key, no backend). It mirrors the `cad/` Python tools:
 
-| Tab | Does | Python equivalent |
-|-----|------|-------------------|
+| Tab | Does | Source / Python equivalent |
+|-----|------|----------------------------|
+| Overview | How-it-works, clickable pipeline map, methods & sources, verified 14-term glossary | — |
 | ① Dossier | Druggability snapshot (function, structures, ligand depth, known drugs) | `cad/target_report.py` |
-| ② Ligand triage | Rank real ChEMBL ligands by potency + drug-likeness; sort; CSV export | `cad/virtual_triage.py` |
+| ② Ligand triage | Rank real ChEMBL ligands by potency + drug-likeness; interactive potency×drug-likeness scatter; 2-D molecule depictions; sort; CSV export | `cad/virtual_triage.py` |
 | ③ Structure | Best PDB + embedded RCSB Mol* 3-D viewer | `cad/fetch_structure.py` |
 | ④ Cost-benefit | Approval probability, cost/time, risk-adjusted return, verdict | `cad/cost_benefit.py` |
-| Trials | Live ClinicalTrials.gov search | — |
+| Literature | Recent/most-cited publications | Europe PMC |
+| Pathways | Curated human pathways + diagrams | Reactome |
+| Trials | Live clinical trials | ClinicalTrials.gov v2 |
+| Report | Consolidated, downloadable brief | `cad/run_pipeline.py` |
 
-Type a target (e.g. `EGFR`, `BTK`, `KRAS G12C`) once; every tab operates on it.
+Type a target (e.g. `EGFR`, `BTK`, `KRAS G12C`) once; every tab operates on it, and the
+choice is preserved in a shareable `?t=` URL. Educational content (glossary, methods) is
+adversarially fact-checked; metric labels carry inline definitions.
 
 ## Develop
 

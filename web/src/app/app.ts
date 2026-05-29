@@ -1,5 +1,5 @@
-import { Component, inject, signal } from '@angular/core';
-import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { Component, effect, inject, signal } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute } from '@angular/router';
 import { TargetStore } from './core/target-store';
 
 @Component({
@@ -10,10 +10,28 @@ import { TargetStore } from './core/target-store';
 })
 export class App {
   private store = inject(TargetStore);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
   readonly target = this.store.target;
   readonly draft = signal(this.store.target());
 
   readonly examples = ['EGFR', 'BTK', 'KRAS G12C', 'ALK', 'BRAF', 'PARP1', 'CDK4'];
+
+  constructor() {
+    // Read shareable target from ?t= on load.
+    const fromUrl = this.route.snapshot.queryParamMap.get('t');
+    if (fromUrl) {
+      this.store.set(fromUrl);
+      this.draft.set(fromUrl);
+    }
+    // Keep ?t= in sync so links are shareable / reload-safe.
+    effect(() => {
+      const t = this.store.target();
+      if (this.route.snapshot.queryParamMap.get('t') !== t) {
+        this.router.navigate([], { queryParams: { t }, queryParamsHandling: 'merge', replaceUrl: true });
+      }
+    });
+  }
 
   submit(value: string) {
     this.store.set(value);
