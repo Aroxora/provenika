@@ -1,0 +1,279 @@
+{
+  "target": "EGFR",
+  "targetId": "CHEMBL203",
+  "targetName": "Epidermal growth factor receptor",
+  "generated": "2026-05-29",
+  "count": 25,
+  "byChembl": {
+    "CHEMBL29197": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.125,
+      "clean": true
+    },
+    "CHEMBL176582": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3cc4nc[nH]c4cc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.062,
+      "clean": true
+    },
+    "CHEMBL53428": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccncc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.133,
+      "clean": true
+    },
+    "CHEMBL328106": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.125,
+      "clean": true
+    },
+    "CHEMBL54400": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccncc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.071,
+      "clean": true
+    },
+    "CHEMBL51853": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true
+    },
+    "CHEMBL174426": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3cc4[nH]cnc4cc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.062,
+      "clean": true
+    },
+    "CHEMBL420624": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "aniline"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true
+    },
+    "CHEMBL188762": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.118,
+      "clean": true
+    },
+    "CHEMBL166154": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.071,
+      "clean": true
+    },
+    "CHEMBL474147": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "C1=CC2C(=C1)N=CN=C2Nc1ccccc1",
+      "eganOk": true,
+      "fractionCsp3": 0.118,
+      "clean": true
+    },
+    "CHEMBL285063": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true
+    },
+    "CHEMBL7917": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.125,
+      "clean": true
+    },
+    "CHEMBL316064": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.176,
+      "clean": true
+    },
+    "CHEMBL516022": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "C1=NC=C2N=CN=C(Nc3ccccc3)C12",
+      "eganOk": true,
+      "fractionCsp3": 0.125,
+      "clean": true
+    },
+    "CHEMBL327307": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.125,
+      "clean": true
+    },
+    "CHEMBL592617": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.059,
+      "clean": true
+    },
+    "CHEMBL334697": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.059,
+      "clean": true
+    },
+    "CHEMBL161956": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.188,
+      "clean": true
+    },
+    "CHEMBL52913": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true
+    },
+    "CHEMBL162821": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.133,
+      "clean": true
+    },
+    "CHEMBL328216": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "aniline"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true
+    },
+    "CHEMBL328955": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "aniline"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true
+    },
+    "CHEMBL522134": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Cc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.105,
+      "clean": true
+    },
+    "CHEMBL491083": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.111,
+      "clean": true
+    }
+  }
+}

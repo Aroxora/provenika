@@ -2,6 +2,7 @@ import { Component, ElementRef, computed, effect, inject, signal, untracked, vie
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TriageService } from '../../core/triage.service';
+import { CheminformaticsService, ChemInfo } from '../../core/cheminformatics.service';
 import { TargetStore } from '../../core/target-store';
 import { TriageHit } from '../../core/models';
 import { Scatter } from './scatter';
@@ -131,6 +132,17 @@ import { InfoTip } from '../../shared/info-tip';
             <span class="pill" [class.blue]="bbbLikely(h) === true"
                   title="CNS-penetration heuristic: TPSA &lt;90 Å² and MW &lt;450 Da">BBB {{ bbbLikely(h) === null ? 'n/a' : bbbLikely(h) ? 'likely' : 'unlikely' }}</span>
           </div>
+          @if (chem(h); as ci) {
+            <div class="chemflags">
+              <span class="pill" [class.green]="ci.painsAlerts === 0" [class.danger-pill]="ci.painsAlerts > 0"
+                    title="Pan-assay interference alerts (Baell 2010), via RDKit">PAINS {{ ci.painsAlerts }}</span>
+              <span class="pill" [class.green]="ci.brenkAlerts === 0" [class.warn]="ci.brenkAlerts > 0"
+                    title="Brenk unwanted-fragment alerts (Brenk 2008), via RDKit">Brenk {{ ci.brenkAlerts }}</span>
+              <span class="pill" [class.green]="ci.eganOk" title="Egan oral-absorption rule (Egan 2000)">Egan {{ ci.eganOk ? 'pass' : 'fail' }}</span>
+              <span class="pill" title="RDKit-verified clean: Ro5+Veber, no PAINS">{{ ci.clean ? '✓ clean' : 'flagged' }}</span>
+            </div>
+            <div class="scaffold"><span class="muted">Bemis–Murcko scaffold</span><br /><span class="mono">{{ ci.scaffold }}</span></div>
+          }
           @if (h.smiles) { <div class="smiles mono">{{ h.smiles }}</div> }
           <div class="drawer-actions">
             <a routerLink="/models" (click)="close()"><button class="primary">Model this potency →</button></a>
@@ -166,6 +178,9 @@ import { InfoTip } from '../../shared/info-tip';
     .depiction { width: 100%; max-width: 340px; background: #fff; border-radius: 8px; margin: 0.5rem 0 1rem; }
     .props { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem 1rem; font-size: 0.88rem; }
     .flags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.8rem; }
+    .chemflags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
+    .pill.danger-pill { color: var(--danger); border-color: #5e1f1f; background: #240e0e; }
+    .scaffold { margin-top: 0.7rem; font-size: 0.78rem; word-break: break-all; }
     .smiles { font-size: 0.75rem; word-break: break-all; margin: 1rem 0; padding: 0.5rem; background: var(--bg); border-radius: 6px; }
     .ext { display: inline-block; margin-top: 0.5rem; }
     .drawer-actions { display: flex; align-items: center; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
@@ -173,8 +188,10 @@ import { InfoTip } from '../../shared/info-tip';
 })
 export class Triage {
   private svc = inject(TriageService);
+  private chemSvc = inject(CheminformaticsService);
   private store = inject(TargetStore);
   readonly target = this.store.target;
+  readonly chemInfo = signal<Map<string, ChemInfo> | null>(null);
 
   readonly minPchembl = signal(7);
   readonly limit = signal(30);
@@ -259,6 +276,9 @@ export class Triage {
       if (stale()) return;
       this.targetName.set(res.targetName);
       this.hits.set(res.hits);
+      // Load precomputed RDKit cheminformatics for this target (if available).
+      this.chemInfo.set(null);
+      this.chemSvc.forTarget(name).then((m) => { if (!stale()) this.chemInfo.set(m); });
     } catch (e: any) {
       if (stale()) return;
       this.hits.set([]);
@@ -289,6 +309,7 @@ export class Triage {
     if (h.psa == null || h.mw == null) return null;
     return h.psa < 90 && h.mw < 450;
   }
+  chem(h: TriageHit): ChemInfo | undefined { return this.chemInfo()?.get(h.chembl_id); }
 
   sortBy(k: keyof TriageHit) {
     if (this.sortKey() === k) this.sortDir.set(this.sortDir() === 1 ? -1 : 1);

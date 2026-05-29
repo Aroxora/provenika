@@ -1,0 +1,29 @@
+{
+  "generated": "2026-05-29",
+  "targets": [
+    {
+      "target": "EGFR",
+      "slug": "EGFR",
+      "file": "EGFR.json",
+      "count": 25
+    },
+    {
+      "target": "BTK",
+      "slug": "BTK",
+      "file": "BTK.json",
+      "count": 25
+    },
+    {
+      "target": "ALK",
+      "slug": "ALK",
+      "file": "ALK.json",
+      "count": 25
+    },
+    {
+      "target": "BRAF",
+      "slug": "BRAF",
+      "file": "BRAF.json",
+      "count": 25
+    }
+  ]
+}

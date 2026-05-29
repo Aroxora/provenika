@@ -1,0 +1,46 @@
+name: Cheminformatics precompute
+
+# Regenerates web/public/data/cheminformatics/*.json (RDKit PAINS/Brenk/scaffold
+# for curated targets) since the browser can't run RDKit. Commits any changes.
+
+on:
+  schedule:
+    - cron: "0 7 * * 4"        # weekly, Thursday 07:00 UTC
+  workflow_dispatch:
+    inputs:
+      targets:
+        description: "Space-separated target list (optional)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cheminformatics-precompute
+  cancel-in-progress: false
+
+jobs:
+  precompute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install --quiet rdkit
+      - name: Precompute cheminformatics JSON
+        run: |
+          python3 cad/precompute_site_data.py --stamp "$(date -u +%F)" \
+            ${{ github.event.inputs.targets && format('--targets {0}', github.event.inputs.targets) || '' }}
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain web/public/data/cheminformatics)" ]; then
+            git add web/public/data/cheminformatics
+            git commit -m "chore(cheminformatics): refresh precomputed site data [skip ci]"
+            git push
+          else
+            echo "No cheminformatics changes."
+          fi
