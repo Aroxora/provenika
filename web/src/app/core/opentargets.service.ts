@@ -11,6 +11,10 @@ export interface DiseaseTargets {
   count: number;
   targets: AssociatedTarget[];
 }
+export interface Tractability { modality: string; top: string; tier: 'approved' | 'clinical' | 'discovery'; }
+
+const MODALITY_NAMES: Record<string, string> = { SM: 'Small molecule', AB: 'Antibody', PR: 'PROTAC / degrader', OC: 'Other clinical' };
+const HEADLINE = ['Approved Drug', 'Advanced Clinical', 'Phase 1 Clinical'];
 
 /** Open Targets Platform GraphQL (CORS-enabled, no key) — disease → druggable targets. */
 @Injectable({ providedIn: 'root' })
@@ -48,5 +52,28 @@ export class OpenTargetsService {
         score: r.score,
       })),
     };
+  }
+
+  /** Druggability tractability by modality (highest achieved bucket) for a gene symbol. */
+  async tractability(symbol: string): Promise<Tractability[]> {
+    const esc = symbol.replace(/"/g, '\\"');
+    const sd = await this.gql<{ search: { hits: { id: string }[] } }>(
+      `{ search(queryString:"${esc}", entityNames:["target"]) { hits { id } } }`,
+    );
+    const id = sd?.search?.hits?.[0]?.id;
+    if (!id) return [];
+    const data = await this.gql<{ target: { tractability: { label: string; modality: string; value: boolean }[] } }>(
+      `{ target(ensemblId:"${id}") { tractability { label modality value } } }`,
+    );
+    const rows = (data?.target?.tractability ?? []).filter((r) => r.value);
+    const out: Tractability[] = [];
+    for (const code of ['SM', 'AB', 'PR', 'OC']) {
+      const labels = rows.filter((r) => r.modality === code).map((r) => r.label);
+      if (!labels.length) continue;
+      const top = HEADLINE.find((h) => labels.includes(h)) ?? labels[0];
+      const tier = top === 'Approved Drug' ? 'approved' : HEADLINE.includes(top) ? 'clinical' : 'discovery';
+      out.push({ modality: MODALITY_NAMES[code] ?? code, top, tier });
+    }
+    return out;
   }
 }

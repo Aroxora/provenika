@@ -2,6 +2,7 @@ import { Component, effect, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { DossierService } from '../../core/dossier.service';
+import { OpenTargetsService, Tractability } from '../../core/opentargets.service';
 import { TargetStore } from '../../core/target-store';
 import { Dossier as DossierModel } from '../../core/models';
 
@@ -54,6 +55,18 @@ import { Dossier as DossierModel } from '../../core/models';
         </div>
       </div>
 
+      @if (tractability().length) {
+        <div class="card tract">
+          <strong>Druggability tractability</strong> <span class="muted">(Open Targets)</span>
+          <div class="tlist">
+            @for (t of tractability(); track t.modality) {
+              <span class="pill" [class.green]="t.tier === 'approved'" [class.blue]="t.tier === 'clinical'"
+                    [title]="t.modality + ': ' + t.top">{{ t.modality }} · {{ t.top }}</span>
+            }
+          </div>
+        </div>
+      }
+
       <div class="card readout">
         <strong>Read-out:</strong> {{ d.readout }}
         <div class="actions">
@@ -94,15 +107,19 @@ import { Dossier as DossierModel } from '../../core/models';
     .big { font-size: 1.9rem; font-weight: 700; color: var(--accent); }
     .readout { margin-bottom: 0.9rem; }
     .actions { display: flex; gap: 0.5rem; margin-top: 0.8rem; }
+    .tract { margin-bottom: 0.9rem; }
+    .tlist { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.5rem; }
   `],
 })
 export class Dossier {
   private svc = inject(DossierService);
+  private ot = inject(OpenTargetsService);
   private store = inject(TargetStore);
   readonly target = this.store.target;
   readonly loading = signal(false);
   readonly error = signal('');
   readonly data = signal<DossierModel | null>(null);
+  readonly tractability = signal<Tractability[]>([]);
 
   constructor() {
     effect(() => {
@@ -114,6 +131,9 @@ export class Dossier {
   private async fetch(name: string) {
     this.loading.set(true);
     this.error.set('');
+    this.tractability.set([]);
+    // Tractability is supplementary — fetch in parallel, don't block/fail the dossier on it.
+    this.ot.tractability(name).then((t) => this.tractability.set(t)).catch(() => this.tractability.set([]));
     try {
       this.data.set(await this.svc.build(name));
     } catch (e: any) {
