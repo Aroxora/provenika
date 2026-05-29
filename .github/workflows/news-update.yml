@@ -1,0 +1,46 @@
+name: News auto-update
+
+# Pulls recent target/modality intelligence into cad/intel/ via Tavily.
+# The Tavily key lives ONLY in repo Actions secrets (TAVILY_API_KEY), never in the repo.
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"        # every Monday 06:00 UTC
+  workflow_dispatch:             # run on demand
+  push:
+    branches: [main]
+    paths:
+      - "cad/watchlist.txt"      # refresh when the watchlist changes
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-update
+  cancel-in-progress: false
+
+jobs:
+  digest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate intelligence digest
+        env:
+          TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        run: python3 cad/news_update.py --days 7
+
+      - name: Commit digest if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain cad/intel)" ]; then
+            git add cad/intel
+            git commit -m "chore(intel): refresh news digest [skip ci]"
+            git push
+          else
+            echo "No digest changes."
+          fi

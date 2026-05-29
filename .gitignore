@@ -15,6 +15,12 @@ venv/
 # CI/CD run logs
 cicd/logs/
 
+# CAD pipeline run artifacts (keep cad/intel digests, which CI commits)
+runs/
+structures/
+docking/
+*.pdbqt
+
 # Test coverage
 coverage/
 

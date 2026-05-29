@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-test:
+    name: Build, type-check & test (Node)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - name: Build (tsc)
+        run: npm run build
+      - name: Type-check
+        run: npx tsc --noEmit
+      - name: Test
+        run: npm test
+
+  cad-tools:
+    name: CAD tools (Python)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Syntax-check all Python
+        run: python -m compileall -q cad cicd
+      - name: Smoke-test cost-benefit (offline, deterministic)
+        run: |
+          python3 cad/cost_benefit.py --modality small_molecule --phase phase1 \
+            --incidence 60000 --price 150000 --json
+      - name: Smoke-test CLI help paths
+        run: |
+          python3 cad/virtual_triage.py --help >/dev/null
+          python3 cad/target_report.py --help >/dev/null
+          python3 cad/fetch_structure.py --help >/dev/null
+          python3 cad/dock.py --help >/dev/null
+          python3 cad/news_update.py --help >/dev/null

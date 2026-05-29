@@ -1,0 +1,8 @@
+# Tavily news watchlist — one search query per line. Lines starting with # are ignored.
+# Refreshed weekly by .github/workflows/news-update.yml into cad/intel/.
+oncology drug FDA approval
+KRAS inhibitor clinical trial results
+EGFR inhibitor resistance new drug
+antibody-drug conjugate oncology trial
+CAR-T cell therapy solid tumor
+targeted protein degradation PROTAC oncology
