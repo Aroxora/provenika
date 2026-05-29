@@ -22,6 +22,7 @@
 
 .search { display: flex; align-items: center; gap: 0.5rem; }
 .search input { min-width: 240px; }
+.search .copy { white-space: nowrap; }
 .search-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
 
 .examples {

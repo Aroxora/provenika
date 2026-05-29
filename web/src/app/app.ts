@@ -41,6 +41,8 @@ export class App {
     });
   }
 
+  readonly copied = signal(false);
+
   submit(value: string) {
     this.store.set(value);
   }
@@ -48,5 +50,15 @@ export class App {
   pick(name: string) {
     this.draft.set(name);
     this.store.set(name);
+  }
+
+  async copyLink() {
+    try {
+      await navigator.clipboard.writeText(location.href);
+      this.copied.set(true);
+      setTimeout(() => this.copied.set(false), 1600);
+    } catch {
+      /* clipboard blocked (e.g. insecure context) — no-op */
+    }
   }
 }
