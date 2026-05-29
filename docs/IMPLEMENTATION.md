@@ -137,8 +137,10 @@ web/src/app/
 
 ### 5.2 Routes / tabs
 
-`overview` (landing) · `dossier` · `triage` · `structure` · `cost-benefit` · `models` ·
-`literature` · `pathways` · `trials` · `report`. All lazy-loaded in `app.routes.ts`.
+`overview` (landing) · `disease` (any disease → targets, Open Targets) · `dossier` (incl. Open
+Targets druggability tractability) · `triage` · `structure` · `cost-benefit` · `models` (8
+interactive models) · `literature` · `pathways` · `trials` · `report`. All lazy-loaded in
+`app.routes.ts`.
 
 ### 5.3 Shared state & cross-linking
 
@@ -148,6 +150,12 @@ web/src/app/
   shareable `?t=` query param in `app.ts`.
 - `focusLigand` — a compound the user drilled into in **triage**; the **models** tab reads it to
   prefill the dose-response EC50 and the potency converter. This is the rank→inspect→model loop.
+
+End-to-end flow: **disease** (Open Targets association) → click a target → `store.set(symbol)` →
+**dossier** (incl. tractability) → **triage** → click a hit → `focusLigand` → **models**, with
+literature / pathways / structure / trials / cost-benefit available throughout. Every
+effect-driven fetch guards against stale responses (capture the requested target/query, discard
+the result if it changed mid-flight) so rapid switching can't show mismatched data.
 
 ### 5.4 Patterns to follow
 
