@@ -144,6 +144,13 @@ import { InfoTip } from '../../shared/info-tip';
               <span class="pill" [class.green]="ci.eganOk" title="Egan oral-absorption rule (Egan 2000)">Egan {{ ci.eganOk ? 'pass' : 'fail' }}</span>
               <span class="pill" title="RDKit-verified clean: Ro5+Veber, no PAINS">{{ ci.clean ? '✓ clean' : 'flagged' }}</span>
             </div>
+            @if (ci.le != null || ci.lle != null) {
+              <div class="effmetrics">
+                @if (ci.le != null) { <span><span class="muted">LE</span> <b class="mono">{{ ci.le | number:'1.2-2' }}</b></span> }
+                @if (ci.lle != null) { <span><span class="muted">LLE</span> <b class="mono">{{ ci.lle | number:'1.2-2' }}</b></span> }
+                <span class="muted tiny">LE=1.37·pChEMBL/heavy-atoms; LLE=pChEMBL−cLogP</span>
+              </div>
+            }
             <div class="scaffold"><span class="muted">Bemis–Murcko scaffold</span><br /><span class="mono">{{ ci.scaffold }}</span></div>
           }
           @if (h.smiles) { <div class="smiles mono">{{ h.smiles }}</div> }
@@ -183,6 +190,8 @@ import { InfoTip } from '../../shared/info-tip';
     .flags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.8rem; }
     .chemflags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 0.6rem; }
     .pill.danger-pill { color: var(--danger); border-color: #5e1f1f; background: #240e0e; }
+    .effmetrics { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; margin-top: 0.7rem; font-size: 0.9rem; }
+    .effmetrics .tiny { font-size: 0.68rem; }
     .scaffold { margin-top: 0.7rem; font-size: 0.78rem; word-break: break-all; }
     .smiles { font-size: 0.75rem; word-break: break-all; margin: 1rem 0; padding: 0.5rem; background: var(--bg); border-radius: 6px; }
     .ext { display: inline-block; margin-top: 0.5rem; }

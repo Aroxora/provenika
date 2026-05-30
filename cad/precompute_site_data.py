@@ -86,12 +86,18 @@ def main(argv=None) -> int:
             a = analyze(smi, pains, brenk)
             if not a:
                 continue
-            by_chembl[cid] = {
+            pchembl = hit.get("best_pchembl")
+            entry = {
                 "painsAlerts": a["pains_alerts"], "pains": a["pains"],
                 "brenkAlerts": a["brenk_alerts"], "brenk": a["brenk"],
                 "scaffold": a["murcko_scaffold"], "eganOk": a["egan_ok"],
                 "fractionCsp3": a["fraction_csp3"], "clean": a["clean"],
             }
+            if isinstance(pchembl, (int, float)):
+                from cheminformatics import ligand_efficiency, lipophilic_efficiency
+                entry["le"] = ligand_efficiency(pchembl, a["heavy_atoms"])
+                entry["lle"] = lipophilic_efficiency(pchembl, a["clogp"])
+            by_chembl[cid] = entry
         if not by_chembl:
             continue
         payload = {

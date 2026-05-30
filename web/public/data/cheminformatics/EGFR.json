@@ -13,7 +13,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.125,
-      "clean": true
+      "clean": true,
+      "le": 0.66,
+      "lle": 6.45
     },
     "CHEMBL176582": {
       "painsAlerts": 0,
@@ -23,7 +25,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cc4nc[nH]c4cc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.062,
-      "clean": true
+      "clean": true,
+      "le": 0.685,
+      "lle": 6.98
     },
     "CHEMBL53428": {
       "painsAlerts": 0,
@@ -33,7 +37,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccncc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.133,
-      "clean": true
+      "clean": true,
+      "le": 0.656,
+      "lle": 6.45
     },
     "CHEMBL328106": {
       "painsAlerts": 0,
@@ -43,7 +49,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.125,
-      "clean": true
+      "clean": true,
+      "le": 0.631,
+      "lle": 5.99
     },
     "CHEMBL54400": {
       "painsAlerts": 0,
@@ -53,7 +61,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccncc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.071,
-      "clean": true
+      "clean": true,
+      "le": 0.677,
+      "lle": 6.32
     },
     "CHEMBL51853": {
       "painsAlerts": 0,
@@ -63,7 +73,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.0,
-      "clean": true
+      "clean": true,
+      "le": 0.713,
+      "lle": 6.78
     },
     "CHEMBL174426": {
       "painsAlerts": 0,
@@ -73,7 +85,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cc4[nH]cnc4cc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.062,
-      "clean": true
+      "clean": true,
+      "le": 0.66,
+      "lle": 6.58
     },
     "CHEMBL420624": {
       "painsAlerts": 0,
@@ -85,7 +99,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.0,
-      "clean": true
+      "clean": true,
+      "le": 0.721,
+      "lle": 6.28
     },
     "CHEMBL188762": {
       "painsAlerts": 0,
@@ -95,7 +111,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.118,
-      "clean": true
+      "clean": true,
+      "le": 0.596,
+      "lle": 5.52
     },
     "CHEMBL166154": {
       "painsAlerts": 0,
@@ -105,7 +123,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.071,
-      "clean": true
+      "clean": true,
+      "le": 0.666,
+      "lle": 6.26
     },
     "CHEMBL474147": {
       "painsAlerts": 0,
@@ -117,7 +137,9 @@
       "scaffold": "C1=CC2C(=C1)N=CN=C2Nc1ccccc1",
       "eganOk": true,
       "fractionCsp3": 0.118,
-      "clean": true
+      "clean": true,
+      "le": 0.584,
+      "lle": 6.83
     },
     "CHEMBL285063": {
       "painsAlerts": 0,
@@ -129,7 +151,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.0,
-      "clean": true
+      "clean": true,
+      "le": 0.602,
+      "lle": 5.84
     },
     "CHEMBL7917": {
       "painsAlerts": 0,
@@ -139,7 +163,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.125,
-      "clean": true
+      "clean": true,
+      "le": 0.592,
+      "lle": 5.47
     },
     "CHEMBL316064": {
       "painsAlerts": 0,
@@ -149,7 +175,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.176,
-      "clean": true
+      "clean": true,
+      "le": 0.527,
+      "lle": 5.21
     },
     "CHEMBL516022": {
       "painsAlerts": 0,
@@ -161,7 +189,9 @@
       "scaffold": "C1=NC=C2N=CN=C(Nc3ccccc3)C12",
       "eganOk": true,
       "fractionCsp3": 0.125,
-      "clean": true
+      "clean": true,
+      "le": 0.58,
+      "lle": 7.3
     },
     "CHEMBL327307": {
       "painsAlerts": 0,
@@ -171,7 +201,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.125,
-      "clean": true
+      "clean": true,
+      "le": 0.604,
+      "lle": 5.22
     },
     "CHEMBL592617": {
       "painsAlerts": 0,
@@ -181,7 +213,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.059,
-      "clean": true
+      "clean": true,
+      "le": 0.558,
+      "lle": 5.78
     },
     "CHEMBL334697": {
       "painsAlerts": 0,
@@ -193,7 +227,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.059,
-      "clean": true
+      "clean": true,
+      "le": 0.558,
+      "lle": 6.09
     },
     "CHEMBL161956": {
       "painsAlerts": 0,
@@ -203,7 +239,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.188,
-      "clean": true
+      "clean": true,
+      "le": 0.575,
+      "lle": 6.7
     },
     "CHEMBL52913": {
       "painsAlerts": 0,
@@ -215,7 +253,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.0,
-      "clean": true
+      "clean": true,
+      "le": 0.572,
+      "lle": 5.45
     },
     "CHEMBL162821": {
       "painsAlerts": 0,
@@ -225,7 +265,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.133,
-      "clean": true
+      "clean": true,
+      "le": 0.64,
+      "lle": 6.23
     },
     "CHEMBL328216": {
       "painsAlerts": 0,
@@ -237,7 +279,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.0,
-      "clean": true
+      "clean": true,
+      "le": 0.68,
+      "lle": 6.62
     },
     "CHEMBL328955": {
       "painsAlerts": 0,
@@ -249,7 +293,9 @@
       "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.0,
-      "clean": true
+      "clean": true,
+      "le": 0.692,
+      "lle": 5.99
     },
     "CHEMBL522134": {
       "painsAlerts": 0,
@@ -261,7 +307,9 @@
       "scaffold": "c1ccc(Cc2ncnc3ccccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.105,
-      "clean": true
+      "clean": true,
+      "le": 0.559,
+      "lle": 5.73
     },
     "CHEMBL491083": {
       "painsAlerts": 0,
@@ -273,7 +321,9 @@
       "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
       "eganOk": true,
       "fractionCsp3": 0.111,
-      "clean": true
+      "clean": true,
+      "le": 0.558,
+      "lle": 5.38
     }
   }
 }

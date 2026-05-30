@@ -6,6 +6,7 @@ export interface ChemInfo {
   painsAlerts: number; pains: string[];
   brenkAlerts: number; brenk: string[];
   scaffold: string; eganOk: boolean; fractionCsp3: number; clean: boolean;
+  le?: number; lle?: number;
 }
 
 /**

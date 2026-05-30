@@ -68,6 +68,7 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
     arom = rdMolDescriptors.CalcNumAromaticRings(mol)
     fsp3 = rdMolDescriptors.CalcFractionCSP3(mol)
     qed = QED.qed(mol)
+    heavy = mol.GetNumHeavyAtoms()
 
     # Drug-likeness rule sets
     ro5_viol = sum([mw > 500, logp > 5, hbd > 5, hba > 10])
@@ -82,7 +83,7 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
     return {
         "smiles": Chem.MolToSmiles(mol),
         "mw": round(mw, 1), "clogp": round(logp, 2), "tpsa": round(tpsa, 1),
-        "hbd": hbd, "hba": hba, "rotb": rotb, "aromatic_rings": arom,
+        "hbd": hbd, "hba": hba, "rotb": rotb, "aromatic_rings": arom, "heavy_atoms": heavy,
         "fraction_csp3": round(fsp3, 3), "qed": round(qed, 3),
         "ro5_violations": ro5_viol, "lipinski_ok": ro5, "veber_ok": veber, "egan_ok": egan,
         "pains_alerts": len(pains_hits), "pains": pains_hits[:5],
@@ -102,17 +103,35 @@ def tanimoto(query: str, smiles: str) -> float | None:
     return round(DataStructs.TanimotoSimilarity(fq, fm), 3)
 
 
-def collect_smiles(args) -> list[tuple[str, str]]:
-    """Return list of (id, smiles)."""
+def ligand_efficiency(pchembl: float, heavy_atoms: int) -> float | None:
+    """LE = 1.37 * pChEMBL / heavy atoms (kcal/mol per heavy atom). Hopkins 2004."""
+    return round(1.37 * pchembl / heavy_atoms, 3) if heavy_atoms else None
+
+
+def lipophilic_efficiency(pchembl: float, clogp: float) -> float:
+    """LLE (LipE) = pChEMBL - cLogP. Leeson & Springthorpe 2007."""
+    return round(pchembl - clogp, 2)
+
+
+def _f(v) -> float | None:
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return None
+
+
+def collect_smiles(args) -> list[tuple[str, str, float | None]]:
+    """Return list of (id, smiles, pchembl|None)."""
     if args.smiles:
-        return [(args.smiles, args.smiles)]
-    rows: list[tuple[str, str]] = []
+        return [(args.smiles, args.smiles, args.pchembl)]
+    rows: list[tuple[str, str, float | None]] = []
     with open(args.csv, newline="") as fh:
         rdr = csv.DictReader(fh)
         for r in rdr:
             smi = (r.get(args.smiles_col) or "").strip()
             if smi:
-                rows.append((r.get("chembl_id") or r.get("name") or smi, smi))
+                rows.append((r.get("chembl_id") or r.get("name") or smi, smi,
+                             _f(r.get("best_pchembl") or r.get("pchembl"))))
     return rows
 
 
@@ -127,18 +146,23 @@ def run(args) -> int:
         return 1
 
     results = []
-    for ident, smi in items:
+    for ident, smi, pchembl in items:
         a = analyze(smi, pains, brenk)
         if a is None:
             continue
         a["id"] = ident
+        if pchembl is not None:
+            a["pchembl"] = pchembl
+            a["le"] = ligand_efficiency(pchembl, a["heavy_atoms"])
+            a["lle"] = lipophilic_efficiency(pchembl, a["clogp"])
         if args.query:
             a["similarity"] = tanimoto(args.query, smi)
         results.append(a)
 
     if args.out:
         cols = ["id", "smiles", "mw", "clogp", "tpsa", "hbd", "hba", "rotb", "aromatic_rings",
-                "fraction_csp3", "qed", "ro5_violations", "lipinski_ok", "veber_ok", "egan_ok",
+                "heavy_atoms", "fraction_csp3", "qed", "pchembl", "le", "lle",
+                "ro5_violations", "lipinski_ok", "veber_ok", "egan_ok",
                 "pains_alerts", "brenk_alerts", "murcko_scaffold", "clean"]
         if args.query:
             cols.append("similarity")
@@ -156,21 +180,31 @@ def run(args) -> int:
                                         "Hypothesis-generation only; not validated, not medical advice."}, indent=2))
         return 0
 
+    has_le = any("le" in r for r in results)
     print(f"\nCheminformatics analysis ({len(results)} molecule(s)):\n")
-    hdr = f"{'id':<16} {'MW':>6} {'cLogP':>6} {'TPSA':>6} {'QED':>5} {'Ro5':>4} {'Veb':>4} {'PAINS':>5} {'Brenk':>5}"
+    hdr = f"{'id':<16} {'MW':>6} {'cLogP':>6} {'TPSA':>6} {'QED':>5}"
+    if has_le:
+        hdr += f" {'LE':>5} {'LLE':>6}"
+    hdr += f" {'Ro5':>4} {'Veb':>4} {'PAINS':>5} {'Brenk':>5}"
     if args.query:
         hdr += f" {'Sim':>5}"
     print(hdr)
     print("-" * len(hdr))
     for r in results:
         line = (f"{str(r['id'])[:16]:<16} {r['mw']:>6.0f} {r['clogp']:>6.2f} {r['tpsa']:>6.0f} "
-                f"{r['qed']:>5.2f} {('ok' if r['lipinski_ok'] else 'X'):>4} "
-                f"{('ok' if r['veber_ok'] else 'X'):>4} {r['pains_alerts']:>5} {r['brenk_alerts']:>5}")
+                f"{r['qed']:>5.2f}")
+        if has_le:
+            le = r.get("le"); lle = r.get("lle")
+            line += f" {(le if le is not None else 0):>5.2f} {(lle if lle is not None else 0):>6.2f}"
+        line += (f" {('ok' if r['lipinski_ok'] else 'X'):>4} "
+                 f"{('ok' if r['veber_ok'] else 'X'):>4} {r['pains_alerts']:>5} {r['brenk_alerts']:>5}")
         if args.query:
             line += f" {(r.get('similarity') or 0):>5.2f}"
         print(line)
     clean = sum(1 for r in results if r["clean"])
     print(f"\n{clean}/{len(results)} pass Ro5 + Veber with no PAINS alerts.")
+    if has_le:
+        print("LE = 1.37·pChEMBL/heavy-atoms (Hopkins 2004); LLE = pChEMBL − cLogP (Leeson 2007). Higher = better.")
     print("PAINS = pan-assay interference (Baell 2010); Brenk = unwanted-fragment alerts (Brenk 2008).")
     print("⚠️  Computational triage/filtering — needs assay/wet-lab confirmation. Not medical advice.")
     return 0
@@ -183,6 +217,7 @@ def main(argv=None) -> int:
     g.add_argument("--csv", help="CSV with a SMILES column (e.g. virtual_triage.py output).")
     p.add_argument("--smiles-col", default="smiles", help="SMILES column name in --csv (default: smiles).")
     p.add_argument("--query", help="Optional SMILES; also report ECFP4 Tanimoto similarity to it.")
+    p.add_argument("--pchembl", type=float, help="pChEMBL for --smiles, to compute LE/LLE.")
     p.add_argument("--out", help="Write an annotated CSV to this path.")
     p.add_argument("--json", action="store_true", help="Emit JSON.")
     return run(p.parse_args(argv))

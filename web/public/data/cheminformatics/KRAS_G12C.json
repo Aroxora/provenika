@@ -13,7 +13,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.743,
-      "clean": false
+      "clean": false,
+      "le": 0.138,
+      "lle": 4.45
     },
     "CHEMBL5562993": {
       "painsAlerts": 0,
@@ -23,7 +25,9 @@
       "scaffold": "O=C1CCNC(=O)C(C2CCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)C2CCN2C(=O)CNC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.746,
-      "clean": false
+      "clean": false,
+      "le": 0.136,
+      "lle": 4.16
     },
     "CHEMBL5572821": {
       "painsAlerts": 0,
@@ -33,7 +37,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.746,
-      "clean": false
+      "clean": false,
+      "le": 0.134,
+      "lle": 5.01
     },
     "CHEMBL5570195": {
       "painsAlerts": 0,
@@ -43,7 +49,9 @@
       "scaffold": "O=C1CNC(=O)CC(C(=O)N2CCOCC2)NC(=O)C(C2CCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)C2CCN2C(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.753,
-      "clean": false
+      "clean": false,
+      "le": 0.131,
+      "lle": 4.33
     },
     "CHEMBL5569602": {
       "painsAlerts": 0,
@@ -53,7 +61,9 @@
       "scaffold": "O=C1CNC(=O)CC(C(=O)N2CCC2)NC(=O)C(C2CCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)C2CCN2C(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.75,
-      "clean": false
+      "clean": false,
+      "le": 0.133,
+      "lle": 3.94
     },
     "CHEMBL5575367": {
       "painsAlerts": 0,
@@ -63,7 +73,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.746,
-      "clean": false
+      "clean": false,
+      "le": 0.132,
+      "lle": 4.88
     },
     "CHEMBL5576025": {
       "painsAlerts": 0,
@@ -73,7 +85,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.75,
-      "clean": false
+      "clean": false,
+      "le": 0.13,
+      "lle": 4.18
     },
     "CHEMBL5570375": {
       "painsAlerts": 0,
@@ -83,7 +97,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.753,
-      "clean": false
+      "clean": false,
+      "le": 0.129,
+      "lle": 3.07
     },
     "CHEMBL5612889": {
       "painsAlerts": 0,
@@ -96,7 +112,9 @@
       "scaffold": "C=C1CN2CCCC2(COc2nc(NC3CC3)c3cnc(-c4cccc5ccccc45)cc3n2)C1",
       "eganOk": false,
       "fractionCsp3": 0.382,
-      "clean": false
+      "clean": false,
+      "le": 0.269,
+      "lle": 3.36
     },
     "CHEMBL5565237": {
       "painsAlerts": 0,
@@ -106,7 +124,9 @@
       "scaffold": "O=C1CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)C2CCN2C(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.757,
-      "clean": false
+      "clean": false,
+      "le": 0.125,
+      "lle": 2.77
     },
     "CHEMBL5572706": {
       "painsAlerts": 0,
@@ -116,7 +136,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)C2(CCCC2)NC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.753,
-      "clean": false
+      "clean": false,
+      "le": 0.125,
+      "lle": 2.87
     },
     "CHEMBL5591865": {
       "painsAlerts": 0,
@@ -126,7 +148,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.75,
-      "clean": false
+      "clean": false,
+      "le": 0.125,
+      "lle": 2.94
     },
     "CHEMBL5205422": {
       "painsAlerts": 0,
@@ -142,7 +166,9 @@
       "scaffold": "O=C1CNC(=O)C(Cc2ccc(-c3ccccc3)cc2)NC(=O)C2CCCN2C(=O)CCSSCCNC(=O)CNC(=O)C2CCCN2C(=O)CNC(=O)C(Cc2ccccc2)NC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.54,
-      "clean": false
+      "clean": false,
+      "le": 0.091,
+      "lle": 14.05
     },
     "CHEMBL5172805": {
       "painsAlerts": 0,
@@ -157,7 +183,9 @@
       "scaffold": "O=C1CNC(=O)C(Cc2ccc(-c3ccccc3)cc2)NC(=O)CNC(=O)C2C(c3ccccc3)CCN2C(=O)CCSSCCNC(=O)CNC(=O)C2CCCN2C(=O)CNC(=O)C(Cc2ccccc2)NC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.531,
-      "clean": false
+      "clean": false,
+      "le": 0.084,
+      "lle": 12.31
     },
     "CHEMBL5569112": {
       "painsAlerts": 0,
@@ -167,7 +195,9 @@
       "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.757,
-      "clean": false
+      "clean": false,
+      "le": 0.12,
+      "lle": 2.15
     },
     "CHEMBL4072295": {
       "painsAlerts": 0,
@@ -182,7 +212,9 @@
       "scaffold": "O=C1CNC(=O)C(Cc2ccccc2)NC(=O)CNC(=O)C2CCCN2C(=O)CCSSCCNC(=O)CNC(=O)C2CCCN2C(=O)CNC(=O)C(Cc2ccccc2)NC(=O)CN1",
       "eganOk": false,
       "fractionCsp3": 0.62,
-      "clean": false
+      "clean": false,
+      "le": 0.067,
+      "lle": 20.47
     },
     "CHEMBL5863463": {
       "painsAlerts": 0,
@@ -194,7 +226,9 @@
       "scaffold": "c1ccc2c(-c3cc4nc(OCC56CCCN5CCC6)nc(N5CC6CCC(C5)N6)c4cn3)cccc2c1",
       "eganOk": true,
       "fractionCsp3": 0.424,
-      "clean": true
+      "clean": true,
+      "le": 0.334,
+      "lle": 5.09
     },
     "CHEMBL4855757": {
       "painsAlerts": 0,
@@ -204,7 +238,9 @@
       "scaffold": "c1ccc2c(-c3cc4nc(OCC56CCCN5CCC6)nc(N5CC6CCC(C5)N6)c4cn3)cccc2c1",
       "eganOk": true,
       "fractionCsp3": 0.469,
-      "clean": true
+      "clean": true,
+      "le": 0.326,
+      "lle": 5.02
     },
     "CHEMBL5776467": {
       "painsAlerts": 0,
@@ -214,7 +250,9 @@
       "scaffold": "c1ccc(-c2cc3nc(OCC45CCCN4CCC5)nc(N4CC5CCC(C4)N5)c3cn2)cc1",
       "eganOk": true,
       "fractionCsp3": 0.536,
-      "clean": true
+      "clean": true,
+      "le": 0.307,
+      "lle": 5.07
     },
     "CHEMBL5873176": {
       "painsAlerts": 0,
@@ -224,7 +262,9 @@
       "scaffold": "c1ccc(-c2cc3nc(OCC45CCCN4CCC5)nc(N4CC5CCC(C4)N5)c3cn2)cc1",
       "eganOk": true,
       "fractionCsp3": 0.552,
-      "clean": true
+      "clean": true,
+      "le": 0.318,
+      "lle": 4.77
     },
     "CHEMBL5905084": {
       "painsAlerts": 0,
@@ -234,7 +274,9 @@
       "scaffold": "c1ccc2c(-c3cc4nc(OCC5CCCN5)nc(N5CC6CCC(C5)N6)c4cn3)cccc2c1",
       "eganOk": true,
       "fractionCsp3": 0.414,
-      "clean": true
+      "clean": true,
+      "le": 0.33,
+      "lle": 4.64
     },
     "CHEMBL4863339": {
       "painsAlerts": 0,
@@ -246,7 +288,9 @@
       "scaffold": "c1ccc2c(-c3cc4nc(OCC56CCCN5CCC6)nc(N5CC6CCC(C5)N6)c4cn3)cccc2c1",
       "eganOk": true,
       "fractionCsp3": 0.424,
-      "clean": true
+      "clean": true,
+      "le": 0.311,
+      "lle": 4.9
     },
     "CHEMBL5953832": {
       "painsAlerts": 0,
@@ -256,7 +300,9 @@
       "scaffold": "c1ccc(C2CC2)c(-c2cc3nc(OCC45CCCN4CCC5)nc(N4CC5CCC(C4)N5)c3cn2)c1",
       "eganOk": true,
       "fractionCsp3": 0.567,
-      "clean": true
+      "clean": true,
+      "le": 0.306,
+      "lle": 4.19
     },
     "CHEMBL5932673": {
       "painsAlerts": 0,
@@ -266,7 +312,9 @@
       "scaffold": "c1ccc(-c2cc3nc(OCC45CCCN4CCC5)nc(N4CC5CCC(C4)N5)c3cn2)cc1",
       "eganOk": true,
       "fractionCsp3": 0.536,
-      "clean": true
+      "clean": true,
+      "le": 0.306,
+      "lle": 4.77
     },
     "CHEMBL5804582": {
       "painsAlerts": 0,
@@ -276,7 +324,9 @@
       "scaffold": "c1ccc2c(-c3cc4nc(OCC56CCCN5CCC6)nc(N5CC6CCC(C5)N6)c4cn3)cccc2c1",
       "eganOk": true,
       "fractionCsp3": 0.452,
-      "clean": true
+      "clean": true,
+      "le": 0.314,
+      "lle": 4.84
     }
   }
 }
