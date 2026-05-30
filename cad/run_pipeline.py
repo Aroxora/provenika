@@ -131,10 +131,8 @@ def main(argv=None) -> int:
         ]
     lines.append("## Next step: dock (stage 6)")
     if box and structs:
-        c, s = box["center"], box["size"]
         lines.append(f"- `python3 cad/dock.py --receptor {out}/structures/{structs[0].name} "
-                     f"--smiles \"<hit SMILES from hits.csv>\" "
-                     f"--center {c[0]} {c[1]} {c[2]} --size {s[0]} {s[1]} {s[2]}`")
+                     f"--smiles \"<hit SMILES from hits.csv>\" --box-json {out}/binding_site.json`")
     else:
         lines.append("- No experimental box available; pick a pocket (fpocket/P2Rank) or an AlphaFold model first.")
     lines += ["", "_Research only. Every figure points to a public source — verify before relying on it._"]

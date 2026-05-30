@@ -26,6 +26,7 @@ affinity. Treat output as ranking/triage, not proof. Research only; not medical 
 from __future__ import annotations
 
 import argparse
+import json
 import os
 import re
 import shutil
@@ -55,12 +56,27 @@ def _run(cmd: list[str]) -> subprocess.CompletedProcess:
     return subprocess.run(cmd, capture_output=True, text=True)
 
 
+def clean_receptor_pdb(path: str, out_dir: str) -> str:
+    """Strip ligands/waters/hetero atoms → protein-only PDB (so the co-crystal
+    ligand isn't treated as part of the receptor during docking)."""
+    cleaned = os.path.join(out_dir, "receptor_clean.pdb")
+    atoms = 0
+    with open(path) as src, open(cleaned, "w") as dst:
+        for line in src:
+            if line.startswith("ATOM"):
+                dst.write(line); atoms += 1
+            elif line.startswith("TER"):
+                dst.write(line)
+    return cleaned if atoms else path
+
+
 def prep_receptor(receptor: str, out_dir: str) -> str:
     """Convert receptor to PDBQT with Open Babel (adds polar H, charges)."""
     if receptor.lower().endswith(".pdbqt"):
         return receptor
+    src = clean_receptor_pdb(receptor, out_dir) if receptor.lower().endswith(".pdb") else receptor
     dest = os.path.join(out_dir, "receptor.pdbqt")
-    res = _run(["obabel", receptor, "-O", dest, "-xr", "-p", "7.4"])
+    res = _run(["obabel", src, "-O", dest, "-xr", "-p", "7.4"])
     if not os.path.exists(dest):
         raise SystemExit(f"Receptor prep failed:\n{res.stderr}")
     return dest
@@ -96,6 +112,17 @@ def parse_vina_scores(out_pdbqt: str, stdout: str) -> list[float]:
 
 
 def run(args) -> int:
+    # Box may come straight from cad/binding_site.py --json output (validated early).
+    if args.box_json and not args.center:
+        try:
+            box = json.load(open(args.box_json))
+            args.center = [float(v) for v in box["center"]]
+            args.size = [float(v) for v in box["size"]]
+            print(f"Box from {args.box_json}: center {args.center} size {args.size}")
+        except (OSError, KeyError, ValueError) as e:
+            print(f"Could not read --box-json {args.box_json}: {e}", file=sys.stderr)
+            return 1
+
     if not (_have("vina") and _have("obabel")):
         print(INSTALL_HELP, file=sys.stderr)
         return 3
@@ -143,6 +170,7 @@ def main(argv=None) -> int:
     p.add_argument("--receptor", required=True, help="Receptor .pdb/.pdbqt (e.g. from fetch_structure.py).")
     p.add_argument("--ligand", help="Ligand file (.pdb/.sdf/.mol2/.smi/.pdbqt).")
     p.add_argument("--smiles", help="Ligand as a SMILES string (3-D generated via Open Babel).")
+    p.add_argument("--box-json", help="binding_site.json (center+size) from cad/binding_site.py.")
     p.add_argument("--center", nargs=3, type=float, metavar=("X", "Y", "Z"),
                    help="Docking box center (Angstroms).")
     p.add_argument("--size", nargs=3, type=float, default=[20, 20, 20], metavar=("X", "Y", "Z"),
