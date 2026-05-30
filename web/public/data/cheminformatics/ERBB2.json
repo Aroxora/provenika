@@ -1,0 +1,368 @@
+{
+  "target": "ERBB2",
+  "targetId": "CHEMBL1824",
+  "targetName": "Receptor tyrosine-protein kinase erbB-2",
+  "generated": "2026-05-30",
+  "count": 25,
+  "clusterCount": 18,
+  "byChembl": {
+    "CHEMBL5221067": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(CNc1n[nH]c2ncccc12)Nc1cc2c(s1)CCCC2",
+      "eganOk": true,
+      "fractionCsp3": 0.294,
+      "clean": true,
+      "le": 0.54,
+      "lle": 7.03,
+      "cluster": 17
+    },
+    "CHEMBL203644": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.059,
+      "clean": true,
+      "le": 0.491,
+      "lle": 5.44,
+      "cluster": 0
+    },
+    "CHEMBL941": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(Nc1cccc(Nc2nccc(-c3cccnc3)n2)c1)c1ccc(CN2CCNCC2)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.241,
+      "clean": true,
+      "le": 0.378,
+      "lle": 5.63,
+      "cluster": 16
+    },
+    "CHEMBL54091": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true,
+      "le": 0.511,
+      "lle": 5.17,
+      "cluster": 15
+    },
+    "CHEMBL31815": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.056,
+      "clean": true,
+      "le": 0.516,
+      "lle": 4.85,
+      "cluster": 14
+    },
+    "CHEMBL202360": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true,
+      "le": 0.519,
+      "lle": 5.01,
+      "cluster": 13
+    },
+    "CHEMBL203599": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "O=C(C#CCCN1CCNCC1)Nc1cc2c(Nc3ccccc3)ncnc2cn1",
+      "eganOk": true,
+      "fractionCsp3": 0.304,
+      "clean": true,
+      "le": 0.38,
+      "lle": 6.01,
+      "cluster": 0
+    },
+    "CHEMBL203661": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "O=C(C#CCCN1CCOCC1)Nc1cc2c(Nc3ccccc3)ncnc2cn1",
+      "eganOk": true,
+      "fractionCsp3": 0.273,
+      "clean": true,
+      "le": 0.39,
+      "lle": 5.87,
+      "cluster": 0
+    },
+    "CHEMBL204638": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "O=C(C#CCCN1CCOCC1)Nc1cc2c(Nc3ccccc3)ncnc2cn1",
+      "eganOk": true,
+      "fractionCsp3": 0.273,
+      "clean": true,
+      "le": 0.398,
+      "lle": 5.97,
+      "cluster": 0
+    },
+    "CHEMBL202411": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.056,
+      "clean": true,
+      "le": 0.457,
+      "lle": 5.58,
+      "cluster": 12
+    },
+    "CHEMBL3968417": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3cnccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.158,
+      "clean": true,
+      "le": 0.426,
+      "lle": 5.08,
+      "cluster": 11
+    },
+    "CHEMBL1873475": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Oc2ccc(-c3nn(C4CCCNC4)c4ncncc34)cc2)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.2,
+      "clean": true,
+      "le": 0.379,
+      "lle": 4.9,
+      "cluster": 10
+    },
+    "CHEMBL205059": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "O=C(C#CCCN1CCCCC1)Nc1cc2c(Nc3ccccc3)ncnc2cn1",
+      "eganOk": true,
+      "fractionCsp3": 0.304,
+      "clean": true,
+      "le": 0.372,
+      "lle": 4.32,
+      "cluster": 0
+    },
+    "CHEMBL2048789": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1NCc2ccc(Oc3ccc(Nc4ncnc5cc[nH]c45)cc3)cc21",
+      "eganOk": true,
+      "fractionCsp3": 0.136,
+      "clean": true,
+      "le": 0.393,
+      "lle": 5.03,
+      "cluster": 9
+    },
+    "CHEMBL1173655": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3cc(OC4CCOC4)ccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.292,
+      "clean": true,
+      "le": 0.351,
+      "lle": 4.31,
+      "cluster": 8
+    },
+    "CHEMBL5742327": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "O=C(C=CCN1CCC1)Nc1ccc2ncnc(Nc3ccccc3)c2c1",
+      "eganOk": true,
+      "fractionCsp3": 0.292,
+      "clean": true,
+      "le": 0.355,
+      "lle": 4.41,
+      "cluster": 1
+    },
+    "CHEMBL483332": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc2c(Nc3ccc(OCc4cnccn4)cc3)ncnc2c1",
+      "eganOk": true,
+      "fractionCsp3": 0.25,
+      "clean": true,
+      "le": 0.374,
+      "lle": 4.28,
+      "cluster": 7
+    },
+    "CHEMBL2048795": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1Cc2cccc(Oc3ccc(Nc4ncnc5cc[nH]c45)cc3)c2N1",
+      "eganOk": true,
+      "fractionCsp3": 0.136,
+      "clean": true,
+      "le": 0.39,
+      "lle": 4.71,
+      "cluster": 2
+    },
+    "CHEMBL2048796": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1Cc2c(cccc2Oc2ccc(Nc3ncnc4cc[nH]c34)cc2)N1",
+      "eganOk": true,
+      "fractionCsp3": 0.136,
+      "clean": true,
+      "le": 0.389,
+      "lle": 4.69,
+      "cluster": 2
+    },
+    "CHEMBL258282": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(COc2ccc(Nc3ncnc4[nH]nc(OCCN5CCNCC5)c34)cc2)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.333,
+      "clean": true,
+      "le": 0.352,
+      "lle": 5.65,
+      "cluster": 6
+    },
+    "CHEMBL437890": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "triple_bond"
+      ],
+      "scaffold": "O=C(C#CCCN1CCNCC1)Nc1cc2c(Nc3ccccc3)ncnc2cn1",
+      "eganOk": true,
+      "fractionCsp3": 0.304,
+      "clean": true,
+      "le": 0.386,
+      "lle": 6.05,
+      "cluster": 0
+    },
+    "CHEMBL553": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 2,
+      "brenk": [
+        "Aliphatic_long_chain",
+        "triple_bond"
+      ],
+      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
+      "eganOk": true,
+      "fractionCsp3": 0.273,
+      "clean": true,
+      "le": 0.411,
+      "lle": 5.29,
+      "cluster": 5
+    },
+    "CHEMBL6050073": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "Michael_acceptor_1"
+      ],
+      "scaffold": "O=C(C=CCN1CCC1)Nc1ccc2ncnc(Nc3ccccc3)c2c1",
+      "eganOk": true,
+      "fractionCsp3": 0.32,
+      "clean": true,
+      "le": 0.344,
+      "lle": 4.02,
+      "cluster": 1
+    },
+    "CHEMBL2048904": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1cc(Oc2ccc(Nc3ncnc4cc[nH]c34)cc2)c2cn[nH]c2c1",
+      "eganOk": true,
+      "fractionCsp3": 0.136,
+      "clean": true,
+      "le": 0.384,
+      "lle": 4.18,
+      "cluster": 4
+    },
+    "CHEMBL518750": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(COc2ccc(Nc3ncnc4ccccc34)cc2)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.167,
+      "clean": true,
+      "le": 0.361,
+      "lle": 4.06,
+      "cluster": 3
+    }
+  }
+}

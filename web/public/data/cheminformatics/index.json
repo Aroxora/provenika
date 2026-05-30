@@ -1,10 +1,16 @@
 {
-  "generated": "2026-05-29",
+  "generated": "2026-05-30",
   "targets": [
     {
       "target": "EGFR",
       "slug": "EGFR",
       "file": "EGFR.json",
+      "count": 25
+    },
+    {
+      "target": "ERBB2",
+      "slug": "ERBB2",
+      "file": "ERBB2.json",
       "count": 25
     },
     {
@@ -20,15 +26,63 @@
       "count": 25
     },
     {
+      "target": "ROS1",
+      "slug": "ROS1",
+      "file": "ROS1.json",
+      "count": 25
+    },
+    {
+      "target": "RET",
+      "slug": "RET",
+      "file": "RET.json",
+      "count": 25
+    },
+    {
+      "target": "ABL1",
+      "slug": "ABL1",
+      "file": "ABL1.json",
+      "count": 25
+    },
+    {
       "target": "BRAF",
       "slug": "BRAF",
       "file": "BRAF.json",
       "count": 25
     },
     {
-      "target": "KRAS G12C",
-      "slug": "KRAS_G12C",
-      "file": "KRAS_G12C.json",
+      "target": "MAP2K1",
+      "slug": "MAP2K1",
+      "file": "MAP2K1.json",
+      "count": 25
+    },
+    {
+      "target": "CDK4",
+      "slug": "CDK4",
+      "file": "CDK4.json",
+      "count": 25
+    },
+    {
+      "target": "CDK6",
+      "slug": "CDK6",
+      "file": "CDK6.json",
+      "count": 25
+    },
+    {
+      "target": "MTOR",
+      "slug": "MTOR",
+      "file": "MTOR.json",
+      "count": 25
+    },
+    {
+      "target": "JAK2",
+      "slug": "JAK2",
+      "file": "JAK2.json",
+      "count": 25
+    },
+    {
+      "target": "FLT3",
+      "slug": "FLT3",
+      "file": "FLT3.json",
       "count": 25
     },
     {
@@ -38,9 +92,21 @@
       "count": 25
     },
     {
-      "target": "CDK4",
-      "slug": "CDK4",
-      "file": "CDK4.json",
+      "target": "BCL2",
+      "slug": "BCL2",
+      "file": "BCL2.json",
+      "count": 25
+    },
+    {
+      "target": "FGFR1",
+      "slug": "FGFR1",
+      "file": "FGFR1.json",
+      "count": 25
+    },
+    {
+      "target": "KRAS G12C",
+      "slug": "KRAS_G12C",
+      "file": "KRAS_G12C.json",
       "count": 25
     }
   ]
