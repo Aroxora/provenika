@@ -84,27 +84,37 @@ calls these directly (every one returns `Access-Control-Allow-Origin: *`):
 
 ## 4. The CAD pipeline (`cad/`)
 
-Stdlib-only Python; each stage is independently runnable and `--json`-capable.
+Python; each tool is independently runnable and `--json`-capable. Core tools are
+standard-library only; **RDKit** (cheminformatics) and **AutoDock Vina + Open Babel**
+(docking) are optional engines, clearly feature-gated.
 
-| Stage | File | What it does | Key sources |
-|-------|------|--------------|-------------|
+| Stage | File | What it does | Engine / sources |
+|-------|------|--------------|------------------|
 | 1 | `target_report.py` | Druggability dossier (function, #PDB, ligand depth, known drugs) | UniProt + ChEMBL |
-| 2 | `virtual_triage.py` | Rank ligands by potency + drug-likeness; CSV export; novelty filter; RDKit similarity | ChEMBL |
+| 2 | `virtual_triage.py` | Rank ligands by potency (pChEMBL) + drug-likeness; CSV; novelty filter; similarity | ChEMBL (RDKit optional) |
+| 2b | `cheminformatics.py` | RDKit: descriptors, **LE/LLE**, drug-likeness rules, **PAINS/Brenk** alerts, **Butina chemotype clustering**, Murcko scaffolds, similarity | **RDKit** |
 | 3 | `fetch_structure.py` | Best experimental PDB (X-ray, best res) or AlphaFold fallback | UniProt + RCSB + AlphaFold |
-| 5 | `dock.py` | AutoDock Vina + Open Babel wrapper (gated on the real binaries) | local Vina |
+| 4 | `binding_site.py` | Docking box (center+size) from the co-crystal ligand envelope | RCSB (stdlib) |
+| 5 | `dock.py` | AutoDock Vina wrapper: clean receptor prep, `--box-json`, parsed ΔG (gated on binaries) | **Vina + Open Babel** |
 | — | `cost_benefit.py` | Program feasibility: P(approval), cost/time, risk-adjusted return | static benchmarks |
-| — | `run_pipeline.py` | Runs 1→2→3 + cost-benefit → `SUMMARY.md` + artifacts | orchestrator |
+| — | `run_pipeline.py` | Orchestrates 1→4 + cost-benefit → `SUMMARY.md` (+ ready dock command) | orchestrator |
+| — | `precompute_site_data.py` | triage→cheminformatics JSON per target for the web app (browser can't run RDKit) | ChEMBL + **RDKit** |
 | — | `news_update.py` | Tavily news digests → `cad/intel/` (key from env only) | Tavily |
 
 ```bash
 python3 cad/run_pipeline.py --target EGFR --modality small_molecule --phase phase1 --out runs/egfr
-python3 cad/target_report.py --target BTK --json
 python3 cad/virtual_triage.py --target "KRAS G12C" --min-pchembl 8 --exclude-approved --out hits.csv
+python3 cad/cheminformatics.py --csv hits.csv --json          # LE/LLE, PAINS/Brenk, chemotypes
+python3 cad/binding_site.py --pdb 1M17                          # docking box
+python3 cad/dock.py --receptor structures/1M17.pdb --smiles "<SMILES>" --box-json runs/egfr/binding_site.json
 ```
 
-Design rules for `cad/` tools: standard library only (RDKit/Vina optional and feature-gated);
-read `TAVILY_API_KEY` from the environment **only**; never fabricate a result (`dock.py` prints
-install steps instead of faking scores); print a "verify at the primary source" disclaimer.
+Design rules for `cad/` tools: stdlib core, with RDKit/Vina optional and feature-gated
+(tools that need them exit with install guidance if absent); read `TAVILY_API_KEY` from the
+environment **only**; never fabricate a result (`dock.py` runs the real Vina binary or prints
+install steps — it never invents scores); print a "verify at the primary source" disclaimer.
+The RDKit-only signals are precomputed into `web/public/data/cheminformatics/<TARGET>.json` by
+`precompute_site_data.py` (weekly Action) and shown in the web triage drawer.
 
 See `docs/REAL-CAD-ROADMAP.md` for the full stage map and what is documented vs. implemented.
 
