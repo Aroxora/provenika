@@ -60,6 +60,15 @@ jobs:
           pip install --quiet rdkit
           python3 cad/cheminformatics.py --smiles "CC(=O)Oc1ccccc1C(=O)O" --json \
             | python3 -c "import sys,json; r=json.load(sys.stdin)['results'][0]; assert r['lipinski_ok'] and 170<r['mw']<190, r; print('cheminformatics OK:', r['mw'], r['qed'])"
+      - name: Cheminformatics LE + chemotype clustering (offline)
+        run: |
+          printf 'smiles,best_pchembl,chembl_id\nCC(=O)Oc1ccccc1C(=O)O,7.0,A\nO=C(O)c1ccccc1O,6.5,B\nCCO,5.0,C\n' > /tmp/t.csv
+          python3 cad/cheminformatics.py --csv /tmp/t.csv --json | python3 -c "
+          import sys,json
+          rs=json.load(sys.stdin)['results']
+          assert len(rs)==3, rs
+          assert all('le' in r and 'lle' in r and isinstance(r['cluster'],int) for r in rs), rs
+          print('LE+cluster OK:', [(r['id'], r['le'], r['cluster']) for r in rs])"
 
   web-build:
     name: Build web app (Angular)
