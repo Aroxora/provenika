@@ -25,22 +25,30 @@
   @for (e of examples; track e) {
     <button class="chip" (click)="pick(e)">{{ e }}</button>
   }
-  <span class="active-target">Active: <strong class="mono">{{ target() }}</strong></span>
 </div>
 
-<nav class="tabs">
+<nav class="tabs" aria-label="Primary">
+  <span class="grp">Start</span>
   <a routerLink="/overview" routerLinkActive="active">Overview</a>
-  <a routerLink="/disease" routerLinkActive="active">⊕ Disease</a>
-  <a routerLink="/dossier" routerLinkActive="active">① Dossier</a>
-  <a routerLink="/triage" routerLinkActive="active">② Ligand triage</a>
-  <a routerLink="/structure" routerLinkActive="active">③ Structure</a>
-  <a routerLink="/cost-benefit" routerLinkActive="active">④ Cost-benefit</a>
-  <a routerLink="/models" routerLinkActive="active">∫ Models</a>
+  <a routerLink="/disease" routerLinkActive="active">Disease</a>
+  <span class="grp">Pipeline</span>
+  <a routerLink="/dossier" routerLinkActive="active">1 · Dossier</a>
+  <a routerLink="/triage" routerLinkActive="active">2 · Triage</a>
+  <a routerLink="/structure" routerLinkActive="active">3 · Structure</a>
+  <a routerLink="/cost-benefit" routerLinkActive="active">4 · Cost-benefit</a>
+  <a routerLink="/report" routerLinkActive="active">5 · Report</a>
+  <span class="grp">Evidence</span>
   <a routerLink="/literature" routerLinkActive="active">Literature</a>
   <a routerLink="/pathways" routerLinkActive="active">Pathways</a>
   <a routerLink="/trials" routerLinkActive="active">Trials</a>
-  <a routerLink="/report" routerLinkActive="active">Report</a>
+  <span class="grp">Tools</span>
+  <a routerLink="/models" routerLinkActive="active">∫ Models</a>
 </nav>
+
+<div class="context" aria-live="polite">
+  Analyzing target: <strong class="mono">{{ target() }}</strong>
+  <span class="muted">— every tab below operates on this target.</span>
+</div>
 
 <main>
   <router-outlet />
@@ -48,7 +56,7 @@
 
 <footer class="disclaimer">
   Research / decision-support only — <strong>not medical advice</strong> and not a treatment
-  recommendation. Live data from PubMed, ClinicalTrials.gov, ChEMBL, UniProt &amp; RCSB PDB;
-  every figure is a lead to verify at the primary source. Computational triage is hypothesis
-  generation, not validation.
+  recommendation. Live data from Open Targets, ChEMBL, UniProt, RCSB PDB, Europe PMC, Reactome
+  &amp; ClinicalTrials.gov; every figure is a lead to verify at the primary source. Computational
+  triage is hypothesis generation, not validation.
 </footer>

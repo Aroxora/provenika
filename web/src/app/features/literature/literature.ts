@@ -15,6 +15,7 @@ import { TargetStore } from '../../core/target-store';
       <button [class.primary]="sort() === 'cited'" (click)="setSort('cited')">Most cited</button>
     </div>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Searching Europe PMC…</div>
     } @else if (error()) {
@@ -36,6 +37,7 @@ import { TargetStore } from '../../core/target-store';
     } @else {
       <div class="card muted">No articles found.</div>
     }
+    </div>
   `,
   styles: [`
     .intro { max-width: 60ch; }

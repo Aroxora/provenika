@@ -1,12 +1,13 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { CostBenefitService, MODALITY_MULT } from '../../core/cost-benefit.service';
 
 @Component({
   selector: 'app-cost-benefit',
-  imports: [DecimalPipe],
+  imports: [DecimalPipe, RouterLink],
   template: `
-    <h2>④ Cost-benefit <span class="muted">— program feasibility / go-no-go</span></h2>
+    <h2>4 · Cost-benefit <span class="muted">— program feasibility / go-no-go</span></h2>
     <p class="muted intro">
       Risk-adjusted feasibility from public benchmarks (BIO/Informa CDSR, DiMasi, Wong et al.).
       Port of <code class="mono">cad/cost_benefit.py</code>. Rough planning heuristic — not a valuation.
@@ -60,6 +61,7 @@ import { CostBenefitService, MODALITY_MULT } from '../../core/cost-benefit.servi
       </div>
     </div>
     <p class="disclaimer">Order-of-magnitude planning figures only. Not financial advice, not a valuation, not a clinical claim.</p>
+    <div class="next"><a routerLink="/report"><button class="primary">Next: assemble report →</button></a></div>
   `,
   styles: [`
     .intro { max-width: 64ch; }

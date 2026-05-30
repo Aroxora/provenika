@@ -13,7 +13,7 @@ import { InfoTip } from '../../shared/info-tip';
   host: { '(document:keydown.escape)': 'close()' },
   imports: [DecimalPipe, Scatter, InfoTip, RouterLink],
   template: `
-    <h2>② Ligand triage <span class="muted">— rank real ChEMBL ligands</span></h2>
+    <h2>2 · Ligand triage <span class="muted">— rank real ChEMBL ligands</span></h2>
     <p class="muted intro">
       Resolves the target, pulls its most potent measured ligands (IC50/Ki/Kd → pChEMBL),
       joins drug-likeness (Lipinski Ro5, QED) and ranks them. Port of
@@ -43,6 +43,7 @@ import { InfoTip } from '../../shared/info-tip';
       </div>
     </div>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Scanning ChEMBL bioactivities for <strong>{{ target() }}</strong>…</div>
     } @else if (error()) {
@@ -105,6 +106,7 @@ import { InfoTip } from '../../shared/info-tip';
     } @else {
       <div class="card muted">No candidates yet — adjust thresholds and run triage.</div>
     }
+    </div>
 
     @if (selected(); as h) {
       <aside class="drawer" (click)="close()">

@@ -9,6 +9,7 @@ import { Trial } from '../../core/models';
     <h2>Clinical trials <span class="muted">— live from ClinicalTrials.gov</span></h2>
     <p class="muted intro">Recent interventional/observational studies mentioning <strong>{{ target() }}</strong>.</p>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Searching ClinicalTrials.gov…</div>
     } @else if (error()) {
@@ -33,6 +34,7 @@ import { Trial } from '../../core/models';
     } @else {
       <div class="card muted">No trials found for this term.</div>
     }
+    </div>
   `,
   styles: [`.intro { max-width: 60ch; } .tablewrap { overflow-x: auto; }`],
 })

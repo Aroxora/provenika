@@ -11,9 +11,10 @@ import { InfoTip } from '../../shared/info-tip';
   template: `
     <h2>Disease → targets <span class="muted">— start from any disease</span></h2>
     <p class="muted intro">
-      Enter a disease; Open Targets returns its highest-association-scored druggable targets
-      (genetics, expression, pathways, known drugs, literature). Pick one to drive the whole
-      pipeline. Works for cancer and beyond.
+      Enter a disease; Open Targets returns its top targets ranked by disease-association score
+      (genetics, expression, pathways, known drugs, literature) — this reflects evidence strength,
+      not druggability. Pick one to drive the whole pipeline (druggability is assessed in the
+      dossier). Works for cancer and beyond.
     </p>
 
     <form class="bar" (submit)="search(); $event.preventDefault()">

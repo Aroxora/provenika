@@ -33,6 +33,7 @@ import { Dossier, TriageHit, CostBenefit } from '../../core/models';
       <button (click)="download()" [disabled]="!dossier()">Download .md</button>
     </div>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Assembling report for {{ target() }}…</div>
     } @else if (error()) {
@@ -88,6 +89,7 @@ import { Dossier, TriageHit, CostBenefit } from '../../core/models';
     } @else {
       <div class="card muted">Click “Generate report”.</div>
     }
+    </div>
   `,
   styles: [`
     .intro { max-width: 64ch; }

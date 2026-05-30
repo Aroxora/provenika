@@ -8,6 +8,7 @@ import { TargetStore } from '../../core/target-store';
     <h2>Pathways <span class="muted">— live from Reactome</span></h2>
     <p class="muted intro">Human signalling pathways involving <strong>{{ target() }}</strong>. Pathway context helps judge biology and off-target risk.</p>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Searching Reactome…</div>
     } @else if (error()) {
@@ -29,6 +30,7 @@ import { TargetStore } from '../../core/target-store';
     } @else {
       <div class="card muted">No Reactome pathways found for this term.</div>
     }
+    </div>
   `,
   styles: [`
     .intro { max-width: 60ch; }

@@ -1,4 +1,5 @@
 import { Component, effect, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { UniprotService } from '../../core/uniprot.service';
 import { TargetStore } from '../../core/target-store';
@@ -6,13 +7,15 @@ import { UniprotSummary } from '../../core/models';
 
 @Component({
   selector: 'app-structure',
+  imports: [RouterLink],
   template: `
-    <h2>③ Structure <span class="muted">— 3-D receptor for docking</span></h2>
+    <h2>3 · Structure <span class="muted">— 3-D receptor for docking</span></h2>
     <p class="muted intro">
       Best experimental structure for <strong>{{ target() }}</strong> from UniProt → RCSB PDB.
       Port of <code class="mono">cad/fetch_structure.py</code>; viewer is RCSB Mol*.
     </p>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Finding structures…</div>
     } @else if (error()) {
@@ -45,6 +48,12 @@ import { UniprotSummary } from '../../core/models';
           <a [href]="'https://alphafold.ebi.ac.uk/entry/' + u.accession" target="_blank" rel="noopener">AlphaFold {{ u.accession }} ↗</a>
         </div>
       }
+    } @else {
+      <div class="card muted">No UniProt entry resolved for “{{ target() }}”. Try a gene symbol (e.g. EGFR, BRAF).</div>
+    }
+    </div>
+    @if (uni()) {
+      <div class="next"><a routerLink="/cost-benefit"><button>Next: cost-benefit →</button></a></div>
     }
   `,
   styles: [`
@@ -56,6 +65,7 @@ import { UniprotSummary } from '../../core/models';
     .chips { display: flex; gap: 0.35rem; flex-wrap: wrap; margin-top: 0.7rem; }
     .chips .chip { font-size: 0.78rem; padding: 0.2rem 0.5rem; }
     .chips .chip.active { border-color: var(--accent); color: var(--accent); }
+    .next { margin-top: 1rem; }
   `],
 })
 export class Structure {

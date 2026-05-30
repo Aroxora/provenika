@@ -11,12 +11,13 @@ import { InfoTip } from '../../shared/info-tip';
   selector: 'app-dossier',
   imports: [RouterLink, DecimalPipe, InfoTip],
   template: `
-    <h2>① Target dossier <span class="muted">— is this target worth pursuing?</span></h2>
+    <h2>1 · Target dossier <span class="muted">— is this target worth pursuing?</span></h2>
     <p class="muted intro">
       Druggability snapshot from UniProt (function, structures) and ChEMBL (ligand depth,
       known drugs). Equivalent to <code class="mono">cad/target_report.py</code>.
     </p>
 
+    <div role="status" aria-live="polite">
     @if (loading()) {
       <div class="card"><span class="spinner"></span> Querying UniProt + ChEMBL for <strong>{{ target() }}</strong>…</div>
     } @else if (error()) {
@@ -95,6 +96,7 @@ import { InfoTip } from '../../shared/info-tip';
         </div>
       }
     }
+    </div>
   `,
   styles: [`
     .intro { max-width: 60ch; }
