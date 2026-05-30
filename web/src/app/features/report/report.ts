@@ -7,6 +7,7 @@ import { EuropePmcService, Article } from '../../core/europepmc.service';
 import { TrialsService } from '../../core/trials.service';
 import { TargetStore } from '../../core/target-store';
 import { Dossier, TriageHit, CostBenefit } from '../../core/models';
+import { track } from '../../core/firebase';
 
 @Component({
   selector: 'app-report',
@@ -125,6 +126,7 @@ export class Report {
 
   async generate() {
     const name = this.store.target();
+    track('generate_report', { target: name, modality: this.modality(), phase: this.phase() });
     this.loading.set(true);
     this.error.set('');
     try {
@@ -152,6 +154,7 @@ export class Report {
   download() {
     const d = this.dossier();
     if (!d) return;
+    track('download_report', { target: this.target() });
     const c = this.cb();
     const md: string[] = [
       `# CADD report — ${d.target.pref_name} (${d.target.target_chembl_id})`,

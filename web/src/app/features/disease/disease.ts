@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { OpenTargetsService, DiseaseTargets } from '../../core/opentargets.service';
 import { TargetStore } from '../../core/target-store';
 import { InfoTip } from '../../shared/info-tip';
+import { track } from '../../core/firebase';
 
 @Component({
   selector: 'app-disease',
@@ -106,6 +107,7 @@ export class Disease {
   }
 
   analyze(symbol: string) {
+    track('analyze_disease_target', { disease: this.query(), target: symbol });
     this.store.set(symbol);
     this.router.navigate(['/dossier']);
   }

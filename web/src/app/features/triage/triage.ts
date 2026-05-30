@@ -5,6 +5,7 @@ import { TriageService } from '../../core/triage.service';
 import { CheminformaticsService, ChemInfo } from '../../core/cheminformatics.service';
 import { TargetStore } from '../../core/target-store';
 import { TriageHit } from '../../core/models';
+import { track } from '../../core/firebase';
 import { Scatter } from './scatter';
 import { InfoTip } from '../../shared/info-tip';
 
@@ -278,6 +279,7 @@ export class Triage {
       if (stale()) return;
       this.targetName.set(res.targetName);
       this.hits.set(res.hits);
+      track('run_triage', { target: name, hits: res.hits.length });
       // Load precomputed RDKit cheminformatics for this target (if available).
       this.chemInfo.set(null);
       this.chemSvc.forTarget(name).then((m) => { if (!stale()) this.chemInfo.set(m); });

@@ -1,5 +1,5 @@
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAnalytics, isSupported, type Analytics } from 'firebase/analytics';
+import { getAnalytics, isSupported, logEvent, type Analytics } from 'firebase/analytics';
 
 // Firebase web config. These values are NOT secrets — Firebase web API keys are
 // public client identifiers; access is controlled by Firebase Security Rules.
@@ -24,6 +24,19 @@ export async function initFirebase(): Promise<void> {
     if (await isSupported()) analytics = getAnalytics(app);
   } catch {
     /* analytics unsupported (e.g. SSR / unsupported browser) — non-fatal */
+  }
+}
+
+/**
+ * Log a Firebase Analytics (GA4) event. No-op when Analytics is unavailable
+ * (unsupported browser, blocked, or before init resolves) — never throws.
+ * No PII is sent; params are the (public) target/query the user chose.
+ */
+export function track(name: string, params?: Record<string, unknown>): void {
+  try {
+    if (analytics) logEvent(analytics, name as never, params as never);
+  } catch {
+    /* analytics blocked / not ready — ignore */
   }
 }
 

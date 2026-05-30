@@ -3,6 +3,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, Nav
 import { filter } from 'rxjs';
 import { TargetStore } from './core/target-store';
 import { FaviconService } from './core/favicon.service';
+import { track } from './core/firebase';
 
 @Component({
   selector: 'app-root',
@@ -27,17 +28,20 @@ export class App {
       this.store.set(fromUrl);
       this.draft.set(fromUrl);
     }
-    // Keep ?t= in sync so links are shareable / reload-safe.
+    // Keep ?t= in sync so links are shareable / reload-safe; track target changes.
     effect(() => {
       const t = this.store.target();
       if (this.route.snapshot.queryParamMap.get('t') !== t) {
         this.router.navigate([], { queryParams: { t }, queryParamsHandling: 'merge', replaceUrl: true });
       }
+      track('select_target', { target: t });
     });
-    // Dynamic favicon: depict the section the user is currently in.
+    // Dynamic favicon + GA4 page_view on every SPA route change.
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((e) => {
-      const seg = (e as NavigationEnd).urlAfterRedirects.split('?')[0].split('/').filter(Boolean)[0] || 'overview';
+      const path = (e as NavigationEnd).urlAfterRedirects;
+      const seg = path.split('?')[0].split('/').filter(Boolean)[0] || 'overview';
       this.favicon.setActivity(seg);
+      track('page_view', { page_path: path, page_title: seg });
     });
   }
 
