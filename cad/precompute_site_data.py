@@ -78,6 +78,7 @@ def main(argv=None) -> int:
         if not data:
             continue
         by_chembl = {}
+        ordered: list[tuple[str, str]] = []  # (chembl_id, smiles) for clustering
         for hit in data.get("candidates", []):
             smi = hit.get("smiles")
             cid = hit.get("chembl_id")
@@ -98,12 +99,20 @@ def main(argv=None) -> int:
                 entry["le"] = ligand_efficiency(pchembl, a["heavy_atoms"])
                 entry["lle"] = lipophilic_efficiency(pchembl, a["clogp"])
             by_chembl[cid] = entry
+            ordered.append((cid, smi))
         if not by_chembl:
             continue
+        # Chemotype clustering (Butina/ECFP4) across this target's hits.
+        from cheminformatics import cluster_indices
+        cluster_ids = cluster_indices([s for _, s in ordered])
+        for (cid, _), clu in zip(ordered, cluster_ids):
+            by_chembl[cid]["cluster"] = clu
+        n_clusters = len({c for c in cluster_ids if c is not None})
         payload = {
             "target": target, "targetId": data.get("target", {}).get("id"),
             "targetName": data.get("target", {}).get("name"),
-            "generated": args.stamp, "count": len(by_chembl), "byChembl": by_chembl,
+            "generated": args.stamp, "count": len(by_chembl),
+            "clusterCount": n_clusters, "byChembl": by_chembl,
         }
         fname = f"{slug(target)}.json"
         (OUT_DIR / fname).write_text(json.dumps(payload, indent=2))

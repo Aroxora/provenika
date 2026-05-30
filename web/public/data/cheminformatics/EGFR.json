@@ -4,6 +4,7 @@
   "targetName": "Epidermal growth factor receptor",
   "generated": "2026-05-29",
   "count": 25,
+  "clusterCount": 11,
   "byChembl": {
     "CHEMBL29197": {
       "painsAlerts": 0,
@@ -15,7 +16,8 @@
       "fractionCsp3": 0.125,
       "clean": true,
       "le": 0.66,
-      "lle": 6.45
+      "lle": 6.45,
+      "cluster": 0
     },
     "CHEMBL176582": {
       "painsAlerts": 0,
@@ -27,7 +29,8 @@
       "fractionCsp3": 0.062,
       "clean": true,
       "le": 0.685,
-      "lle": 6.98
+      "lle": 6.98,
+      "cluster": 6
     },
     "CHEMBL53428": {
       "painsAlerts": 0,
@@ -39,7 +42,8 @@
       "fractionCsp3": 0.133,
       "clean": true,
       "le": 0.656,
-      "lle": 6.45
+      "lle": 6.45,
+      "cluster": 7
     },
     "CHEMBL328106": {
       "painsAlerts": 0,
@@ -51,7 +55,8 @@
       "fractionCsp3": 0.125,
       "clean": true,
       "le": 0.631,
-      "lle": 5.99
+      "lle": 5.99,
+      "cluster": 0
     },
     "CHEMBL54400": {
       "painsAlerts": 0,
@@ -63,7 +68,8 @@
       "fractionCsp3": 0.071,
       "clean": true,
       "le": 0.677,
-      "lle": 6.32
+      "lle": 6.32,
+      "cluster": 7
     },
     "CHEMBL51853": {
       "painsAlerts": 0,
@@ -75,7 +81,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.713,
-      "lle": 6.78
+      "lle": 6.78,
+      "cluster": 1
     },
     "CHEMBL174426": {
       "painsAlerts": 0,
@@ -87,7 +94,8 @@
       "fractionCsp3": 0.062,
       "clean": true,
       "le": 0.66,
-      "lle": 6.58
+      "lle": 6.58,
+      "cluster": 6
     },
     "CHEMBL420624": {
       "painsAlerts": 0,
@@ -101,7 +109,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.721,
-      "lle": 6.28
+      "lle": 6.28,
+      "cluster": 1
     },
     "CHEMBL188762": {
       "painsAlerts": 0,
@@ -113,7 +122,8 @@
       "fractionCsp3": 0.118,
       "clean": true,
       "le": 0.596,
-      "lle": 5.52
+      "lle": 5.52,
+      "cluster": 2
     },
     "CHEMBL166154": {
       "painsAlerts": 0,
@@ -125,7 +135,8 @@
       "fractionCsp3": 0.071,
       "clean": true,
       "le": 0.666,
-      "lle": 6.26
+      "lle": 6.26,
+      "cluster": 3
     },
     "CHEMBL474147": {
       "painsAlerts": 0,
@@ -139,7 +150,8 @@
       "fractionCsp3": 0.118,
       "clean": true,
       "le": 0.584,
-      "lle": 6.83
+      "lle": 6.83,
+      "cluster": 5
     },
     "CHEMBL285063": {
       "painsAlerts": 0,
@@ -153,7 +165,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.602,
-      "lle": 5.84
+      "lle": 5.84,
+      "cluster": 2
     },
     "CHEMBL7917": {
       "painsAlerts": 0,
@@ -165,7 +178,8 @@
       "fractionCsp3": 0.125,
       "clean": true,
       "le": 0.592,
-      "lle": 5.47
+      "lle": 5.47,
+      "cluster": 0
     },
     "CHEMBL316064": {
       "painsAlerts": 0,
@@ -177,7 +191,8 @@
       "fractionCsp3": 0.176,
       "clean": true,
       "le": 0.527,
-      "lle": 5.21
+      "lle": 5.21,
+      "cluster": 0
     },
     "CHEMBL516022": {
       "painsAlerts": 0,
@@ -191,7 +206,8 @@
       "fractionCsp3": 0.125,
       "clean": true,
       "le": 0.58,
-      "lle": 7.3
+      "lle": 7.3,
+      "cluster": 5
     },
     "CHEMBL327307": {
       "painsAlerts": 0,
@@ -203,7 +219,8 @@
       "fractionCsp3": 0.125,
       "clean": true,
       "le": 0.604,
-      "lle": 5.22
+      "lle": 5.22,
+      "cluster": 0
     },
     "CHEMBL592617": {
       "painsAlerts": 0,
@@ -215,7 +232,8 @@
       "fractionCsp3": 0.059,
       "clean": true,
       "le": 0.558,
-      "lle": 5.78
+      "lle": 5.78,
+      "cluster": 2
     },
     "CHEMBL334697": {
       "painsAlerts": 0,
@@ -229,7 +247,8 @@
       "fractionCsp3": 0.059,
       "clean": true,
       "le": 0.558,
-      "lle": 6.09
+      "lle": 6.09,
+      "cluster": 4
     },
     "CHEMBL161956": {
       "painsAlerts": 0,
@@ -241,7 +260,8 @@
       "fractionCsp3": 0.188,
       "clean": true,
       "le": 0.575,
-      "lle": 6.7
+      "lle": 6.7,
+      "cluster": 4
     },
     "CHEMBL52913": {
       "painsAlerts": 0,
@@ -255,7 +275,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.572,
-      "lle": 5.45
+      "lle": 5.45,
+      "cluster": 10
     },
     "CHEMBL162821": {
       "painsAlerts": 0,
@@ -267,7 +288,8 @@
       "fractionCsp3": 0.133,
       "clean": true,
       "le": 0.64,
-      "lle": 6.23
+      "lle": 6.23,
+      "cluster": 3
     },
     "CHEMBL328216": {
       "painsAlerts": 0,
@@ -281,7 +303,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.68,
-      "lle": 6.62
+      "lle": 6.62,
+      "cluster": 0
     },
     "CHEMBL328955": {
       "painsAlerts": 0,
@@ -295,7 +318,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.692,
-      "lle": 5.99
+      "lle": 5.99,
+      "cluster": 1
     },
     "CHEMBL522134": {
       "painsAlerts": 0,
@@ -309,7 +333,8 @@
       "fractionCsp3": 0.105,
       "clean": true,
       "le": 0.559,
-      "lle": 5.73
+      "lle": 5.73,
+      "cluster": 9
     },
     "CHEMBL491083": {
       "painsAlerts": 0,
@@ -323,7 +348,8 @@
       "fractionCsp3": 0.111,
       "clean": true,
       "le": 0.558,
-      "lle": 5.38
+      "lle": 5.38,
+      "cluster": 8
     }
   }
 }

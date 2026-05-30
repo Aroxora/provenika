@@ -4,6 +4,7 @@
   "targetName": "Cyclin-dependent kinase 4",
   "generated": "2026-05-29",
   "count": 25,
+  "clusterCount": 16,
   "byChembl": {
     "CHEMBL4446357": {
       "painsAlerts": 0,
@@ -15,7 +16,8 @@
       "fractionCsp3": 0.65,
       "clean": true,
       "le": 0.423,
-      "lle": 7.85
+      "lle": 7.85,
+      "cluster": 15
     },
     "CHEMBL151546": {
       "painsAlerts": 0,
@@ -27,7 +29,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.631,
-      "lle": 7.1
+      "lle": 7.1,
+      "cluster": 14
     },
     "CHEMBL5280928": {
       "painsAlerts": 0,
@@ -39,7 +42,8 @@
       "fractionCsp3": 0.619,
       "clean": true,
       "le": 0.429,
-      "lle": 7.45
+      "lle": 7.45,
+      "cluster": 13
     },
     "CHEMBL4453997": {
       "painsAlerts": 0,
@@ -53,7 +57,8 @@
       "fractionCsp3": 0.056,
       "clean": true,
       "le": 0.578,
-      "lle": 6.59
+      "lle": 6.59,
+      "cluster": 12
     },
     "CHEMBL5751717": {
       "painsAlerts": 0,
@@ -65,7 +70,8 @@
       "fractionCsp3": 0.375,
       "clean": true,
       "le": 0.391,
-      "lle": 6.12
+      "lle": 6.12,
+      "cluster": 0
     },
     "CHEMBL3698644": {
       "painsAlerts": 0,
@@ -77,7 +83,8 @@
       "fractionCsp3": 0.409,
       "clean": true,
       "le": 0.437,
-      "lle": 6.85
+      "lle": 6.85,
+      "cluster": 1
     },
     "CHEMBL384304": {
       "painsAlerts": 0,
@@ -89,7 +96,8 @@
       "fractionCsp3": 0.389,
       "clean": true,
       "le": 0.421,
-      "lle": 7.8
+      "lle": 7.8,
+      "cluster": 11
     },
     "CHEMBL6008170": {
       "painsAlerts": 0,
@@ -101,7 +109,8 @@
       "fractionCsp3": 0.476,
       "clean": true,
       "le": 0.402,
-      "lle": 6.6
+      "lle": 6.6,
+      "cluster": 10
     },
     "CHEMBL5742108": {
       "painsAlerts": 0,
@@ -113,7 +122,8 @@
       "fractionCsp3": 0.348,
       "clean": true,
       "le": 0.385,
-      "lle": 5.19
+      "lle": 5.19,
+      "cluster": 0
     },
     "CHEMBL5996434": {
       "painsAlerts": 0,
@@ -125,7 +135,8 @@
       "fractionCsp3": 0.333,
       "clean": true,
       "le": 0.385,
-      "lle": 4.58
+      "lle": 4.58,
+      "cluster": 2
     },
     "CHEMBL3904602": {
       "painsAlerts": 0,
@@ -137,7 +148,8 @@
       "fractionCsp3": 0.538,
       "clean": true,
       "le": 0.352,
-      "lle": 5.5
+      "lle": 5.5,
+      "cluster": 9
     },
     "CHEMBL3698639": {
       "painsAlerts": 1,
@@ -151,7 +163,8 @@
       "fractionCsp3": 0.375,
       "clean": false,
       "le": 0.413,
-      "lle": 5.1
+      "lle": 5.1,
+      "cluster": 1
     },
     "CHEMBL5999532": {
       "painsAlerts": 0,
@@ -163,7 +176,8 @@
       "fractionCsp3": 0.4,
       "clean": true,
       "le": 0.363,
-      "lle": 4.41
+      "lle": 4.41,
+      "cluster": 0
     },
     "CHEMBL5825661": {
       "painsAlerts": 0,
@@ -175,7 +189,8 @@
       "fractionCsp3": 0.333,
       "clean": true,
       "le": 0.352,
-      "lle": 5.9
+      "lle": 5.9,
+      "cluster": 0
     },
     "CHEMBL526110": {
       "painsAlerts": 0,
@@ -190,7 +205,8 @@
       "fractionCsp3": 0.0,
       "clean": true,
       "le": 0.522,
-      "lle": 6.68
+      "lle": 6.68,
+      "cluster": 8
     },
     "CHEMBL3698653": {
       "painsAlerts": 1,
@@ -204,7 +220,8 @@
       "fractionCsp3": 0.16,
       "clean": false,
       "le": 0.406,
-      "lle": 5.37
+      "lle": 5.37,
+      "cluster": 1
     },
     "CHEMBL5943325": {
       "painsAlerts": 0,
@@ -216,7 +233,8 @@
       "fractionCsp3": 0.4,
       "clean": true,
       "le": 0.351,
-      "lle": 4.83
+      "lle": 4.83,
+      "cluster": 0
     },
     "CHEMBL3698671": {
       "painsAlerts": 1,
@@ -230,7 +248,8 @@
       "fractionCsp3": 0.375,
       "clean": false,
       "le": 0.401,
-      "lle": 4.83
+      "lle": 4.83,
+      "cluster": 1
     },
     "CHEMBL5945809": {
       "painsAlerts": 1,
@@ -244,7 +263,8 @@
       "fractionCsp3": 0.385,
       "clean": false,
       "le": 0.343,
-      "lle": 4.81
+      "lle": 4.81,
+      "cluster": 0
     },
     "CHEMBL3698641": {
       "painsAlerts": 0,
@@ -256,7 +276,8 @@
       "fractionCsp3": 0.417,
       "clean": true,
       "le": 0.387,
-      "lle": 5.09
+      "lle": 5.09,
+      "cluster": 1
     },
     "CHEMBL148580": {
       "painsAlerts": 0,
@@ -271,7 +292,8 @@
       "fractionCsp3": 0.25,
       "clean": false,
       "le": 0.407,
-      "lle": 8.35
+      "lle": 8.35,
+      "cluster": 7
     },
     "CHEMBL3698659": {
       "painsAlerts": 0,
@@ -283,7 +305,8 @@
       "fractionCsp3": 0.44,
       "clean": true,
       "le": 0.375,
-      "lle": 5.14
+      "lle": 5.14,
+      "cluster": 6
     },
     "CHEMBL4209329": {
       "painsAlerts": 0,
@@ -295,7 +318,8 @@
       "fractionCsp3": 0.385,
       "clean": true,
       "le": 0.351,
-      "lle": 5.22
+      "lle": 5.22,
+      "cluster": 5
     },
     "CHEMBL5886747": {
       "painsAlerts": 0,
@@ -307,7 +331,8 @@
       "fractionCsp3": 0.333,
       "clean": true,
       "le": 0.375,
-      "lle": 4.67
+      "lle": 4.67,
+      "cluster": 4
     },
     "CHEMBL3698649": {
       "painsAlerts": 0,
@@ -319,7 +344,8 @@
       "fractionCsp3": 0.48,
       "clean": true,
       "le": 0.363,
-      "lle": 4.84
+      "lle": 4.84,
+      "cluster": 3
     }
   }
 }

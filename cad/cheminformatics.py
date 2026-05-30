@@ -120,6 +120,29 @@ def _f(v) -> float | None:
         return None
 
 
+def cluster_indices(smiles_list: list[str], cutoff_dist: float = 0.35) -> list[int | None]:
+    """Butina cluster a set of molecules by ECFP4 Tanimoto distance; returns a cluster
+    id per input (0 = largest cluster). Members within ~(1-cutoff) similarity group
+    together → chemotype/series detection. Ref: Butina, J Chem Inf Comput Sci 1999."""
+    from rdkit.ML.Cluster import Butina
+    mols = [Chem.MolFromSmiles(s) if s else None for s in smiles_list]
+    fps = [AllChem.GetMorganFingerprintAsBitVect(m, 2, 2048) if m else None for m in mols]
+    valid = [i for i, f in enumerate(fps) if f is not None]
+    n = len(valid)
+    out: list[int | None] = [None] * len(smiles_list)
+    if n == 0:
+        return out
+    dists: list[float] = []
+    for a in range(1, n):
+        sims = DataStructs.BulkTanimotoSimilarity(fps[valid[a]], [fps[valid[b]] for b in range(a)])
+        dists.extend(1.0 - s for s in sims)
+    clusters = Butina.ClusterData(dists, n, cutoff_dist, isDistData=True)
+    for cid, members in enumerate(clusters):
+        for m in members:
+            out[valid[m]] = cid
+    return out
+
+
 def collect_smiles(args) -> list[tuple[str, str, float | None]]:
     """Return list of (id, smiles, pchembl|None)."""
     if args.smiles:
@@ -159,11 +182,19 @@ def run(args) -> int:
             a["similarity"] = tanimoto(args.query, smi)
         results.append(a)
 
+    # Chemotype clustering across the set (Butina on ECFP4).
+    n_clusters = 0
+    if len(results) > 1:
+        ids = cluster_indices([r["smiles"] for r in results])
+        for r, cid in zip(results, ids):
+            r["cluster"] = cid
+        n_clusters = len({c for c in ids if c is not None})
+
     if args.out:
         cols = ["id", "smiles", "mw", "clogp", "tpsa", "hbd", "hba", "rotb", "aromatic_rings",
                 "heavy_atoms", "fraction_csp3", "qed", "pchembl", "le", "lle",
                 "ro5_violations", "lipinski_ok", "veber_ok", "egan_ok",
-                "pains_alerts", "brenk_alerts", "murcko_scaffold", "clean"]
+                "pains_alerts", "brenk_alerts", "cluster", "murcko_scaffold", "clean"]
         if args.query:
             cols.append("similarity")
         with open(args.out, "w", newline="") as fh:
@@ -203,6 +234,8 @@ def run(args) -> int:
         print(line)
     clean = sum(1 for r in results if r["clean"])
     print(f"\n{clean}/{len(results)} pass Ro5 + Veber with no PAINS alerts.")
+    if n_clusters:
+        print(f"{n_clusters} distinct chemotype cluster(s) (Butina, ECFP4) among {len(results)} compounds.")
     if has_le:
         print("LE = 1.37·pChEMBL/heavy-atoms (Hopkins 2004); LLE = pChEMBL − cLogP (Leeson 2007). Higher = better.")
     print("PAINS = pan-assay interference (Baell 2010); Brenk = unwanted-fragment alerts (Brenk 2008).")

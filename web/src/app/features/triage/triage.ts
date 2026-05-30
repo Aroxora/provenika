@@ -52,6 +52,7 @@ import { InfoTip } from '../../shared/info-tip';
     } @else if (hits().length) {
       <div class="card meta">
         <strong>{{ targetName() }}</strong> · {{ hits().length }} candidates ranked by potency + drug-likeness
+        @if (chemClusters()) { · <span class="pill blue">{{ chemClusters() }} chemotypes</span> }
         <span class="muted">— scores rank hypotheses, not efficacy.</span>
       </div>
 
@@ -151,6 +152,10 @@ import { InfoTip } from '../../shared/info-tip';
                 <span class="muted tiny">LE=1.37·pChEMBL/heavy-atoms; LLE=pChEMBL−cLogP</span>
               </div>
             }
+            @if (ci.cluster != null) {
+              <div class="cluster"><span class="pill blue">chemotype cluster #{{ ci.cluster }}</span>
+                <span class="muted tiny">Butina/ECFP4 — same number = same chemical series</span></div>
+            }
             <div class="scaffold"><span class="muted">Bemis–Murcko scaffold</span><br /><span class="mono">{{ ci.scaffold }}</span></div>
           }
           @if (h.smiles) { <div class="smiles mono">{{ h.smiles }}</div> }
@@ -192,6 +197,8 @@ import { InfoTip } from '../../shared/info-tip';
     .pill.danger-pill { color: var(--danger); border-color: #5e1f1f; background: #240e0e; }
     .effmetrics { display: flex; gap: 1rem; align-items: baseline; flex-wrap: wrap; margin-top: 0.7rem; font-size: 0.9rem; }
     .effmetrics .tiny { font-size: 0.68rem; }
+    .cluster { margin-top: 0.7rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .cluster .tiny { font-size: 0.68rem; }
     .scaffold { margin-top: 0.7rem; font-size: 0.78rem; word-break: break-all; }
     .smiles { font-size: 0.75rem; word-break: break-all; margin: 1rem 0; padding: 0.5rem; background: var(--bg); border-radius: 6px; }
     .ext { display: inline-block; margin-top: 0.5rem; }
@@ -323,6 +330,7 @@ export class Triage {
     return h.psa < 90 && h.mw < 450;
   }
   chem(h: TriageHit): ChemInfo | undefined { return this.chemInfo()?.get(h.chembl_id); }
+  chemClusters(): number { return this.chemInfo() ? this.chemSvc.clusterCount(this.target()) : 0; }
 
   sortBy(k: keyof TriageHit) {
     if (this.sortKey() === k) this.sortDir.set(this.sortDir() === 1 ? -1 : 1);
