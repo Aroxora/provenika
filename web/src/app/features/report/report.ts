@@ -5,6 +5,7 @@ import { TriageService } from '../../core/triage.service';
 import { CostBenefitService, MODALITY_MULT } from '../../core/cost-benefit.service';
 import { EuropePmcService, Article } from '../../core/europepmc.service';
 import { TrialsService } from '../../core/trials.service';
+import { CheminformaticsService, ChemInfo } from '../../core/cheminformatics.service';
 import { TargetStore } from '../../core/target-store';
 import { Dossier, TriageHit, CostBenefit } from '../../core/models';
 import { track } from '../../core/firebase';
@@ -52,11 +53,11 @@ import { track } from '../../core/firebase';
           </ul>
         </div>
         <div class="sec">
-          <h4>Top ligand candidates</h4>
+          <h4>Top ligand candidates @if (chemClusters()) { <span class="muted">· {{ chemClusters() }} chemotypes among hits</span> }</h4>
           <ol class="hits">
             @for (h of topHits(); track h.chembl_id) {
               <li><span class="mono">{{ h.chembl_id }}</span> — pChEMBL {{ h.best_pchembl | number:'1.1-1' }},
-                DL {{ h.drug_likeness | number:'1.2-2' }}, {{ h.dev_phase }}</li>
+                DL {{ h.drug_likeness | number:'1.2-2' }}, {{ h.dev_phase }}@if (chem(h); as c) {<span>, LE {{ c.le | number:'1.2-2' }}, chemotype #{{ c.cluster }}</span>}</li>
             }
           </ol>
         </div>
@@ -108,6 +109,7 @@ export class Report {
   private cbSvc = inject(CostBenefitService);
   private pmcSvc = inject(EuropePmcService);
   private trialsSvc = inject(TrialsService);
+  private chemSvc = inject(CheminformaticsService);
   private store = inject(TargetStore);
   readonly target = this.store.target;
 
@@ -123,6 +125,10 @@ export class Report {
   readonly cb = signal<CostBenefit | null>(null);
   readonly literature = signal<Article[]>([]);
   readonly trialCount = signal<number | null>(null);
+  readonly chemInfo = signal<Map<string, ChemInfo> | null>(null);
+  readonly chemClusters = signal(0);
+
+  chem(h: TriageHit): ChemInfo | undefined { return this.chemInfo()?.get(h.chembl_id); }
 
   async generate() {
     const name = this.store.target();
@@ -130,16 +136,19 @@ export class Report {
     this.loading.set(true);
     this.error.set('');
     try {
-      const [d, t, lit, trials] = await Promise.all([
+      const [d, t, lit, trials, chem] = await Promise.all([
         this.dossierSvc.build(name),
         this.triageSvc.run({ target: name, minPchembl: 7, limit: 5 }).catch(() => ({ hits: [] as TriageHit[] })),
         this.pmcSvc.search(name, 'cited', 3).catch(() => [] as Article[]),
         this.trialsSvc.count(name).catch(() => null),
+        this.chemSvc.forTarget(name).catch(() => null),
       ]);
       this.dossier.set(d);
       this.topHits.set(t.hits.slice(0, 5));
       this.literature.set(lit);
       this.trialCount.set(trials);
+      this.chemInfo.set(chem);
+      this.chemClusters.set(this.chemSvc.clusterCount(name));
       this.cb.set(this.cbSvc.analyze({
         modality: this.modality(), phase: this.phase(), incidence: 50000, price: 150000,
       }));
@@ -163,8 +172,12 @@ export class Report {
       `- UniProt: ${d.uniprot?.accession ?? 'n/a'} (${d.uniprot?.length ?? '?'} aa)`,
       `- PDB structures: ${d.uniprot?.pdb_count ?? 0} (docking feasible: ${(d.uniprot?.pdb_count ?? 0) > 0 ? 'yes' : 'no'})`,
       `- Potent ChEMBL activities: ${d.potentActivityCount} · known mechanism drugs: ${d.knownDrugs.length}`,
-      '', '## Top ligand candidates',
-      ...this.topHits().map((h, i) => `${i + 1}. ${h.chembl_id} — pChEMBL ${h.best_pchembl.toFixed(1)}, DL ${h.drug_likeness.toFixed(2)}, ${h.dev_phase}`),
+      '', `## Top ligand candidates${this.chemClusters() ? ` (${this.chemClusters()} chemotypes among hits)` : ''}`,
+      ...this.topHits().map((h, i) => {
+        const c = this.chem(h);
+        const extra = c ? `, LE ${c.le ?? '–'}, chemotype #${c.cluster}` : '';
+        return `${i + 1}. ${h.chembl_id} — pChEMBL ${h.best_pchembl.toFixed(1)}, DL ${h.drug_likeness.toFixed(2)}, ${h.dev_phase}${extra}`;
+      }),
       '', '## Evidence',
       `- Registered clinical trials referencing term: ${this.trialCount() ?? 'n/a'}`,
       ...this.literature().map((a) => `- ${a.title} (${a.year}, cited ${a.citedBy}) — ${a.url}`),
