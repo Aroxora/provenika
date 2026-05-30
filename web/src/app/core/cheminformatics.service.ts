@@ -29,6 +29,16 @@ export class CheminformaticsService {
     return this.counts.get(CheminformaticsService.slug(name)) ?? 0;
   }
 
+  /** Targets that have precomputed RDKit cheminformatics (from index.json). */
+  async index(): Promise<{ target: string; slug: string; count: number }[]> {
+    try {
+      const d: any = await firstValueFrom(this.http.get('data/cheminformatics/index.json'));
+      return d?.targets ?? [];
+    } catch {
+      return [];
+    }
+  }
+
   async forTarget(name: string): Promise<Map<string, ChemInfo> | null> {
     const slug = CheminformaticsService.slug(name);
     if (this.cache.has(slug)) return this.cache.get(slug)!;

@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
 import { TargetStore } from '../../core/target-store';
+import { CheminformaticsService } from '../../core/cheminformatics.service';
 import { METHODS, TAGLINE } from '../../core/methods';
 import { GLOSSARY } from '../../core/glossary';
 
@@ -22,6 +23,16 @@ import { GLOSSARY } from '../../core/glossary';
         <a routerLink="/report"><button>Jump to report →</button></a>
       </div>
     </section>
+
+    @if (ready().length) {
+      <h3 class="sec-h">Cheminformatics-ready targets <span class="muted">— precomputed RDKit profiles</span></h3>
+      <p class="muted ready-note">These targets have full offline RDKit analysis (PAINS/Brenk, chemotype clusters, scaffolds) baked in — click to triage instantly.</p>
+      <div class="ready">
+        @for (r of ready(); track r.slug) {
+          <button class="chip ready-chip" (click)="analyze(r.target)">{{ r.target }} <span class="muted">· {{ r.count }}</span></button>
+        }
+      </div>
+    }
 
     <h3 class="sec-h">The pipeline</h3>
     <div class="flow">
@@ -91,14 +102,30 @@ import { GLOSSARY } from '../../core/glossary';
     .g .why { font-size: 0.8rem; }
     .g .src { font-size: 0.74rem; }
     @media (max-width: 700px) { .arrow { display: none; } }
+    .ready-note { font-size: 0.85rem; max-width: 70ch; margin: 0 0 0.6rem; }
+    .ready { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+    .ready-chip { padding: 0.3rem 0.7rem; border-radius: 999px; font-size: 0.85rem; }
+    .ready-chip:hover { border-color: var(--accent); color: var(--accent); }
   `],
 })
 export class Overview {
   private store = inject(TargetStore);
+  private chemSvc = inject(CheminformaticsService);
+  private router = inject(Router);
   readonly target = this.store.target;
   readonly tagline = TAGLINE;
   readonly methods = METHODS;
   readonly glossary = GLOSSARY;
+  readonly ready = signal<{ target: string; slug: string; count: number }[]>([]);
+
+  constructor() {
+    this.chemSvc.index().then((r) => this.ready.set(r));
+  }
+
+  analyze(target: string) {
+    this.store.set(target);
+    this.router.navigate(['/triage']);
+  }
 
   readonly stages = [
     { id: 'disease', label: 'Disease → targets', source: 'Open Targets', route: 'disease' },
