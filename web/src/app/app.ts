@@ -3,6 +3,7 @@ import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, Nav
 import { filter } from 'rxjs';
 import { TargetStore } from './core/target-store';
 import { FaviconService } from './core/favicon.service';
+import { BusyService } from './core/busy.service';
 import { track } from './core/firebase';
 
 @Component({
@@ -16,6 +17,7 @@ export class App {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private favicon = inject(FaviconService);
+  private busy = inject(BusyService);
   readonly target = this.store.target;
   readonly draft = signal(this.store.target());
 
@@ -34,13 +36,16 @@ export class App {
       if (this.route.snapshot.queryParamMap.get('t') !== t) {
         this.router.navigate([], { queryParams: { t }, queryParamsHandling: 'merge', replaceUrl: true });
       }
+      this.favicon.setTarget(t);
       track('select_target', { target: t });
     });
-    // Dynamic favicon + GA4 page_view on every SPA route change.
+    // Favicon reflects "what you're doing": spin while any request is in flight.
+    effect(() => this.favicon.setBusy(this.busy.busy()));
+    // Dynamic favicon section + GA4 page_view on every SPA route change.
     this.router.events.pipe(filter((e) => e instanceof NavigationEnd)).subscribe((e) => {
       const path = (e as NavigationEnd).urlAfterRedirects;
       const seg = path.split('?')[0].split('/').filter(Boolean)[0] || 'overview';
-      this.favicon.setActivity(seg);
+      this.favicon.setRoute(seg);
       track('page_view', { page_path: path, page_title: seg });
     });
   }
