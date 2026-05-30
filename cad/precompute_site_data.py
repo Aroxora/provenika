@@ -30,7 +30,13 @@ ROOT = HERE.parent
 OUT_DIR = ROOT / "web" / "public" / "data" / "cheminformatics"
 sys.path.insert(0, str(HERE))
 
-DEFAULT_TARGETS = ["EGFR", "BTK", "ALK", "BRAF", "KRAS G12C", "PARP1"]
+# Curated, well-covered oncology targets refreshed by the weekly precompute Action.
+# Keep in sync with web/public/data/cheminformatics/ so the scheduled run maintains
+# (rather than shrinks) the cheminformatics-ready set.
+DEFAULT_TARGETS = [
+    "EGFR", "ERBB2", "BTK", "ALK", "ROS1", "RET", "ABL1", "BRAF", "MAP2K1",
+    "CDK4", "CDK6", "MTOR", "JAK2", "FLT3", "PARP1", "BCL2", "FGFR1", "KRAS G12C",
+]
 
 
 def slug(name: str) -> str:
