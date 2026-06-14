@@ -60,7 +60,7 @@ async function runCAD() {
             solutions.screeningSolutions.push({
                 cancer: cancer.type,
                 incidence: cancer.incidence,
-                solution: { proposedScreening: 'Liquid biopsy + AI imaging' }
+                solution: { proposedScreening: '(CAD tool failed to run — placeholder, NOT a real result)' }
             });
         }
     }
@@ -259,7 +259,7 @@ def generate_solutions_readme(solutions):
         cancer = s['cancer']
         incidence = s.get('incidence', 'N/A')
         sol = s.get('solution', {})
-        screening = sol.get('proposedScreening', 'Liquid biopsy + AI imaging')
+        screening = sol.get('proposedScreening', '(CAD tool failed to run — placeholder, NOT a real result)')
         tech = sol.get('technology', 'cfDNA/MCED')
         pathway = 'Breakthrough Device'
         readme += f"| {cancer} | {incidence:,} | {screening[:40]} | {tech} | {pathway} |\n"

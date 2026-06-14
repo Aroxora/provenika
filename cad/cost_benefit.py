@@ -51,6 +51,8 @@ PHASE_PLAN = [
 ]
 
 # Modality multipliers (development cost & complexity vs. a small molecule).
+# HEURISTIC, not fetched data: these are transparent, editable order-of-magnitude
+# estimates informed by the cited cost literature, not exact published constants.
 MODALITY_MULT = {
     "small_molecule": 1.0,
     "mab": 1.2,
@@ -61,6 +63,8 @@ MODALITY_MULT = {
 }
 
 # Oncology programs historically carry lower success than the all-areas average.
+# HEURISTIC discount (not a single sourced constant): oncology LOA runs well below
+# the all-areas BIO/Informa average; 0.65 is an editable, transparent adjustment.
 ONCOLOGY_LOA_FACTOR = 0.65
 
 PHASE_ORDER = ["preclinical", "phase1", "phase2", "phase3", "filed"]
@@ -79,7 +83,7 @@ def analyze(modality: str, phase: str, incidence: int, price: float,
 
     # Benefit side: risk-adjusted revenue over the peak-sales window.
     peak_annual_rev = incidence * price * penetration            # $/yr at peak
-    gross_margin = 0.80
+    gross_margin = 0.80          # heuristic; typical large-molecule pharma gross margin (editable)
     risk_adj_rev = loa * peak_annual_rev * years_at_peak * gross_margin
 
     cost_dollars = exp_cost * 1e6

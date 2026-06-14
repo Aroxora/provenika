@@ -1,4 +1,5 @@
 {
+  "__CAVEAT__": "NOT REAL RESULTS. This file is legacy template/placeholder output from a fallback path that triggers when the CAD discovery tools fail (e.g. no TAVILY_API_KEY). The identical 'screening' strings are placeholders, not computed proposals. Do not cite. The real, provenance-tracked pipeline is cad/run_pipeline.py + cad/verify.py.",
   "screeningSolutions": [
     {
       "cancer": "Pancreatic Cancer",

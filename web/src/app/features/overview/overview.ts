@@ -24,6 +24,23 @@ import { GLOSSARY } from '../../core/glossary';
       </div>
     </section>
 
+    <section class="strategy card">
+      <h3>Compute or cite — never assert</h3>
+      <p class="muted">
+        A terminal-bound agent can't cure cancer, run a lab, or see a patient — and the deadliest
+        failure mode of "AI for medicine" is a confident, fabricated number. So the one rule here is:
+        <strong>no figure originates from a language model.</strong> Every value is either fetched
+        live from a named public database or computed by deterministic open-source code — and links
+        back to its primary source so you can re-prove it.
+      </p>
+      <ul class="guarantees">
+        <li><strong>Fetched or computed, never invented</strong> — each figure carries its origin + source.</li>
+        <li><strong>Re-verifiable</strong> — the CLI's <code>verify.py</code> re-pulls every number from its live source (PASS/DRIFT/FAIL).</li>
+        <li><strong>Triage ≠ validation</strong> — scores rank hypotheses; they don't prove a molecule works.</li>
+        <li><strong>No medical advice</strong> — no recommendations, prognoses, or treatment plans.</li>
+      </ul>
+    </section>
+
     @if (ready().length) {
       <h3 class="sec-h">Cheminformatics-ready targets <span class="muted">— precomputed RDKit profiles</span></h3>
       <p class="muted ready-note">These targets have full offline RDKit analysis (PAINS/Brenk, chemotype clusters, scaffolds) baked in — click to triage instantly.</p>
@@ -83,6 +100,12 @@ import { GLOSSARY } from '../../core/glossary';
   styles: [`
     .hero { margin-bottom: 1.5rem; }
     .hero h2 { margin-top: 0; }
+    .strategy { margin-bottom: 1.5rem; }
+    .strategy h3 { margin-top: 0; color: var(--accent); }
+    .strategy p { max-width: 80ch; font-size: 0.92rem; line-height: 1.5; }
+    .guarantees { margin: 0.6rem 0 0; padding-left: 1.1rem; display: grid; gap: 0.35rem; }
+    .guarantees li { font-size: 0.88rem; line-height: 1.4; }
+    .guarantees code { font-size: 0.82rem; }
     .tag { font-size: 1.15rem; color: var(--text); max-width: 70ch; }
     .cta { display: flex; gap: 0.6rem; margin-top: 1rem; flex-wrap: wrap; }
     .sec-h { margin: 1.8rem 0 0.8rem; }

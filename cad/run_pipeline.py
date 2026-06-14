@@ -24,9 +24,12 @@ import argparse
 import json
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 
 HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE))
+import provenance as prov  # noqa: E402
 
 
 def _run_json(script: str, extra: list[str]) -> dict | None:
@@ -93,6 +96,43 @@ def main(argv=None) -> int:
     if cb:
         (out / "cost_benefit.json").write_text(json.dumps(cb, indent=2))
 
+    # provenance.json — where every reported figure came from (anti-hallucination
+    # spine). Re-check it with `python3 cad/verify.py --run <out>`.
+    manifest = prov.Manifest(target=args.target, stamp=date.today().isoformat())
+    if dossier:
+        u = dossier.get("uniprot") or {}
+        c = dossier.get("chembl") or {}
+        tid = (dossier.get("chembl_target") or {}).get("id")
+        if u.get("accession") is not None:
+            manifest.fetched("uniprot_accession", u.get("accession"), "uniprot",
+                             prov.source_url("uniprot", "entry", u.get("accession")))
+            manifest.fetched("pdb_structure_count", u.get("pdb_count"), "uniprot",
+                             prov.source_url("uniprot", "entry", u.get("accession")))
+        if tid:
+            manifest.fetched("chembl_potent_activity_records", c.get("potent_activity_records"),
+                             "chembl", prov.source_url("chembl", "activity_count", tid))
+            manifest.fetched("chembl_known_mechanism_drugs", len(c.get("known_mechanism_drugs", [])),
+                             "chembl", prov.source_url("chembl", "mechanisms", tid))
+    if (out / "hits.csv").exists():
+        n = max(0, sum(1 for _ in (out / "hits.csv").open()) - 1)
+        manifest.fetched("ranked_ligand_candidates", n, "chembl",
+                         "https://www.ebi.ac.uk/chembl/api/data/docs",
+                         note="ChEMBL bioactivities ranked by a transparent potency+drug-likeness score")
+    if pdb_id:
+        manifest.fetched("receptor_pdb_id", pdb_id, "rcsb", prov.source_url("rcsb", "entry", pdb_id))
+    if box:
+        manifest.computed("docking_box", {"center": box.get("center"), "size": box.get("size")},
+                          "geometric envelope of the co-crystal ligand in the receptor PDB",
+                          note=f"derived from {box.get('pdb')} via cad/binding_site.py")
+    if cb:
+        manifest.computed("probability_of_approval", cb.get("probability_of_approval"),
+                          prov.source_url("benchmarks", "entry", None),
+                          note="BIO/Informa CDSR 2011-2020 × oncology factor (cad/cost_benefit.py)")
+        manifest.computed("benefit_cost_ratio", cb.get("benefit_cost_ratio"),
+                          prov.source_url("benchmarks", "entry", None),
+                          note="risk-adjusted revenue / expected remaining cost (cad/cost_benefit.py)")
+    manifest.write(out)
+
     # SUMMARY.md
     lines = [f"# CADD pipeline summary — {args.target}", ""]
     if dossier:
@@ -135,10 +175,18 @@ def main(argv=None) -> int:
                      f"--smiles \"<hit SMILES from hits.csv>\" --box-json {out}/binding_site.json`")
     else:
         lines.append("- No experimental box available; pick a pocket (fpocket/P2Rank) or an AlphaFold model first.")
-    lines += ["", "_Research only. Every figure points to a public source — verify before relying on it._"]
+    lines += [
+        "## Provenance",
+        "- Every figure above is fetched-and-cited or deterministically computed — see `provenance.json`.",
+        f"- Re-prove it: `python3 cad/verify.py --run {out}`  (re-pulls each number from its live source).",
+        "",
+        "_Research only. Every figure points to a public source — verify before relying on it._",
+    ]
     (out / "SUMMARY.md").write_text("\n".join(lines))
 
-    print(f"\nDone → {out}/  (SUMMARY.md, dossier.json, hits.csv, structures/, binding_site.json, cost_benefit.json)")
+    print(f"\nDone → {out}/  (SUMMARY.md, dossier.json, hits.csv, structures/, binding_site.json, "
+          f"cost_benefit.json, provenance.json)")
+    print(f"Verify every figure is real:  python3 cad/verify.py --run {out}")
     return 0
 
 

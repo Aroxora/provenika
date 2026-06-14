@@ -1,4 +1,5 @@
 {
+  "__CAVEAT__": "Legacy snapshot (2026-01-25). Figures here were NOT re-verified against live sources and may include template/placeholder values from failed tool runs. Do not cite. Use cad/run_pipeline.py + cad/verify.py for provenance-tracked, re-verifiable output.",
   "timestamp": "2026-01-25T18:00:50.518Z",
   "oralDrugs": {
     "total": 36,

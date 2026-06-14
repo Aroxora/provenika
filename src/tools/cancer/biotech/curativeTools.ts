@@ -126,8 +126,8 @@ function assessCurativePotential(params: {
   }
 
   // Determine best approach
-  let bestApproach = 'Standard of care recommended';
-  let rationale = 'No curative biotechnology specifically indicated for this cancer type/stage.';
+  let bestApproach = 'No curative biotechnology in this educational reference set matches this cancer type/stage';
+  let rationale = 'No match in the reference set (this is not a recommendation; consult published guidelines and a qualified oncologist).';
 
   if (eligibleTherapies.length > 0) {
     // Sort by response rate
@@ -314,7 +314,8 @@ function designCurativeProtocol(params: {
   }
 
   output.push('\n## Curative Therapy Assessment\n');
-  output.push(`**Recommended Approach:** ${assessment.bestApproach}`);
+  output.push('> ⚠️ **NOT MEDICAL ADVICE — educational reference only.** The text below describes, in general terms, how these therapy *classes* are studied/administered in the literature. It is **not** a treatment plan, contains **no** patient-specific dosing, and must never guide care. Clinical decisions require a qualified oncologist.\n');
+  output.push(`**Most-studied option for this profile (evidence only — NOT a recommendation):** ${assessment.bestApproach}`);
   output.push(`**Rationale:** ${assessment.rationale}\n`);
 
   if (assessment.eligibleTherapies.length > 0) {
@@ -347,8 +348,8 @@ function designCurativeProtocol(params: {
       }
     }
 
-    // Treatment protocol
-    output.push('## Proposed Treatment Protocol\n');
+    // General, educational description of how the therapy class is administered — NOT a plan.
+    output.push('## How this therapy class is administered in general (educational reference — NOT a treatment plan, NOT patient-specific)\n');
 
     const bestTherapy = assessment.eligibleTherapies[0];
     if (bestTherapy.therapyType === 'CAR-T') {
@@ -367,7 +368,7 @@ function designCurativeProtocol(params: {
       output.push('4. **Bridging Therapy** (if needed)');
       output.push('   - Low-intensity chemotherapy to control disease');
       output.push('5. **Lymphodepletion** (Day -5 to -3)');
-      output.push('   - Fludarabine 30 mg/m² + Cyclophosphamide 500 mg/m²');
+      output.push('   - Standard lymphodepletion chemotherapy (specific agents/doses per the product label and treating center — deliberately not specified here)');
       output.push('6. **CAR-T Infusion** (Day 0)');
       output.push('   - Single infusion of manufactured cells');
       output.push('7. **Monitoring** (Day 0-28)');
@@ -408,10 +409,10 @@ function designCurativeProtocol(params: {
   }
 
   output.push('\n## Important Disclaimers');
-  output.push('- This protocol is for research/educational purposes only');
-  output.push('- Actual treatment decisions require oncologist oversight');
-  output.push('- Clinical trial eligibility requires formal screening');
-  output.push('- Individual patient factors may modify recommendations');
+  output.push('- **This is NOT medical advice and NOT a recommendation.** It is a general educational reference.');
+  output.push('- It contains no patient-specific dosing and must never be used to direct treatment.');
+  output.push('- Actual treatment decisions require a qualified oncologist and formal clinical screening.');
+  output.push('- This tool is terminal-bound software over public reference data — it has no access to the patient and cannot validate anything.');
 
   return output.join('\n');
 }
@@ -428,7 +429,7 @@ export function createCurativeTools(apiKey?: string): ToolDefinition[] {
     {
       name: 'AssessCurativePotential',
       description:
-        'Assess eligibility for curative biotechnologies (CAR-T, mRNA vaccines, CRISPR, oncolytic viruses) based on cancer type, stage, and biomarkers.',
+        'Educational evidence lookup over a static reference set of curative biotechnologies (CAR-T, mRNA vaccines, CRISPR, oncolytic viruses). Returns which classes have been STUDIED for a cancer type/stage. NOT medical advice, NOT a recommendation, NOT validated, and not patient-specific.',
       parameters: {
         type: 'object',
         properties: {
@@ -509,7 +510,7 @@ export function createCurativeTools(apiKey?: string): ToolDefinition[] {
     {
       name: 'DesignCurativeProtocol',
       description:
-        'Design a comprehensive curative treatment protocol based on patient characteristics and eligible biotechnologies.',
+        'Return a general, educational description of how the matched therapy CLASSES are administered in published practice. NOT a treatment plan, NOT patient-specific, NO dosing guidance, NOT medical advice. For research/education only — clinical decisions require a qualified oncologist.',
       parameters: {
         type: 'object',
         properties: {

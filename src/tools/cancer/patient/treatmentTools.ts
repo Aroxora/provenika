@@ -54,7 +54,9 @@ interface TreatmentRecommendation {
  */
 interface RiskStratification {
   overallRisk: 'very_low' | 'low' | 'intermediate' | 'high' | 'very_high';
-  recurrenceRisk: number; // percentage
+  recurrenceRisk: number; // percentage — NON-VALIDATED illustrative heuristic, not a clinical estimate
+  disclaimer?: string;
+  notValidated?: boolean;
   survivalEstimate: {
     fiveYear: number;
     tenYear?: number;
@@ -441,6 +443,9 @@ function stratifyRisk(params: {
   }
 
   return {
+    notValidated: true,
+    disclaimer:
+      'NON-VALIDATED illustrative heuristic. These percentages come from a simple ad-hoc formula, NOT from any validated prognostic model or real patient data. They are NOT clinical estimates and must never inform any decision. Use validated tools (e.g., PREDICT, published nomograms) with a clinician.',
     overallRisk,
     recurrenceRisk,
     survivalEstimate: {
@@ -449,9 +454,9 @@ function stratifyRisk(params: {
     },
     riskFactors,
     riskScore: {
-      name: 'Composite Risk Score',
+      name: 'Composite Risk Score (non-validated heuristic)',
       value: Math.round(baseRisk),
-      interpretation: `${overallRisk.replace('_', ' ')} risk based on ${riskFactors.length} evaluated factors`,
+      interpretation: `${overallRisk.replace('_', ' ')} risk (NON-VALIDATED heuristic) based on ${riskFactors.length} evaluated factors`,
     },
   };
 }
@@ -588,7 +593,7 @@ export function createTreatmentTools(): ToolDefinition[] {
     {
       name: 'StratifyRisk',
       description:
-        'Calculate risk stratification including recurrence risk and survival estimates',
+        'Educational illustration ONLY: maps stage/grade/nodes/age to a risk tier using a SIMPLE NON-VALIDATED heuristic. The recurrence/survival percentages are NOT clinical estimates, NOT from a validated model, and must never inform care. Use validated prognostic tools with a clinician.',
       parameters: {
         type: 'object',
         properties: {

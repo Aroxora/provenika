@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
 """
-Patient Matching CLI
+Therapy-evidence lookup CLI (research/education only — NOT medical advice).
 
-Match cancer patients to curative biotechnologies:
-- CAR-T Cell Therapy (6 FDA-approved products)
-- mRNA Cancer Vaccines (Phase 2/3 trials)
-- CRISPR Gene Editing (Phase 1/2 trials)
-- Oncolytic Virus Therapy (2 approved products)
+Given a cancer type/stage/biomarkers, list which curative biotechnology CLASSES
+have been STUDIED for that profile, from a static public reference set:
+- CAR-T Cell Therapy (FDA-approved products)
+- mRNA Cancer Vaccines (trials)
+- CRISPR Gene Editing (trials)
+- Oncolytic Virus Therapy (approved products)
+
+This is a terminal-bound evidence lookup. It has NO access to the patient, makes
+NO recommendation, generates NO treatment plan or dosing, and validates nothing.
+Clinical decisions require a qualified oncologist.
 """
 
 import subprocess
@@ -92,8 +97,10 @@ def print_results(results: dict):
     protocol = results["protocol"]
 
     print("\n" + "╔" + "═" * 68 + "╗")
-    print("║" + " CANDIDATE THERAPY MATCHING RESULTS ".center(68) + "║")
+    print("║" + " PUBLISHED THERAPY OPTIONS — EVIDENCE LOOKUP ".center(68) + "║")
     print("╚" + "═" * 68 + "╝")
+    print("  ⚠️  NOT MEDICAL ADVICE. Educational evidence lookup over public reference")
+    print("      data. No recommendation, no treatment plan. See a qualified oncologist.")
 
     print(f"\n  Cancer: {assessment['cancerType']}")
     print(f"  Stage: {assessment['stage']}")
@@ -116,13 +123,13 @@ def print_results(results: dict):
             print(f"         - {c}")
 
     print("\n" + "─" * 70)
-    print("  RECOMMENDED APPROACH")
+    print("  MOST-STUDIED OPTION  (evidence only — NOT a recommendation)")
     print("─" * 70)
     print(f"\n  {assessment['bestApproach']}")
     print(f"\n  Rationale: {assessment['rationale']}")
 
     print("\n" + "─" * 70)
-    print("  TREATMENT PROTOCOL")
+    print("  GENERAL REGIMEN STRUCTURE  (educational reference — NOT a treatment plan)")
     print("─" * 70)
 
     # Print protocol (truncated for display)

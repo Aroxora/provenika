@@ -196,6 +196,11 @@ def chembl_url(mol_id: str) -> str:
     return f"https://www.ebi.ac.uk/chembl/compound_report_card/{mol_id}/"
 
 
+# NOTE: the weights below (0.6/0.4, 0.45/0.3/0.25, the 0.34 Ro5 penalty, the
+# pChEMBL/11 cap) are a TRANSPARENT, NON-VALIDATED ranking HEURISTIC — design
+# choices, not fetched data and not fitted to any benchmark. The inputs (pChEMBL,
+# QED, Ro5) are real ChEMBL values; only their combination is heuristic. The score
+# is a triage ordering, never a prediction of efficacy.
 def drug_likeness_score(p: dict) -> float:
     """0..1 transparent drug-likeness score from QED + Lipinski Ro5 compliance."""
     qed = p.get("qed")

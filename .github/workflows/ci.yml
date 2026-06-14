@@ -69,6 +69,17 @@ jobs:
           assert len(rs)==3, rs
           assert all('le' in r and 'lle' in r and isinstance(r['cluster'],int) for r in rs), rs
           print('LE+cluster OK:', [(r['id'], r['le'], r['cluster']) for r in rs])"
+      - name: Anti-hallucination enforcement tests (offline)
+        run: python3 cad/test_provenance.py
+      - name: Verify a deterministic artifact end-to-end (offline)
+        run: |
+          mkdir -p /tmp/run
+          python3 cad/cost_benefit.py --modality small_molecule --phase phase1 \
+            --incidence 60000 --price 150000 --json > /tmp/run/cost_benefit.json
+          python3 cad/verify.py --run /tmp/run --json | python3 -c "
+          import sys,json; r=json.load(sys.stdin)
+          assert r['ok'] and r['fail']==0, r
+          print('verify gate OK:', [(c['figure'], c['status']) for c in r['checks']])"
 
   web-build:
     name: Build web app (Angular)
