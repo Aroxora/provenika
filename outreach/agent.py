@@ -22,6 +22,7 @@ import re
 import time
 from pathlib import Path
 
+import control
 import emailer
 import llm
 import research
@@ -166,7 +167,8 @@ def draft(email: str, kind: str = "first_touch") -> dict:
     hist_txt = "; ".join(f"{h['kind']}" for h in history) or "none"
     user = (f"Recipient: {c.get('name') or '(unknown)'} at {c.get('firm') or '(unknown firm)'} "
             f"({c.get('category')}).\nWhat we know about them (a lead, verify): {prof or 'little'}\n"
-            f"Prior touches: {hist_txt}\nDraft type: {kind}.\n\nCONTEXT (facts you may use):\n{context}")
+            f"Prior touches: {hist_txt}\nDraft type: {kind}.\nSign the email as: {cfg.HUMAN_NAME}.\n"
+            f"\nCONTEXT (facts you may use):\n{context}")
     try:
         body = llm.chat([{"role": "system", "content": DRAFT_SYSTEM},
                          {"role": "user", "content": user}], temperature=0.5)
@@ -322,7 +324,7 @@ def _agentic_reply(store, c: dict, msg: dict, label: str) -> dict:
     if escalate:
         store.upsert_contact(c["email"], needs_human=True)
 
-    if cfg.SEND_ENABLED and cfg.AUTO_REPLY_ENABLED:
+    if control.effective_send_enabled() and control.effective_auto_reply_enabled():
         res = emailer.send(c["email"], subject, body, force=True,
                            in_reply_to=msg.get("message_id", ""),
                            references=msg.get("references", ""), auto_reply=True)

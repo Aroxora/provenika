@@ -52,12 +52,13 @@ def send(to_email: str, subject: str, body: str, *, force: bool = False,
         msg["Auto-Submitted"] = "auto-replied"   # RFC 3834: prevents auto-responder loops
     msg.set_content(body)
 
-    if not (cfg.SEND_ENABLED and force):
+    import control  # local import avoids any import cycle
+    if not (control.effective_send_enabled() and force):
         OUTBOX.mkdir(parents=True, exist_ok=True)
         p = OUTBOX / f"{int(time.time())}_{to_email.replace('@', '_at_')}.eml"
         p.write_text(msg.as_string())
         return {"sent": False, "dry_run": True, "path": str(p),
-                "reason": "SEND_ENABLED is false or not forced — wrote to outbox"}
+                "reason": "sending disabled (control switch / SEND_ENABLED off) — wrote to outbox"}
 
     host, port = cfg.SMTP_HOST, cfg.SMTP_PORT
     if cfg.SMTP_SECURITY == "SSL":

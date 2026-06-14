@@ -14,5 +14,6 @@ export const routes: Routes = [
   { path: 'trials', loadComponent: () => import('./features/trials/trials').then((m) => m.Trials) },
   { path: 'report', loadComponent: () => import('./features/report/report').then((m) => m.Report) },
   { path: 'outreach', loadComponent: () => import('./features/outreach/outreach').then((m) => m.Outreach) },
+  { path: 'admin', loadComponent: () => import('./features/admin/admin').then((m) => m.Admin) },
   { path: '**', redirectTo: 'overview' },
 ];

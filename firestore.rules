@@ -1,0 +1,23 @@
+rules_version = '2';
+// Firestore security rules for the outreach control plane.
+// Deploy:  firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // The agent kill-switch. World-READABLE (so the Mac-local monitor can read it
+    // over the REST API with no credentials) but WRITE-LOCKED to the owner only.
+    match /control/outreach {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'daburu.dragon@gmail.com'
+                   && request.auth.token.email_verified == true;
+    }
+
+    // Everything else: locked down by default. The public outreach LOG is served as a
+    // static JSON file from hosting (web/public/data/outreach/log.json), not Firestore,
+    // so no other collection needs to be exposed.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

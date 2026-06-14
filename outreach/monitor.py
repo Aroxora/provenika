@@ -27,6 +27,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 import agent
+import control
 import emailer
 from config import cfg
 
@@ -81,8 +82,10 @@ def _process_and_maintain(last_publish: float) -> float:
             ref = agent.refresh_contacts()         # Tavily-refresh the list
             pub = agent.export_public_log()
             n_sent = sum(1 for s in sent if isinstance(s, dict) and s.get("sent"))
+            cs = control.summary()
             log(f"maintenance: {len(fu)} follow-up(s), {n_sent} sent, {len(ref)} refreshed; "
-                f"public log -> {pub.get('entries')} entries")
+                f"public log -> {pub.get('entries')} entries; "
+                f"switch[{cs['source']}]: send={cs['send_enabled']} auto_reply={cs['auto_reply_enabled']}")
         except Exception as e:
             log(f"maintenance error: {e}")
         return now

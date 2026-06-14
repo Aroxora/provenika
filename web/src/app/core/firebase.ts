@@ -16,6 +16,12 @@ export const firebaseConfig = {
 let app: FirebaseApp | undefined;
 let analytics: Analytics | undefined;
 
+/** Synchronously ensure the Firebase app exists (Auth/Firestore need it before init resolves). */
+export function ensureApp(): FirebaseApp {
+  if (!app) app = initializeApp(firebaseConfig);
+  return app;
+}
+
 /** Initialize Firebase once, enabling Analytics only where supported (browser). */
 export async function initFirebase(): Promise<void> {
   if (app) return;

@@ -1,4 +1,7 @@
 {
+  "firestore": {
+    "rules": "firestore.rules"
+  },
   "hosting": {
     "public": "web/dist/cancer-osint-web/browser",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],

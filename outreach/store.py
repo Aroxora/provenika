@@ -50,7 +50,13 @@ class LocalStore:
                 pass
 
     def _save(self):
-        self.path.write_text(json.dumps(self._db, indent=2))
+        # Atomic write (tmp + os.replace) so a concurrent reader/writer (e.g. the
+        # 24/7 monitor) never sees a half-written file. NOTE: the local JSON store is
+        # single-writer-friendly; for concurrent multi-process use, set STORE_BACKEND=firestore.
+        import os
+        tmp = self.path.with_suffix(".tmp")
+        tmp.write_text(json.dumps(self._db, indent=2))
+        os.replace(tmp, self.path)
 
     # --- contacts ---
     def upsert_contact(self, email: str, **fields):
@@ -162,7 +168,16 @@ class FirestoreStore:
         return sum(1 for _ in self.col.where("_type", "==", "memory").stream())
 
 
+_STORE = None
+
+
 def get_store():
-    if cfg.STORE_BACKEND == "firestore":
-        return FirestoreStore(cfg.GOOGLE_CLOUD_PROJECT, cfg.FIRESTORE_COLLECTION)
-    return LocalStore(cfg.LOCAL_STORE_PATH)
+    """Process-wide singleton so all callers share one in-memory view (a fresh
+    LocalStore per call would let divergent copies clobber each other on save)."""
+    global _STORE
+    if _STORE is None:
+        if cfg.STORE_BACKEND == "firestore":
+            _STORE = FirestoreStore(cfg.GOOGLE_CLOUD_PROJECT, cfg.FIRESTORE_COLLECTION)
+        else:
+            _STORE = LocalStore(cfg.LOCAL_STORE_PATH)
+    return _STORE

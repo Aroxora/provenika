@@ -49,6 +49,8 @@ def main(argv=None) -> int:
     sub.add_parser("cycle")
     sub.add_parser("check")
     mon = sub.add_parser("monitor"); mon.add_argument("--once", action="store_true")
+    ctl = sub.add_parser("control")
+    ctl.add_argument("--send", choices=["on", "off"]); ctl.add_argument("--autoreply", choices=["on", "off"])
     args = p.parse_args(argv)
 
     if args.cmd == "seed-memory":
@@ -77,6 +79,14 @@ def main(argv=None) -> int:
     elif args.cmd == "monitor":
         import monitor
         return monitor.main(["--once"] if args.once else [])
+    elif args.cmd == "control":
+        import control
+        if args.send or args.autoreply:
+            control.set_local(
+                send_enabled=(args.send == "on") if args.send else None,
+                auto_reply_enabled=(args.autoreply == "on") if args.autoreply else None,
+                by="cli")
+        out = control.summary()
     else:
         out = {"error": "unknown command"}
     print(json.dumps(out, indent=2, default=str))
