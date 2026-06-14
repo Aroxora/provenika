@@ -1,7 +1,7 @@
 {
-  "name": "Oncology CADD · OSINT",
-  "short_name": "CADD·OSINT",
-  "description": "Interactive computer-aided drug-discovery triage on public data. Research only — not medical advice.",
+  "name": "Provenika",
+  "short_name": "Provenika",
+  "description": "Auditable oncology evidence engine — compute or cite, never assert. Research only, not medical advice.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0e14",

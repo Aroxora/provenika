@@ -60,6 +60,8 @@ PROVIDERS = {
                   "model": "grok-4.3", "format": "openai", "key_env": "XAI_API_KEY"},
     "openai":    {"base": "https://api.openai.com/v1", "anthropic": "",
                   "model": "gpt-4o-mini", "format": "openai", "key_env": "OPENAI_API_KEY"},
+    "gemini":    {"base": "https://generativelanguage.googleapis.com/v1beta/openai", "anthropic": "",
+                  "model": "gemini-flash-latest", "format": "openai", "key_env": "GEMINI_API_KEY"},
     "anthropic": {"base": "", "anthropic": "https://api.anthropic.com",
                   "model": "claude-opus-4-8", "format": "anthropic", "key_env": "ANTHROPIC_API_KEY"},
 }

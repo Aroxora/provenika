@@ -47,8 +47,9 @@ import { KeysService, Provider } from '../../core/keys.service';
     </div>
 
     <p class="muted foot">
-      Where to get keys: DeepSeek (platform.deepseek.com), xAI (console.x.ai), OpenAI (platform.openai.com),
-      Anthropic (console.anthropic.com), Tavily (tavily.com). The same keys work in the open-source CLI.
+      Where to get keys: DeepSeek (platform.deepseek.com), xAI (console.x.ai), Google Gemini
+      (aistudio.google.com), OpenAI (platform.openai.com), Anthropic (console.anthropic.com),
+      Tavily (tavily.com). The same keys work in the open-source CLI.
     </p>
   `,
   styles: [`
@@ -73,6 +74,7 @@ export class Settings {
     { p: 'tavily', label: 'Tavily', req: true, ph: 'tvly-...' },
     { p: 'deepseek', label: 'DeepSeek', ph: 'sk-...' },
     { p: 'xai', label: 'xAI (Grok)', ph: 'xai-...' },
+    { p: 'gemini', label: 'Google Gemini', ph: 'AIza... / AQ...' },
     { p: 'openai', label: 'OpenAI', ph: 'sk-...' },
     { p: 'anthropic', label: 'Anthropic', ph: 'sk-ant-...' },
   ];

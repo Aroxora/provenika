@@ -37,7 +37,9 @@ import { RouterLink } from '@angular/router';
         Configurable via <span class="mono">LLM_FORMAT = openai | anthropic | auto</span>. Keys are
         bring-your-own and never committed — set them in a local <span class="mono">.env</span>,
         save them at runtime (<span class="mono">cli.py keys</span>), or use cloud secrets. The same
-        provider-neutral wrapper works with DeepSeek, OpenAI, Anthropic, or a local model.
+        provider-neutral wrapper supports <strong>DeepSeek, xAI (Grok 4.3), Google Gemini, OpenAI,
+        and Anthropic</strong> — switch with one setting (<span class="mono">LLM_PROVIDER</span>), or
+        compare them side by side on the <a routerLink="/settings">Settings → Comparison</a> page.
       </p>
     </div>
 

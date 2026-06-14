@@ -35,7 +35,7 @@ def get_tool_data():
         return {"toolCount": 0}
 
 
-TEMPLATE = r"""# Oncology evidence engine — *compute or cite, never assert*
+TEMPLATE = r"""# Provenika — auditable oncology evidence engine *(compute or cite, never assert)*
 
 > A terminal-bound AI agent **cannot cure cancer.** It cannot run a lab, see a patient, or
 > touch a device — and the deadliest failure mode of "AI for medicine" is a confident,

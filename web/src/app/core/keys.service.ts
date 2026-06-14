@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-export type Provider = 'deepseek' | 'xai' | 'openai' | 'anthropic' | 'tavily';
+export type Provider = 'deepseek' | 'xai' | 'gemini' | 'openai' | 'anthropic' | 'tavily';
 
 /**
  * Browser-local API-key store. Keys live ONLY in localStorage on this device and are
@@ -15,10 +15,10 @@ export class KeysService {
 
   private load(): Record<Provider, string> {
     try {
-      return { deepseek: '', xai: '', openai: '', anthropic: '', tavily: '',
+      return { deepseek: '', xai: '', gemini: '', openai: '', anthropic: '', tavily: '',
                ...JSON.parse(localStorage.getItem(this.KEY) || '{}') };
     } catch {
-      return { deepseek: '', xai: '', openai: '', anthropic: '', tavily: '' };
+      return { deepseek: '', xai: '', gemini: '', openai: '', anthropic: '', tavily: '' };
     }
   }
 
@@ -26,7 +26,7 @@ export class KeysService {
   has(p: Provider): boolean { return this.get(p).length > 0; }
   /** Tavily is required; at least one model provider key is needed to compare. */
   get ready(): boolean {
-    return this.has('tavily') && (['deepseek', 'xai', 'openai', 'anthropic'] as Provider[]).some((p) => this.has(p));
+    return this.has('tavily') && (['deepseek', 'xai', 'gemini', 'openai', 'anthropic'] as Provider[]).some((p) => this.has(p));
   }
 
   save(next: Partial<Record<Provider, string>>): void {

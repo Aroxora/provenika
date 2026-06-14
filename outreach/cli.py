@@ -55,7 +55,8 @@ def main(argv=None) -> int:
     k = sub.add_parser("keys", help="save user-submitted keys (gitignored .state/keys.json)")
     k.add_argument("--llm-key"); k.add_argument("--llm-base-url"); k.add_argument("--llm-anthropic-base-url")
     k.add_argument("--llm-format", choices=["openai", "anthropic", "auto"]); k.add_argument("--llm-model")
-    k.add_argument("--tavily-key")
+    k.add_argument("--llm-provider", choices=["deepseek", "xai", "gemini", "openai", "anthropic"])
+    k.add_argument("--gemini-key"); k.add_argument("--xai-key"); k.add_argument("--tavily-key")
     args = p.parse_args(argv)
 
     if args.cmd == "seed-memory":
@@ -108,7 +109,8 @@ def main(argv=None) -> int:
         mapping = {"LLM_API_KEY": args.llm_key, "LLM_BASE_URL": args.llm_base_url,
                    "LLM_ANTHROPIC_BASE_URL": args.llm_anthropic_base_url,
                    "LLM_FORMAT": args.llm_format, "LLM_MODEL": args.llm_model,
-                   "TAVILY_API_KEY": args.tavily_key}
+                   "LLM_PROVIDER": args.llm_provider, "GEMINI_API_KEY": args.gemini_key,
+                   "XAI_API_KEY": args.xai_key, "TAVILY_API_KEY": args.tavily_key}
         for kk, vv in mapping.items():
             if vv:
                 cur[kk] = vv

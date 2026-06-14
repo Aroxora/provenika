@@ -7,6 +7,8 @@ export interface ModelChoice { id: string; provider: Provider; label: string }
 export const MODELS: ModelChoice[] = [
   { id: 'deepseek-chat', provider: 'deepseek', label: 'DeepSeek Chat' },
   { id: 'grok-4.3', provider: 'xai', label: 'Grok 4.3 (xAI)' },
+  { id: 'gemini-flash-latest', provider: 'gemini', label: 'Gemini Flash (latest, Google)' },
+  { id: 'gemini-3.1-pro-preview', provider: 'gemini', label: 'Gemini 3.1 Pro (Google)' },
   { id: 'gpt-4o-mini', provider: 'openai', label: 'GPT-4o mini (OpenAI)' },
   { id: 'claude-opus-4-8', provider: 'anthropic', label: 'Claude Opus 4.8 (Anthropic)' },
 ];
@@ -16,6 +18,7 @@ export interface RunResult { ok: boolean; text: string; ms: number; error?: stri
 const OPENAI_BASE: Partial<Record<Provider, string>> = {
   deepseek: 'https://api.deepseek.com/v1',
   xai: 'https://api.x.ai/v1',
+  gemini: 'https://generativelanguage.googleapis.com/v1beta/openai',
   openai: 'https://api.openai.com/v1',
 };
 
