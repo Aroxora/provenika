@@ -33,11 +33,13 @@ DAY = 86400
 
 def _footer() -> str:
     """Mandatory disclosure on EVERY outbound message (cold + agentic replies)."""
+    emails = cfg.HUMAN_EMAIL + (f" / {cfg.HUMAN_EMAIL_ALT}" if cfg.HUMAN_EMAIL_ALT else "")
+    phone = f" · {cfg.HUMAN_PHONE}" if cfg.HUMAN_PHONE else ""
     return (
         f"\n\n—\n"
         f"Sent by an automated outreach agent on behalf of {cfg.HUMAN_NAME}. "
-        f"Just reply and the agent will respond; if you'd prefer a human, email "
-        f"{cfg.HUMAN_NAME} directly at {cfg.HUMAN_EMAIL}. "
+        f"Just reply and the agent will respond; if you'd prefer a human, reach "
+        f"{cfg.HUMAN_NAME} directly: {emails}{phone}. "
         f"Reply STOP to opt out — you won't be contacted again."
     )
 
@@ -119,8 +121,36 @@ def add_prospect(email: str, name: str = "", firm: str = "", category: str = "in
             profile = {"error": str(e)}
     c = store.upsert_contact(email, name=name, firm=firm, category=category,
                              public=bool(public), status="researched" if profile else "new",
-                             profile=profile)
+                             profile=profile, researched_at=time.time() if profile else 0)
     return c
+
+
+def refresh_contacts(max_n: int = 3, stale_days: int = 14) -> list[dict]:
+    """Keep the outreach list current from Tavily: (re)research contacts that lack a
+    profile or have gone stale. (IMAP-driven updates — bounces -> invalid, replies ->
+    status/follow-up — happen in process_inbox.) Bounded per call for rate limits."""
+    store = get_store()
+    if not cfg.TAVILY_API_KEY:
+        return []
+    out, now = [], time.time()
+    for c in store.all_contacts():
+        if len(out) >= max_n:
+            break
+        if c.get("invalid") or c.get("status") in ("unsubscribed", "bounced"):
+            continue
+        prof = (c.get("profile") or {}).get("summary")
+        if prof and (now - c.get("researched_at", 0)) < stale_days * DAY:
+            continue
+        try:
+            profile = research.profile_prospect(c.get("name") or c["email"], c.get("firm", ""))
+        except Exception as e:
+            out.append({"email": c["email"], "refresh": f"error: {e}"}); continue
+        store.upsert_contact(c["email"], profile=profile, researched_at=now)
+        if profile.get("summary"):
+            store.add_memory(f"{c.get('name') or c['email']} ({c.get('firm','')}): {profile['summary']}",
+                             llm.embed(profile["summary"]), source="tavily", kind=f"contact:{c['email']}")
+        out.append({"email": c["email"], "refresh": "updated"})
+    return out
 
 
 # --------------------------------------------------------------------------- drafting
@@ -398,8 +428,9 @@ def _date(ts: float) -> str:
 def run_cycle() -> dict:
     """The scheduled action (Lambda/EventBridge): ingest -> follow-up -> send -> publish."""
     return {
-        "replies": ingest_replies(),
+        "replies": process_inbox(),
         "followups": followups(),
         "sent": send_approved(),
+        "refreshed": refresh_contacts(),
         "public_log": export_public_log(),
     }

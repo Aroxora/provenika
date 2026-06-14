@@ -25,6 +25,12 @@ interface OutreachLog {
         project — <strong>the counts are real and re-verifiable.</strong> Names appear only with
         consent; <strong>no email addresses or message contents are ever published.</strong>
       </p>
+      <p class="contact">
+        <strong>Reach Bo Shang directly:</strong>
+        <a href="mailto:bo@shang.software">bo@shang.software</a> ·
+        <a href="mailto:bo@trenchwork.org">bo@trenchwork.org</a> ·
+        <a href="tel:+15082600326">+1&nbsp;508-260-0326</a>
+      </p>
     </section>
 
     @if (log(); as l) {
@@ -80,6 +86,8 @@ interface OutreachLog {
     .hero { margin-bottom: 1.2rem; }
     .hero h2 { margin-top: 0; }
     .hero p { max-width: 80ch; }
+    .contact { font-size: 0.9rem; }
+    .contact a { color: var(--accent); }
     .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.6rem; margin-bottom: 1.2rem; }
     .stat { text-align: center; }
     .stat .n { font-size: 1.8rem; font-weight: 700; color: var(--accent); }

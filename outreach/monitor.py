@@ -76,9 +76,13 @@ def _process_and_maintain(last_publish: float) -> float:
     now = time.time()
     if now - last_publish > PUBLISH_EVERY:
         try:
-            fu = agent.followups()
+            fu = agent.followups()                 # draft follow-ups for the unanswered
+            sent = agent.send_approved()           # send human-approved drafts (within caps)
+            ref = agent.refresh_contacts()         # Tavily-refresh the list
             pub = agent.export_public_log()
-            log(f"maintenance: {len(fu)} follow-up(s) checked; public log -> {pub.get('entries')} entries")
+            n_sent = sum(1 for s in sent if isinstance(s, dict) and s.get("sent"))
+            log(f"maintenance: {len(fu)} follow-up(s), {n_sent} sent, {len(ref)} refreshed; "
+                f"public log -> {pub.get('entries')} entries")
         except Exception as e:
             log(f"maintenance error: {e}")
         return now

@@ -15,6 +15,12 @@ irreversible without a human.**
 - **Human approval gate.** Only contacts you explicitly `approve` are ever sent.
 - **Rate limits.** `DAILY_SEND_CAP` and `MIN_HOURS_BETWEEN_TOUCHES` are enforced in code.
 - **Opt-out + identity** are appended to every message (it's individual founder outreach, not bulk mail).
+- **Cold emails are human-approved per message.** First-touch sends only go to contacts you
+  explicitly `approve`. An agent should not operate an autonomous loop that emails agent-chosen
+  strangers without that gate — so you (the human) flip `SEND_ENABLED` and approve each cold contact.
+- **Self-updating list.** The list stays current automatically: **IMAP** responses drive status
+  (bounces → invalid + stop; replies → classified + follow-up), and **Tavily** re-researches contacts
+  that lack a profile or have gone stale (`refresh_contacts`, bounded per cycle for rate limits).
 - **No fabrication.** Drafts use only facts retrieved from the committed `pitch/` + `business/` corpus;
   the system prompt forbids inventing metrics, users, or partnerships.
 - **Full disclosure on every email.** A mandatory footer states the message was sent by an automated
