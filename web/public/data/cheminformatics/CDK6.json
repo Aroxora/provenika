@@ -2,9 +2,9 @@
   "target": "CDK6",
   "targetId": "CHEMBL2508",
   "targetName": "Cyclin-dependent kinase 6",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 13,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 10,
   "byChembl": {
     "CHEMBL4446357": {
       "painsAlerts": 0,
@@ -17,7 +17,7 @@
       "clean": true,
       "le": 0.42,
       "lle": 7.76,
-      "cluster": 12
+      "cluster": 9
     },
     "CHEMBL5280928": {
       "painsAlerts": 0,
@@ -30,7 +30,7 @@
       "clean": true,
       "le": 0.429,
       "lle": 7.45,
-      "cluster": 11
+      "cluster": 8
     },
     "CHEMBL5751717": {
       "painsAlerts": 0,
@@ -58,19 +58,6 @@
       "lle": 4.58,
       "cluster": 0
     },
-    "CHEMBL521686": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(c1cccc(Cc2n[nH]c(=O)c3ccccc23)c1)N1CCN(C(=O)C2CC2)CC1",
-      "eganOk": true,
-      "fractionCsp3": 0.333,
-      "clean": true,
-      "le": 0.37,
-      "lle": 6.29,
-      "cluster": 10
-    },
     "CHEMBL5956531": {
       "painsAlerts": 0,
       "pains": [],
@@ -97,7 +84,7 @@
       "clean": false,
       "le": 0.404,
       "lle": 5.32,
-      "cluster": 9
+      "cluster": 7
     },
     "CHEMBL5095102": {
       "painsAlerts": 0,
@@ -138,7 +125,7 @@
       "clean": true,
       "le": 0.341,
       "lle": 5.2,
-      "cluster": 8
+      "cluster": 6
     },
     "CHEMBL5917565": {
       "painsAlerts": 0,
@@ -164,7 +151,7 @@
       "clean": true,
       "le": 0.396,
       "lle": 5.92,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL5943325": {
       "painsAlerts": 0,
@@ -216,7 +203,7 @@
       "clean": true,
       "le": 0.393,
       "lle": 5.25,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL3698672": {
       "painsAlerts": 0,
@@ -285,65 +272,7 @@
       "clean": true,
       "le": 0.39,
       "lle": 5.62,
-      "cluster": 7
-    },
-    "CHEMBL5758951": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "heavy_metal"
-      ],
-      "scaffold": "c1cc(-c2ccc3nc[nH]c3c2)nc(Nc2ccc3c(n2)CCN(CCN2CCCCC2)C3)n1",
-      "eganOk": true,
-      "fractionCsp3": 0.484,
-      "clean": true,
-      "le": 0.276,
-      "lle": 4.6,
-      "cluster": 4
-    },
-    "CHEMBL4439999": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "heavy_metal"
-      ],
-      "scaffold": "c1cc(-c2ccc3nc[nH]c3c2)nc(Nc2ccc3c(n2)CCNC3)n1",
-      "eganOk": false,
-      "fractionCsp3": 0.484,
-      "clean": false,
-      "le": 0.287,
-      "lle": 2.37,
-      "cluster": 6
-    },
-    "CHEMBL3237704": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cc2c3cnc(Nc4ccc(N5CCNCC5)cn4)nc3n(C3CCCCC3)c2cn1",
-      "eganOk": true,
-      "fractionCsp3": 0.462,
-      "clean": true,
-      "le": 0.361,
-      "lle": 4.29,
-      "cluster": 3
-    },
-    "CHEMBL5775776": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "heavy_metal"
-      ],
-      "scaffold": "C1=CCN(CCN2CCc3nc(Nc4nccc(-c5ccc6nc[nH]c6c5)n4)ccc3C2)CC1",
-      "eganOk": true,
-      "fractionCsp3": 0.419,
-      "clean": true,
-      "le": 0.273,
-      "lle": 4.78,
-      "cluster": 4
+      "cluster": 5
     }
   }
 }

@@ -2,9 +2,9 @@
   "target": "PARP1",
   "targetId": "CHEMBL3105",
   "targetName": "Poly [ADP-ribose] polymerase 1",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 16,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 12,
   "byChembl": {
     "CHEMBL3889630": {
       "painsAlerts": 0,
@@ -17,7 +17,7 @@
       "clean": true,
       "le": 0.457,
       "lle": 8.32,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3958202": {
       "painsAlerts": 0,
@@ -30,7 +30,7 @@
       "clean": true,
       "le": 0.45,
       "lle": 8.23,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL595679": {
       "painsAlerts": 0,
@@ -43,7 +43,7 @@
       "clean": true,
       "le": 0.439,
       "lle": 6.56,
-      "cluster": 15
+      "cluster": 11
     },
     "CHEMBL3933136": {
       "painsAlerts": 0,
@@ -56,7 +56,7 @@
       "clean": true,
       "le": 0.554,
       "lle": 6.07,
-      "cluster": 14
+      "cluster": 10
     },
     "CHEMBL481084": {
       "painsAlerts": 0,
@@ -69,33 +69,7 @@
       "clean": true,
       "le": 0.62,
       "lle": 7.06,
-      "cluster": 13
-    },
-    "CHEMBL460474": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc2[nH]c(C3CCCN(C4CCCC4)CC3)nc2c1",
-      "eganOk": true,
-      "fractionCsp3": 0.579,
-      "clean": true,
-      "le": 0.514,
-      "lle": 5.83,
-      "cluster": 12
-    },
-    "CHEMBL595018": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C1NCC2c3c(cccc31)CCN2C(=O)Cc1cccnc1",
-      "eganOk": true,
-      "fractionCsp3": 0.278,
-      "clean": true,
-      "le": 0.536,
-      "lle": 7.51,
-      "cluster": 11
+      "cluster": 9
     },
     "CHEMBL3927171": {
       "painsAlerts": 0,
@@ -110,20 +84,7 @@
       "clean": true,
       "le": 0.464,
       "lle": 7.26,
-      "cluster": 0
-    },
-    "CHEMBL3932477": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(c1cccc(Cc2n[nH]c(=O)c3c2CCCC3)c1)N1CCNCC1",
-      "eganOk": true,
-      "fractionCsp3": 0.45,
-      "clean": true,
-      "le": 0.474,
-      "lle": 7.72,
-      "cluster": 10
+      "cluster": 1
     },
     "CHEMBL4169012": {
       "painsAlerts": 0,
@@ -136,7 +97,7 @@
       "clean": true,
       "le": 0.407,
       "lle": 7.07,
-      "cluster": 9
+      "cluster": 8
     },
     "CHEMBL3917181": {
       "painsAlerts": 0,
@@ -151,7 +112,7 @@
       "clean": true,
       "le": 0.462,
       "lle": 6.68,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL498007": {
       "painsAlerts": 0,
@@ -164,7 +125,7 @@
       "clean": true,
       "le": 0.649,
       "lle": 7.75,
-      "cluster": 8
+      "cluster": 7
     },
     "CHEMBL3960376": {
       "painsAlerts": 0,
@@ -179,7 +140,7 @@
       "clean": true,
       "le": 0.482,
       "lle": 7.72,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL493045": {
       "painsAlerts": 0,
@@ -192,7 +153,7 @@
       "clean": true,
       "le": 0.478,
       "lle": 7.73,
-      "cluster": 2
+      "cluster": 3
     },
     "CHEMBL2058682": {
       "painsAlerts": 0,
@@ -207,22 +168,7 @@
       "clean": true,
       "le": 0.464,
       "lle": 7.25,
-      "cluster": 0
-    },
-    "CHEMBL3986557": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "phthalimide"
-      ],
-      "scaffold": "O=C1C=CC(=O)N1c1cccc(Cc2n[nH]c(=O)c3c2CCCC3)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.333,
-      "clean": true,
-      "le": 0.44,
-      "lle": 6.41,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL521686": {
       "painsAlerts": 0,
@@ -235,7 +181,7 @@
       "clean": true,
       "le": 0.412,
       "lle": 7.27,
-      "cluster": 2
+      "cluster": 3
     },
     "CHEMBL3909439": {
       "painsAlerts": 0,
@@ -248,7 +194,7 @@
       "clean": true,
       "le": 0.482,
       "lle": 7.61,
-      "cluster": 7
+      "cluster": 6
     },
     "CHEMBL3892324": {
       "painsAlerts": 0,
@@ -261,7 +207,7 @@
       "clean": true,
       "le": 0.387,
       "lle": 7.23,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3913258": {
       "painsAlerts": 0,
@@ -274,7 +220,7 @@
       "clean": true,
       "le": 0.402,
       "lle": 7.55,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL4112930": {
       "painsAlerts": 0,
@@ -287,33 +233,7 @@
       "clean": true,
       "le": 0.564,
       "lle": 6.97,
-      "cluster": 6
-    },
-    "CHEMBL593363": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C1NCC2c3c(cccc31)CCN2C(=O)C1CCNC1",
-      "eganOk": true,
-      "fractionCsp3": 0.5,
-      "clean": true,
-      "le": 0.587,
-      "lle": 8.53,
       "cluster": 5
-    },
-    "CHEMBL3944818": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(c1cccc(Cc2n[nH]c(=O)c3c2CCCC3)c1)N1CCNCC1",
-      "eganOk": true,
-      "fractionCsp3": 0.5,
-      "clean": true,
-      "le": 0.385,
-      "lle": 6.68,
-      "cluster": 1
     },
     "CHEMBL3982603": {
       "painsAlerts": 0,
@@ -328,18 +248,31 @@
       "lle": 7.37,
       "cluster": 4
     },
-    "CHEMBL596354": {
+    "CHEMBL3961474": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "O=C1NCC2c3c(cccc31)CCN2C(=O)CCn1cnc2ccccc21",
+      "scaffold": "O=C(c1cccc(Cc2n[nH]c(=O)c3c2CCCC3)c1)N1CCN(C(=O)N2CCCC2)CC1",
       "eganOk": true,
-      "fractionCsp3": 0.286,
+      "fractionCsp3": 0.52,
       "clean": true,
-      "le": 0.457,
+      "le": 0.365,
       "lle": 6.7,
-      "cluster": 3
+      "cluster": 0
+    },
+    "CHEMBL3980638": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(c1cccc(Cc2n[nH]c(=O)c3c2NCCC3)c1)N1CCN(C(=O)C2CCCC2)CC1",
+      "eganOk": true,
+      "fractionCsp3": 0.52,
+      "clean": true,
+      "le": 0.369,
+      "lle": 6.82,
+      "cluster": 2
     }
   }
 }

@@ -2,9 +2,9 @@
   "target": "KRAS G12C",
   "targetId": "CHEMBL2189121",
   "targetName": "GTPase KRas",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 7,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 6,
   "byChembl": {
     "CHEMBL5573020": {
       "painsAlerts": 0,
@@ -124,7 +124,7 @@
       "clean": false,
       "le": 0.269,
       "lle": 3.36,
-      "cluster": 6
+      "cluster": 5
     },
     "CHEMBL5565237": {
       "painsAlerts": 0,
@@ -202,37 +202,6 @@
       "lle": 12.31,
       "cluster": 3
     },
-    "CHEMBL5569112": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C1CNC(=O)CNC(=O)CC(C(=O)N2CCCCC2)NC(=O)C(C2CCCCC2)NC(=O)C2(CCCC2)NC(=O)C2CCCN2C(=O)C(CCc2ccccc2)NC(=O)CNC(=O)C(CC2CCCCC2)NC(=O)CNC(=O)CN1",
-      "eganOk": false,
-      "fractionCsp3": 0.757,
-      "clean": false,
-      "le": 0.12,
-      "lle": 2.15,
-      "cluster": 0
-    },
-    "CHEMBL4072295": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 4,
-      "brenk": [
-        "Aliphatic_long_chain",
-        "disulphide",
-        "imine_1",
-        "imine_2"
-      ],
-      "scaffold": "O=C1CNC(=O)C(Cc2ccccc2)NC(=O)CNC(=O)C2CCCN2C(=O)CCSSCCNC(=O)CNC(=O)C2CCCN2C(=O)CNC(=O)C(Cc2ccccc2)NC(=O)CN1",
-      "eganOk": false,
-      "fractionCsp3": 0.62,
-      "clean": false,
-      "le": 0.067,
-      "lle": 20.47,
-      "cluster": 3
-    },
     "CHEMBL5863463": {
       "painsAlerts": 0,
       "pains": [],
@@ -274,19 +243,6 @@
       "lle": 5.07,
       "cluster": 2
     },
-    "CHEMBL5873176": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2cc3nc(OCC45CCCN4CCC5)nc(N4CC5CCC(C4)N5)c3cn2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.552,
-      "clean": true,
-      "le": 0.318,
-      "lle": 4.77,
-      "cluster": 1
-    },
     "CHEMBL5905084": {
       "painsAlerts": 0,
       "pains": [],
@@ -298,7 +254,7 @@
       "clean": true,
       "le": 0.33,
       "lle": 4.64,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL4863339": {
       "painsAlerts": 0,
@@ -327,32 +283,6 @@
       "le": 0.306,
       "lle": 4.19,
       "cluster": 2
-    },
-    "CHEMBL5932673": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2cc3nc(OCC45CCCN4CCC5)nc(N4CC5CCC(C4)N5)c3cn2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.536,
-      "clean": true,
-      "le": 0.306,
-      "lle": 4.77,
-      "cluster": 1
-    },
-    "CHEMBL5804582": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc2c(-c3cc4nc(OCC56CCCN5CCC6)nc(N5CC6CCC(C5)N6)c4cn3)cccc2c1",
-      "eganOk": true,
-      "fractionCsp3": 0.452,
-      "clean": true,
-      "le": 0.314,
-      "lle": 4.84,
-      "cluster": 4
     }
   }
 }

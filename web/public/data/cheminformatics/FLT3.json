@@ -2,9 +2,9 @@
   "target": "FLT3",
   "targetId": "CHEMBL1974",
   "targetName": "Receptor-type tyrosine-protein kinase FLT3",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 20,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 19,
   "byChembl": {
     "CHEMBL4513768": {
       "painsAlerts": 0,
@@ -17,7 +17,7 @@
       "clean": true,
       "le": 0.489,
       "lle": 6.39,
-      "cluster": 19
+      "cluster": 18
     },
     "CHEMBL4475689": {
       "painsAlerts": 1,
@@ -32,7 +32,7 @@
       "clean": false,
       "le": 0.541,
       "lle": 5.85,
-      "cluster": 18
+      "cluster": 17
     },
     "CHEMBL4744130": {
       "painsAlerts": 0,
@@ -45,7 +45,7 @@
       "clean": true,
       "le": 0.494,
       "lle": 6.0,
-      "cluster": 17
+      "cluster": 16
     },
     "CHEMBL1835870": {
       "painsAlerts": 0,
@@ -58,7 +58,7 @@
       "clean": true,
       "le": 0.432,
       "lle": 6.42,
-      "cluster": 16
+      "cluster": 15
     },
     "CHEMBL3612513": {
       "painsAlerts": 0,
@@ -71,7 +71,7 @@
       "clean": true,
       "le": 0.514,
       "lle": 7.32,
-      "cluster": 15
+      "cluster": 14
     },
     "CHEMBL4519741": {
       "painsAlerts": 0,
@@ -84,7 +84,7 @@
       "clean": true,
       "le": 0.476,
       "lle": 6.21,
-      "cluster": 14
+      "cluster": 13
     },
     "CHEMBL535": {
       "painsAlerts": 0,
@@ -99,7 +99,7 @@
       "clean": true,
       "le": 0.456,
       "lle": 6.33,
-      "cluster": 13
+      "cluster": 12
     },
     "CHEMBL2105728": {
       "painsAlerts": 0,
@@ -112,7 +112,7 @@
       "clean": true,
       "le": 0.424,
       "lle": 6.3,
-      "cluster": 12
+      "cluster": 11
     },
     "CHEMBL3687222": {
       "painsAlerts": 1,
@@ -127,7 +127,7 @@
       "clean": false,
       "le": 0.392,
       "lle": 7.08,
-      "cluster": 2
+      "cluster": 0
     },
     "CHEMBL4461418": {
       "painsAlerts": 1,
@@ -159,7 +159,7 @@
       "clean": false,
       "le": 0.43,
       "lle": 7.32,
-      "cluster": 11
+      "cluster": 10
     },
     "CHEMBL404366": {
       "painsAlerts": 0,
@@ -172,7 +172,7 @@
       "clean": true,
       "le": 0.48,
       "lle": 5.29,
-      "cluster": 10
+      "cluster": 9
     },
     "CHEMBL273187": {
       "painsAlerts": 0,
@@ -185,39 +185,7 @@
       "clean": true,
       "le": 0.489,
       "lle": 5.7,
-      "cluster": 9
-    },
-    "CHEMBL3687224": {
-      "painsAlerts": 1,
-      "pains": [
-        "anil_di_alk_A(478)"
-      ],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cc(N2CCNCC2)ccc1Nc1cncc(NC2CCOCC2)n1",
-      "eganOk": true,
-      "fractionCsp3": 0.542,
-      "clean": false,
-      "le": 0.385,
-      "lle": 6.49,
-      "cluster": 0
-    },
-    "CHEMBL4591953": {
-      "painsAlerts": 1,
-      "pains": [
-        "anil_di_alk_A(478)"
-      ],
-      "brenkAlerts": 1,
-      "brenk": [
-        "Michael_acceptor_1"
-      ],
-      "scaffold": "c1cc(N2CCNCC2)ccc1Nc1cncc(NC2CCOCC2)n1",
-      "eganOk": false,
-      "fractionCsp3": 0.464,
-      "clean": false,
-      "le": 0.31,
-      "lle": 6.78,
-      "cluster": 0
+      "cluster": 8
     },
     "CHEMBL2032274": {
       "painsAlerts": 0,
@@ -230,7 +198,7 @@
       "clean": false,
       "le": 0.373,
       "lle": 5.92,
-      "cluster": 8
+      "cluster": 7
     },
     "CHEMBL373798": {
       "painsAlerts": 0,
@@ -243,7 +211,7 @@
       "clean": true,
       "le": 0.497,
       "lle": 5.2,
-      "cluster": 7
+      "cluster": 6
     },
     "CHEMBL522892": {
       "painsAlerts": 0,
@@ -256,7 +224,7 @@
       "clean": true,
       "le": 0.45,
       "lle": 6.98,
-      "cluster": 6
+      "cluster": 5
     },
     "CHEMBL3237706": {
       "painsAlerts": 0,
@@ -269,7 +237,7 @@
       "clean": true,
       "le": 0.395,
       "lle": 5.24,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL4086149": {
       "painsAlerts": 0,
@@ -282,7 +250,7 @@
       "clean": true,
       "le": 0.403,
       "lle": 6.28,
-      "cluster": 4
+      "cluster": 3
     },
     "CHEMBL4550647": {
       "painsAlerts": 2,
@@ -300,7 +268,7 @@
       "clean": false,
       "le": 0.399,
       "lle": 7.04,
-      "cluster": 3
+      "cluster": 2
     },
     "CHEMBL3687223": {
       "painsAlerts": 1,
@@ -315,55 +283,6 @@
       "clean": false,
       "le": 0.364,
       "lle": 6.52,
-      "cluster": 0
-    },
-    "CHEMBL4438727": {
-      "painsAlerts": 1,
-      "pains": [
-        "anil_di_alk_A(478)"
-      ],
-      "brenkAlerts": 1,
-      "brenk": [
-        "Michael_acceptor_1"
-      ],
-      "scaffold": "c1cc(N2CCNCC2)ccc1Nc1cncc(NC2CCOCC2)n1",
-      "eganOk": false,
-      "fractionCsp3": 0.483,
-      "clean": false,
-      "le": 0.297,
-      "lle": 6.8,
-      "cluster": 0
-    },
-    "CHEMBL3687191": {
-      "painsAlerts": 1,
-      "pains": [
-        "anil_di_alk_A(478)"
-      ],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cc(N2CCNCC2)ccc1Nc1cncc(NC2CCCCC2)n1",
-      "eganOk": true,
-      "fractionCsp3": 0.542,
-      "clean": false,
-      "le": 0.389,
-      "lle": 7.01,
-      "cluster": 1
-    },
-    "CHEMBL4441604": {
-      "painsAlerts": 1,
-      "pains": [
-        "anil_di_alk_A(478)"
-      ],
-      "brenkAlerts": 1,
-      "brenk": [
-        "Michael_acceptor_1"
-      ],
-      "scaffold": "c1cc(N2CCNCC2)ccc1Nc1cncc(NC2CCCCC2)n1",
-      "eganOk": false,
-      "fractionCsp3": 0.464,
-      "clean": false,
-      "le": 0.313,
-      "lle": 7.3,
       "cluster": 1
     }
   }

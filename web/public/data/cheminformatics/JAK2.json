@@ -2,9 +2,9 @@
   "target": "JAK2",
   "targetId": "CHEMBL2971",
   "targetName": "Tyrosine-protein kinase JAK2",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 6,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 5,
   "byChembl": {
     "CHEMBL3665130": {
       "painsAlerts": 0,
@@ -82,7 +82,7 @@
       "clean": true,
       "le": 0.622,
       "lle": 6.97,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL3652402": {
       "painsAlerts": 0,
@@ -95,7 +95,7 @@
       "clean": true,
       "le": 0.505,
       "lle": 8.86,
-      "cluster": 4
+      "cluster": 3
     },
     "CHEMBL3665127": {
       "painsAlerts": 0,
@@ -265,71 +265,6 @@
       "le": 0.485,
       "lle": 7.34,
       "cluster": 0
-    },
-    "CHEMBL3665146": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cnc(NC2CCCNC2)c(-c2cnc3[nH]ccc3n2)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.389,
-      "clean": true,
-      "le": 0.524,
-      "lle": 8.17,
-      "cluster": 0
-    },
-    "CHEMBL3665174": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cnc(NC2CCCNC2)c(-c2cnc3[nH]ccc3n2)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.353,
-      "clean": true,
-      "le": 0.528,
-      "lle": 7.89,
-      "cluster": 0
-    },
-    "CHEMBL2325895": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(NCC(=O)N1CCC1)c1c[nH]c2ncc(C3CC3)nc12",
-      "eganOk": true,
-      "fractionCsp3": 0.55,
-      "clean": true,
-      "le": 0.477,
-      "lle": 7.78,
-      "cluster": 3
-    },
-    "CHEMBL3665120": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cnc(NC2CCNC2)c(-c2cnc3[nH]ccc3n2)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.294,
-      "clean": true,
-      "le": 0.573,
-      "lle": 7.98,
-      "cluster": 0
-    },
-    "CHEMBL3665137": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cnc(NC2CCNC2)c(-c2cnc3[nH]ccc3n2)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.333,
-      "clean": true,
-      "le": 0.552,
-      "lle": 7.63,
-      "cluster": 1
     }
   }
 }

@@ -2,9 +2,9 @@
   "target": "ABL1",
   "targetId": "CHEMBL1862",
   "targetName": "Tyrosine-protein kinase ABL1",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 8,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 6,
   "byChembl": {
     "CHEMBL3689736": {
       "painsAlerts": 0,
@@ -17,7 +17,7 @@
       "clean": true,
       "le": 0.577,
       "lle": 7.05,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL3689737": {
       "painsAlerts": 0,
@@ -30,7 +30,7 @@
       "clean": true,
       "le": 0.577,
       "lle": 7.05,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL3685101": {
       "painsAlerts": 0,
@@ -238,7 +238,7 @@
       "clean": true,
       "le": 0.56,
       "lle": 5.96,
-      "cluster": 7
+      "cluster": 5
     },
     "CHEMBL3685023": {
       "painsAlerts": 0,
@@ -265,71 +265,6 @@
       "le": 0.543,
       "lle": 6.29,
       "cluster": 0
-    },
-    "CHEMBL3689568": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1cc2ccc(-c3cccnc3)cc2cn1)C1CC1",
-      "eganOk": true,
-      "fractionCsp3": 0.286,
-      "clean": true,
-      "le": 0.543,
-      "lle": 6.29,
-      "cluster": 0
-    },
-    "CHEMBL2347725": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(NCCN1CCNCC1)Nc1nc2ccc(-c3ccccc3)cc2s1",
-      "eganOk": true,
-      "fractionCsp3": 0.364,
-      "clean": true,
-      "le": 0.494,
-      "lle": 7.48,
-      "cluster": 4
-    },
-    "CHEMBL3685147": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1cc2ccc(-c3cccnc3)cc2cn1)C1CC1",
-      "eganOk": true,
-      "fractionCsp3": 0.167,
-      "clean": true,
-      "le": 0.605,
-      "lle": 5.85,
-      "cluster": 0
-    },
-    "CHEMBL2347722": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(NCCN1CCOCC1)Nc1nc2ccc(-c3ccccc3)cc2s1",
-      "eganOk": true,
-      "fractionCsp3": 0.333,
-      "clean": true,
-      "le": 0.505,
-      "lle": 7.25,
-      "cluster": 4
-    },
-    "CHEMBL3685181": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1cc2ccc(-c3cccnc3)cc2cn1)C1CC1",
-      "eganOk": true,
-      "fractionCsp3": 0.25,
-      "clean": true,
-      "le": 0.556,
-      "lle": 6.7,
-      "cluster": 6
     }
   }
 }

@@ -2,9 +2,9 @@
   "target": "BRAF",
   "targetId": "CHEMBL5145",
   "targetName": "Serine/threonine-protein kinase B-raf",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 11,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 10,
   "byChembl": {
     "CHEMBL500659": {
       "painsAlerts": 0,
@@ -55,7 +55,7 @@
       "clean": true,
       "le": 0.543,
       "lle": 7.18,
-      "cluster": 1
+      "cluster": 2
     },
     "CHEMBL498344": {
       "painsAlerts": 0,
@@ -85,7 +85,7 @@
       "clean": true,
       "le": 0.458,
       "lle": 6.81,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL3236470": {
       "painsAlerts": 0,
@@ -98,7 +98,7 @@
       "clean": true,
       "le": 0.458,
       "lle": 6.3,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL3236472": {
       "painsAlerts": 0,
@@ -111,7 +111,7 @@
       "clean": true,
       "le": 0.466,
       "lle": 6.77,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL3236463": {
       "painsAlerts": 0,
@@ -137,7 +137,7 @@
       "clean": true,
       "le": 0.466,
       "lle": 6.82,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL525191": {
       "painsAlerts": 0,
@@ -154,7 +154,7 @@
       "clean": true,
       "le": 0.542,
       "lle": 7.16,
-      "cluster": 1
+      "cluster": 2
     },
     "CHEMBL521562": {
       "painsAlerts": 0,
@@ -184,7 +184,7 @@
       "clean": true,
       "le": 0.446,
       "lle": 5.74,
-      "cluster": 10
+      "cluster": 9
     },
     "CHEMBL500406": {
       "painsAlerts": 0,
@@ -201,7 +201,7 @@
       "clean": true,
       "le": 0.612,
       "lle": 6.56,
-      "cluster": 9
+      "cluster": 8
     },
     "CHEMBL3613198": {
       "painsAlerts": 0,
@@ -214,7 +214,7 @@
       "clean": true,
       "le": 0.532,
       "lle": 7.26,
-      "cluster": 8
+      "cluster": 7
     },
     "CHEMBL2047875": {
       "painsAlerts": 0,
@@ -272,7 +272,7 @@
       "clean": true,
       "le": 0.432,
       "lle": 6.2,
-      "cluster": 7
+      "cluster": 6
     },
     "CHEMBL3651675": {
       "painsAlerts": 0,
@@ -299,91 +299,6 @@
       "le": 0.46,
       "lle": 6.32,
       "cluster": 4
-    },
-    "CHEMBL500660": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 3,
-      "brenk": [
-        "imine_1",
-        "oxime_1",
-        "Oxygen-nitrogen_single_bond"
-      ],
-      "scaffold": "N=C1CCc2cc(-c3cn[nH]c3-c3ccncc3)ccc21",
-      "eganOk": true,
-      "fractionCsp3": 0.167,
-      "clean": true,
-      "le": 0.555,
-      "lle": 6.05,
-      "cluster": 6
-    },
-    "CHEMBL524640": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 3,
-      "brenk": [
-        "imine_1",
-        "oxime_1",
-        "Oxygen-nitrogen_single_bond"
-      ],
-      "scaffold": "N=C1CCc2cc(-c3cn(C4CCCC4)nc3-c3ccncc3)ccc21",
-      "eganOk": true,
-      "fractionCsp3": 0.318,
-      "clean": true,
-      "le": 0.464,
-      "lle": 5.66,
-      "cluster": 0
-    },
-    "CHEMBL498674": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 3,
-      "brenk": [
-        "imine_1",
-        "oxime_1",
-        "Oxygen-nitrogen_single_bond"
-      ],
-      "scaffold": "N=C1CCc2cc(-c3cn(C4CCNCC4)nc3-c3ccncc3)ccc21",
-      "eganOk": true,
-      "fractionCsp3": 0.348,
-      "clean": true,
-      "le": 0.447,
-      "lle": 5.47,
-      "cluster": 0
-    },
-    "CHEMBL498688": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 3,
-      "brenk": [
-        "imine_1",
-        "oxime_1",
-        "Oxygen-nitrogen_single_bond"
-      ],
-      "scaffold": "N=C1CCc2cc(-c3cn(C4CCCCC4)nc3-c3ccncc3)ccc21",
-      "eganOk": true,
-      "fractionCsp3": 0.375,
-      "clean": true,
-      "le": 0.44,
-      "lle": 5.2,
-      "cluster": 0
-    },
-    "CHEMBL498496": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 3,
-      "brenk": [
-        "imine_1",
-        "oxime_1",
-        "Oxygen-nitrogen_single_bond"
-      ],
-      "scaffold": "N=C1CCc2cc(-c3c[nH]nc3-c3ccncc3)ccc21",
-      "eganOk": true,
-      "fractionCsp3": 0.25,
-      "clean": true,
-      "le": 0.496,
-      "lle": 6.32,
-      "cluster": 1
     }
   }
 }

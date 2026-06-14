@@ -2,9 +2,9 @@
   "target": "BTK",
   "targetId": "CHEMBL5251",
   "targetName": "Tyrosine-protein kinase BTK",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 15,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 11,
   "byChembl": {
     "CHEMBL4276669": {
       "painsAlerts": 0,
@@ -19,7 +19,7 @@
       "clean": true,
       "le": 0.489,
       "lle": 8.4,
-      "cluster": 14
+      "cluster": 10
     },
     "CHEMBL4648442": {
       "painsAlerts": 0,
@@ -47,7 +47,7 @@
       "clean": true,
       "le": 0.516,
       "lle": 6.71,
-      "cluster": 0
+      "cluster": 3
     },
     "CHEMBL4297674": {
       "painsAlerts": 0,
@@ -90,7 +90,7 @@
       "clean": true,
       "le": 0.487,
       "lle": 6.19,
-      "cluster": 3
+      "cluster": 2
     },
     "CHEMBL4242527": {
       "painsAlerts": 0,
@@ -103,7 +103,7 @@
       "clean": true,
       "le": 0.533,
       "lle": 6.67,
-      "cluster": 0
+      "cluster": 2
     },
     "CHEMBL4248386": {
       "painsAlerts": 0,
@@ -116,35 +116,7 @@
       "clean": true,
       "le": 0.5,
       "lle": 6.11,
-      "cluster": 0
-    },
-    "CHEMBL4243995": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "Michael_acceptor_1"
-      ],
-      "scaffold": "c1ccc(-c2cccc3[nH]ccc23)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.1,
-      "clean": true,
-      "le": 0.53,
-      "lle": 6.0,
-      "cluster": 0
-    },
-    "CHEMBL4782313": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(NCc1ccc(-c2ccnc(Nc3cn[nH]c3)n2)cc1)N1CCCC1",
-      "eganOk": true,
-      "fractionCsp3": 0.44,
-      "clean": true,
-      "le": 0.403,
-      "lle": 5.19,
-      "cluster": 13
+      "cluster": 2
     },
     "CHEMBL4447328": {
       "painsAlerts": 0,
@@ -159,22 +131,7 @@
       "clean": true,
       "le": 0.418,
       "lle": 6.4,
-      "cluster": 2
-    },
-    "CHEMBL4543998": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "triple_bond"
-      ],
-      "scaffold": "c1ccc(Oc2ccc(-c3cncnc3NCC3CCNCC3)cc2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.24,
-      "clean": true,
-      "le": 0.415,
-      "lle": 5.9,
-      "cluster": 12
+      "cluster": 1
     },
     "CHEMBL1873475": {
       "painsAlerts": 0,
@@ -189,7 +146,7 @@
       "clean": true,
       "le": 0.419,
       "lle": 5.88,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL4279353": {
       "painsAlerts": 0,
@@ -204,7 +161,7 @@
       "clean": true,
       "le": 0.393,
       "lle": 7.22,
-      "cluster": 11
+      "cluster": 9
     },
     "CHEMBL4520801": {
       "painsAlerts": 0,
@@ -219,7 +176,7 @@
       "clean": true,
       "le": 0.404,
       "lle": 5.71,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL4240879": {
       "painsAlerts": 0,
@@ -232,7 +189,7 @@
       "clean": true,
       "le": 0.419,
       "lle": 6.1,
-      "cluster": 10
+      "cluster": 8
     },
     "CHEMBL3962133": {
       "painsAlerts": 0,
@@ -247,7 +204,7 @@
       "clean": true,
       "le": 0.423,
       "lle": 6.6,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL4248550": {
       "painsAlerts": 0,
@@ -275,7 +232,7 @@
       "clean": true,
       "le": 0.422,
       "lle": 6.56,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3922120": {
       "painsAlerts": 0,
@@ -290,7 +247,7 @@
       "clean": true,
       "le": 0.408,
       "lle": 6.14,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL4248719": {
       "painsAlerts": 0,
@@ -320,7 +277,7 @@
       "clean": true,
       "le": 0.399,
       "lle": 5.78,
-      "cluster": 9
+      "cluster": 7
     },
     "CHEMBL3954730": {
       "painsAlerts": 0,
@@ -335,34 +292,6 @@
       "clean": true,
       "le": 0.408,
       "lle": 5.33,
-      "cluster": 8
-    },
-    "CHEMBL4111650": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1ccccn1)c1ccc(-c2nc(C3CCC4CCC(=O)N4C3)n3ccncc23)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.321,
-      "clean": true,
-      "le": 0.363,
-      "lle": 5.74,
-      "cluster": 7
-    },
-    "CHEMBL4744536": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "triple_bond"
-      ],
-      "scaffold": "O=C(Nc1ccccn1)c1ccc(Oc2ccnc3ccccc23)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.077,
-      "clean": true,
-      "le": 0.396,
-      "lle": 5.56,
       "cluster": 6
     }
   }

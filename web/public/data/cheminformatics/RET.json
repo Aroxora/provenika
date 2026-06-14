@@ -2,9 +2,9 @@
   "target": "RET",
   "targetId": "CHEMBL2041",
   "targetName": "Proto-oncogene tyrosine-protein kinase receptor Ret",
-  "generated": "2026-05-30",
-  "count": 25,
-  "clusterCount": 17,
+  "generated": "",
+  "count": 20,
+  "clusterCount": 13,
   "byChembl": {
     "CHEMBL3775169": {
       "painsAlerts": 0,
@@ -17,7 +17,7 @@
       "clean": true,
       "le": 0.536,
       "lle": 6.02,
-      "cluster": 0
+      "cluster": 2
     },
     "CHEMBL24828": {
       "painsAlerts": 0,
@@ -30,7 +30,7 @@
       "clean": true,
       "le": 0.452,
       "lle": 5.46,
-      "cluster": 16
+      "cluster": 12
     },
     "CHEMBL440727": {
       "painsAlerts": 0,
@@ -43,7 +43,7 @@
       "clean": true,
       "le": 0.521,
       "lle": 5.58,
-      "cluster": 0
+      "cluster": 2
     },
     "CHEMBL3774904": {
       "painsAlerts": 0,
@@ -56,20 +56,7 @@
       "clean": true,
       "le": 0.534,
       "lle": 5.72,
-      "cluster": 0
-    },
-    "CHEMBL3753341": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ncc2c(-c3cc(C4CC4)on3)n[nH]c2n1",
-      "eganOk": true,
-      "fractionCsp3": 0.429,
-      "clean": true,
-      "le": 0.577,
-      "lle": 6.33,
-      "cluster": 15
+      "cluster": 2
     },
     "CHEMBL4854822": {
       "painsAlerts": 0,
@@ -82,20 +69,7 @@
       "clean": true,
       "le": 0.41,
       "lle": 6.88,
-      "cluster": 2
-    },
-    "CHEMBL3775557": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(Nc2ncnc3ccccc23)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.125,
-      "clean": true,
-      "le": 0.501,
-      "lle": 5.4,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL1908395": {
       "painsAlerts": 0,
@@ -108,7 +82,7 @@
       "clean": true,
       "le": 0.355,
       "lle": 4.9,
-      "cluster": 14
+      "cluster": 11
     },
     "CHEMBL4853155": {
       "painsAlerts": 0,
@@ -121,7 +95,7 @@
       "clean": true,
       "le": 0.404,
       "lle": 6.23,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL4877264": {
       "painsAlerts": 0,
@@ -136,7 +110,7 @@
       "clean": true,
       "le": 0.401,
       "lle": 6.29,
-      "cluster": 2
+      "cluster": 1
     },
     "CHEMBL2180602": {
       "painsAlerts": 0,
@@ -151,7 +125,7 @@
       "clean": true,
       "le": 0.393,
       "lle": 5.16,
-      "cluster": 13
+      "cluster": 10
     },
     "CHEMBL3355010": {
       "painsAlerts": 0,
@@ -209,7 +183,7 @@
       "clean": false,
       "le": 0.299,
       "lle": 6.88,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL1081312": {
       "painsAlerts": 0,
@@ -222,7 +196,7 @@
       "clean": true,
       "le": 0.508,
       "lle": 5.83,
-      "cluster": 12
+      "cluster": 9
     },
     "CHEMBL1967878": {
       "painsAlerts": 1,
@@ -239,7 +213,7 @@
       "clean": false,
       "le": 0.369,
       "lle": 6.39,
-      "cluster": 11
+      "cluster": 8
     },
     "CHEMBL495727": {
       "painsAlerts": 0,
@@ -252,47 +226,6 @@
       "clean": true,
       "le": 0.44,
       "lle": 6.93,
-      "cluster": 10
-    },
-    "CHEMBL1981047": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1n[nH]c2c1CN(C(=O)Cc1ccccc1)C2)c1ccc(N2CCNCC2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.346,
-      "clean": true,
-      "le": 0.344,
-      "lle": 6.16,
-      "cluster": 9
-    },
-    "CHEMBL1289601": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1ccc(Oc2ccnc3ccccc23)cc1)NC1CC1",
-      "eganOk": true,
-      "fractionCsp3": 0.19,
-      "clean": true,
-      "le": 0.403,
-      "lle": 4.75,
-      "cluster": 8
-    },
-    "CHEMBL5566020": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "triple_bond"
-      ],
-      "scaffold": "O=C(Nc1ccc(CN2CCNCC2)cc1)c1cncc(C#Cc2cncnc2)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.28,
-      "clean": true,
-      "le": 0.336,
-      "lle": 5.96,
       "cluster": 7
     },
     "CHEMBL3687191": {
@@ -308,7 +241,7 @@
       "clean": false,
       "le": 0.372,
       "lle": 6.61,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL4441604": {
       "painsAlerts": 1,
@@ -325,7 +258,7 @@
       "clean": false,
       "le": 0.299,
       "lle": 6.9,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL388978": {
       "painsAlerts": 0,
