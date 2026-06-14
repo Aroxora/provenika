@@ -17,5 +17,8 @@ export const routes: Routes = [
   { path: 'admin', loadComponent: () => import('./features/admin/admin').then((m) => m.Admin) },
   { path: 'status', loadComponent: () => import('./features/status/status').then((m) => m.Status) },
   { path: 'about', loadComponent: () => import('./features/about/about').then((m) => m.About) },
+  { path: 'settings', loadComponent: () => import('./features/settings/settings').then((m) => m.Settings) },
+  // Linked only from Settings (not in the main nav).
+  { path: 'compare', loadComponent: () => import('./features/compare/compare').then((m) => m.Compare) },
   { path: '**', redirectTo: 'overview' },
 ];
