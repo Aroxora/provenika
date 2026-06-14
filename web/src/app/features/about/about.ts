@@ -46,7 +46,7 @@ import { RouterLink } from '@angular/router';
     <h3 class="sec-h">Open &amp; verifiable</h3>
     <div class="card">
       <p class="muted">
-        Everything is open source and auditable: <a href="https://github.com/Aroxora/cancer-cure-agent" target="_blank" rel="noopener">github.com/Aroxora/cancer-cure-agent</a>.
+        Everything is open source and auditable: <a href="https://github.com/Aroxora/provenika" target="_blank" rel="noopener">github.com/Aroxora/provenika</a>.
         Prove any figure yourself — <span class="mono">python3 cad/verify.py --target EGFR</span> re-pulls
         each number from its public source. See <a routerLink="/status">Status</a> for live service health
         and <a routerLink="/outreach">Outreach</a> for our transparent fundraising log.

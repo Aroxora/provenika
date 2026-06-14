@@ -50,7 +50,7 @@ npm install -g firebase-tools                       # deploy
 Clone & build:
 
 ```bash
-git clone https://github.com/Aroxora/cancer-cure-agent && cd cancer-cure-agent
+git clone https://github.com/Aroxora/provenika && cd provenika
 npm install && npm run build         # TS framework + CLI
 cd web && npm install && npm start   # web app at http://localhost:4200
 ```
@@ -233,7 +233,7 @@ with its canonical reference. The 7 model cards on the `/models` tab use them.
 > `npm test` needs `--forceExit` (configured in CI) — the suite has a benign teardown handle leak
 > that otherwise hangs the runner.
 
-**Secrets** (set with `gh secret set <NAME> --repo Aroxora/cancer-cure-agent`):
+**Secrets** (set with `gh secret set <NAME> --repo Aroxora/provenika`):
 `TAVILY_API_KEY` (news), and optionally `FIREBASE_PROJECT_ID` + `FIREBASE_SERVICE_ACCOUNT` (CI
 deploy). The Firebase **web** config in `web/src/app/core/firebase.ts` is a public client
 identifier and intentionally in-bundle — that is not a secret.

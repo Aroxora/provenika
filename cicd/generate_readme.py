@@ -145,7 +145,7 @@ UniProt * Europe PMC * Reactome * Open Targets.
 ## Prerequisites
 
 ```bash
-git clone https://github.com/Aroxora/cancer-cure-agent && cd cancer-cure-agent
+git clone https://github.com/Aroxora/provenika && cd provenika
 npm install && npm run build      # TypeScript OSINT tools + CLI
 python3 --version                 # 3.10+  (CAD tools are stdlib-only)
 pip install rdkit                 # optional: similarity, PAINS/Brenk, scaffolds

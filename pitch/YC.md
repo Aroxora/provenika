@@ -17,7 +17,7 @@ structurally can't offer: **explainable, re-verifiable output instead of a black
 **Describe your company in 50 characters or less.**
 `Re-verifiable evidence engine for drug R&D`
 
-**Company URL / demo:** https://github.com/Aroxora/cancer-cure-agent · live verify: `python3 cad/verify.py --target EGFR`
+**Company URL / demo:** https://github.com/Aroxora/provenika · live verify: `python3 cad/verify.py --target EGFR`
 
 ## Founders & progress
 

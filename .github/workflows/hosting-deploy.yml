@@ -3,8 +3,8 @@ name: Deploy web (Firebase Hosting)
 # Manual deploy. Builds the Angular app and deploys to Firebase Hosting only when
 # the required secrets are present, so it never fails for forks/unconfigured repos.
 # Configure once:
-#   gh secret set FIREBASE_PROJECT_ID --repo Aroxora/cancer-cure-agent
-#   gh secret set FIREBASE_SERVICE_ACCOUNT --repo Aroxora/cancer-cure-agent < service-account.json
+#   gh secret set FIREBASE_PROJECT_ID --repo Aroxora/provenika
+#   gh secret set FIREBASE_SERVICE_ACCOUNT --repo Aroxora/provenika < service-account.json
 
 on:
   workflow_dispatch:

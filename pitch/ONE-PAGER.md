@@ -17,7 +17,7 @@
 **Proof in 10 seconds:** run `python3 cad/verify.py --target EGFR` — it fetches EGFR's real
 ChEMBL/UniProt figures with the exact URLs to confirm each one. Nothing is from a language model.
 
-**Repo (public):** https://github.com/Aroxora/cancer-cure-agent · **Analysis:** [`/business`](../business/) · **Outreach log (public):** the website's *Outreach* tab.
+**Repo (public):** https://github.com/Aroxora/provenika · **Analysis:** [`/business`](../business/) · **Outreach log (public):** the website's *Outreach* tab.
 
 *Research/decision-support only — not medical advice. Comparable figures (Schrödinger, Certara) are
 SEC-filed; market-size projections are research-firm estimates (see `/business/MARKET.md`).*
