@@ -1,24 +1,37 @@
 import { Routes } from '@angular/router';
 
+// Clean, user-friendly routes for the refactored site.
+// Real functionality (target explorer), radical transparency (agent log), investor narrative.
+//
+// Old routes are redirected in parallel so that existing links, bookmarks,
+// and any external references continue to work during the transition.
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'overview' },
-  { path: 'overview', loadComponent: () => import('./features/overview/overview').then((m) => m.Overview) },
-  { path: 'disease', loadComponent: () => import('./features/disease/disease').then((m) => m.Disease) },
-  { path: 'dossier', loadComponent: () => import('./features/dossier/dossier').then((m) => m.Dossier) },
-  { path: 'triage', loadComponent: () => import('./features/triage/triage').then((m) => m.Triage) },
-  { path: 'structure', loadComponent: () => import('./features/structure/structure').then((m) => m.Structure) },
-  { path: 'cost-benefit', loadComponent: () => import('./features/cost-benefit/cost-benefit').then((m) => m.CostBenefitPage) },
-  { path: 'models', loadComponent: () => import('./features/math/math').then((m) => m.MathPage) },
-  { path: 'literature', loadComponent: () => import('./features/literature/literature').then((m) => m.Literature) },
-  { path: 'pathways', loadComponent: () => import('./features/pathways/pathways').then((m) => m.Pathways) },
-  { path: 'trials', loadComponent: () => import('./features/trials/trials').then((m) => m.Trials) },
-  { path: 'report', loadComponent: () => import('./features/report/report').then((m) => m.Report) },
-  { path: 'outreach', loadComponent: () => import('./features/outreach/outreach').then((m) => m.Outreach) },
-  { path: 'admin', loadComponent: () => import('./features/admin/admin').then((m) => m.Admin) },
-  { path: 'status', loadComponent: () => import('./features/status/status').then((m) => m.Status) },
+  // New primary routes
+  { path: '', pathMatch: 'full', loadComponent: () => import('./features/landing/landing').then(m => m.Landing) },
+  { path: 'explore', loadComponent: () => import('./features/explorer/explorer').then(m => m.Explorer) },
+  { path: 'log', loadComponent: () => import('./features/log/log').then(m => m.AgentLog) },
+  { path: 'investors', loadComponent: () => import('./features/investors/investors').then(m => m.Investors) },
   { path: 'about', loadComponent: () => import('./features/about/about').then((m) => m.About) },
-  { path: 'settings', loadComponent: () => import('./features/settings/settings').then((m) => m.Settings) },
-  // Linked only from Settings (not in the main nav).
-  { path: 'compare', loadComponent: () => import('./features/compare/compare').then((m) => m.Compare) },
-  { path: '**', redirectTo: 'overview' },
+  { path: 'admin', loadComponent: () => import('./features/admin/admin').then((m) => m.Admin) },
+
+  // Parallel redirects for old routes (preserve query params like ?t=EGFR where applicable)
+  { path: 'overview', redirectTo: '', pathMatch: 'full' },
+  { path: 'disease', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'dossier', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'triage', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'structure', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'cost-benefit', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'report', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'models', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'literature', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'pathways', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'trials', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'settings', redirectTo: 'explore', pathMatch: 'full' },
+  { path: 'compare', redirectTo: 'explore', pathMatch: 'full' },
+
+  // Old agentic pages now live under the unified log
+  { path: 'outreach', redirectTo: 'log', pathMatch: 'full' },
+  { path: 'status', redirectTo: 'log', pathMatch: 'full' },
+
+  { path: '**', redirectTo: '' },
 ];

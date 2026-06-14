@@ -1,72 +1,56 @@
 <header class="topbar">
-  <div class="brand">
+  <a routerLink="/" class="brand" aria-label="Provenika home">
     <span class="logo">⬡</span>
     <div>
       <div class="title">Provenika</div>
-      <div class="sub muted">Auditable oncology evidence engine — compute or cite, never assert</div>
+      <div class="sub muted">Auditable oncology evidence engine</div>
     </div>
-  </div>
+  </a>
 
-  <form class="search" (submit)="submit(draft()); $event.preventDefault()">
-    <span class="search-label muted">Target</span>
-    <input
-      [value]="draft()"
-      (input)="draft.set($any($event.target).value)"
-      placeholder="e.g. EGFR, BTK, KRAS G12C"
-      aria-label="Protein target" />
-    <button class="primary" type="submit">Analyze</button>
-    <button type="button" class="copy" (click)="copyLink()"
-            [title]="'Copy shareable link for ' + target()">{{ copied() ? '✓ Copied' : '🔗 Share' }}</button>
-  </form>
+  <nav class="main-nav" aria-label="Main">
+    <a routerLink="/explore" routerLinkActive="active">Explore</a>
+    <a routerLink="/log" routerLinkActive="active">Agent Log</a>
+    <a routerLink="/investors" routerLinkActive="active">Investors</a>
+    <a href="https://github.com/Aroxora/provenika" target="_blank" rel="noopener" class="ext">GitHub ↗</a>
+  </nav>
+
+  @if (showTargetBar()) {
+    <div class="target-bar">
+      <form class="target-form" (submit)="submitTarget(draft()); $event.preventDefault()">
+        <input
+          [value]="draft()"
+          (input)="draft.set($any($event.target).value)"
+          placeholder="Target (e.g. EGFR)"
+          aria-label="Current target gene symbol"
+          class="target-input" />
+        <button type="submit" class="primary sm">Update</button>
+        <button type="button" class="ghost sm" (click)="copyLink()" [title]="'Share ' + target()">
+          {{ copied() ? '✓' : 'Share' }}
+        </button>
+      </form>
+      <div class="examples">
+        @for (e of examples; track e) {
+          <button class="chip" (click)="pickExample(e)">{{ e }}</button>
+        }
+      </div>
+    </div>
+  }
 </header>
 
-<div class="examples">
-  <span class="muted">Try:</span>
-  @for (e of examples; track e) {
-    <button class="chip" (click)="pick(e)">{{ e }}</button>
-  }
-</div>
-
-<nav class="tabs" aria-label="Primary">
-  <span class="grp">Start</span>
-  <a routerLink="/overview" routerLinkActive="active">Overview</a>
-  <a routerLink="/disease" routerLinkActive="active">Disease</a>
-  <span class="grp">Pipeline</span>
-  <a routerLink="/dossier" routerLinkActive="active">1 · Dossier</a>
-  <a routerLink="/triage" routerLinkActive="active">2 · Triage</a>
-  <a routerLink="/structure" routerLinkActive="active">3 · Structure</a>
-  <a routerLink="/cost-benefit" routerLinkActive="active">4 · Cost-benefit</a>
-  <a routerLink="/report" routerLinkActive="active">5 · Report</a>
-  <span class="grp">Evidence</span>
-  <a routerLink="/literature" routerLinkActive="active">Literature</a>
-  <a routerLink="/pathways" routerLinkActive="active">Pathways</a>
-  <a routerLink="/trials" routerLinkActive="active">Trials</a>
-  <span class="grp">Tools</span>
-  <a routerLink="/models" routerLinkActive="active">∫ Models</a>
-  <a routerLink="/settings" routerLinkActive="active">Settings</a>
-  <span class="grp">Company</span>
-  <a routerLink="/about" routerLinkActive="active">About</a>
-  <a routerLink="/outreach" routerLinkActive="active">Outreach</a>
-  <a routerLink="/status" routerLinkActive="active">Status</a>
-  <a routerLink="/admin" routerLinkActive="active">Admin</a>
-</nav>
-
-<div class="context" aria-live="polite">
-  Analyzing target: <strong class="mono">{{ target() }}</strong>
-  <span class="muted">— every tab below operates on this target.</span>
-</div>
-
-<main>
+<main class="page">
   <router-outlet />
 </main>
 
-<footer class="disclaimer">
-  Research / decision-support only — <strong>not medical advice</strong> and not a treatment
-  recommendation. Live data from Open Targets, ChEMBL, UniProt, RCSB PDB, Europe PMC, Reactome
-  &amp; ClinicalTrials.gov; every figure is a lead to verify at the primary source. Computational
-  triage is hypothesis generation, not validation.
-  <br />
-  Contact Bo Shang: <a href="mailto:bo@shang.software">bo@shang.software</a> ·
-  <a href="mailto:bo@trenchwork.org">bo@trenchwork.org</a> ·
-  <a href="tel:+15082600326">+1&nbsp;508-260-0326</a>.
+<footer class="global-foot">
+  <div class="disclaimer">
+    <strong>Research &amp; decision-support only — not medical advice.</strong>
+    All numbers are fetched live from public sources (ChEMBL, UniProt, RCSB, etc.) or computed deterministically.
+    Verify anything yourself with <code>python3 cad/verify.py --target EGFR</code>.
+  </div>
+  <div class="contact">
+    Bo Shang · <a href="mailto:bo@shang.software">bo@shang.software</a> ·
+    <a href="mailto:bo@trenchwork.org">bo@trenchwork.org</a> ·
+    <a href="tel:+15082600326">+1 508-260-0326</a> ·
+    <a routerLink="/about">About &amp; provenance</a>
+  </div>
 </footer>

@@ -2,19 +2,16 @@ import { Injectable } from '@angular/core';
 
 interface Route { letter: string; color: string; }
 
-// Each view → a short mark + a group color. Letters/digits/∫ render reliably everywhere.
+// Each view → a short mark + a group color. Letters/digits render reliably everywhere.
 const ROUTES: Record<string, Route> = {
-  overview: { letter: '⬡', color: '#3ddc97' },
-  disease: { letter: '+', color: '#3ddc97' },
-  dossier: { letter: '1', color: '#4aa8ff' },
-  triage: { letter: '2', color: '#4aa8ff' },
-  structure: { letter: '3', color: '#4aa8ff' },
-  'cost-benefit': { letter: '4', color: '#4aa8ff' },
-  report: { letter: '5', color: '#4aa8ff' },
-  literature: { letter: 'L', color: '#ffb454' },
-  pathways: { letter: 'P', color: '#ffb454' },
-  trials: { letter: 'T', color: '#ffb454' },
-  models: { letter: '∫', color: '#3ddc97' },
+  '': { letter: '⬡', color: '#3ddc97' },
+  'home': { letter: '⬡', color: '#3ddc97' },
+  'landing': { letter: '⬡', color: '#3ddc97' },
+  'explore': { letter: '▣', color: '#4aa8ff' },
+  'log': { letter: '◉', color: '#3ddc97' },
+  'investors': { letter: '$', color: '#f0b060' },
+  'about': { letter: '?', color: '#8b9bb0' },
+  'admin': { letter: '⚙', color: '#ff6b6b' },
 };
 const BG = '#0a0e14';
 const SIZE = 64;
@@ -68,7 +65,7 @@ export class FaviconService {
     const cv = this.canvas;
     const ctx = cv?.getContext('2d');
     if (!cv || !ctx) return;
-    const r = ROUTES[this.routeId] ?? ROUTES['overview'];
+    const r = ROUTES[this.routeId] ?? ROUTES[''];
     ctx.clearRect(0, 0, SIZE, SIZE);
 
     // rounded dark background

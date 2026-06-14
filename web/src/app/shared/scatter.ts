@@ -1,5 +1,5 @@
 import { Component, computed, input, output } from '@angular/core';
-import { TriageHit } from '../../core/models';
+import { TriageHit } from '../core/models';
 
 type Shape = 'filled' | 'ring' | 'square';
 interface Pt { hit: TriageHit; cx: number; cy: number; color: string; shape: Shape; label: string; }

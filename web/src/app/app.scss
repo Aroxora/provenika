@@ -1,59 +1,6 @@
-:host {
-  display: block;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 1.25rem 1.25rem 3rem;
-}
+/* Scoped additions for root app — most styling lives in global styles.scss now */
+:host { display: block; }
 
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-.brand { display: flex; align-items: center; gap: 0.7rem; }
-.logo {
-  font-size: 1.8rem; color: var(--accent);
-  filter: drop-shadow(0 0 8px #3ddc9755);
-}
-.brand .title { font-size: 1.15rem; font-weight: 700; }
-.brand .sub { font-size: 0.78rem; }
+.page { min-height: 52vh; }
 
-.search { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.search input { flex: 1 1 160px; min-width: 0; }
-.search .copy { white-space: nowrap; }
-.search-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
-@media (max-width: 560px) { .search { width: 100%; } }
-
-.examples {
-  display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;
-  margin: 1rem 0 0.25rem; font-size: 0.85rem;
-}
-.chip { padding: 0.25rem 0.6rem; border-radius: 999px; font-size: 0.8rem; }
-
-.tabs {
-  display: flex; align-items: baseline; gap: 0.2rem 0.35rem; flex-wrap: wrap;
-  margin: 1rem 0 0; border-bottom: 1px solid var(--border);
-}
-.tabs .grp {
-  font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.07em;
-  color: var(--text-dim); opacity: 0.7; padding: 0 0.35rem 0 0.7rem; align-self: center;
-}
-.tabs .grp:first-child { padding-left: 0; }
-.tabs a {
-  padding: 0.55rem 0.7rem; color: var(--text-dim);
-  border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: 0.9rem; white-space: nowrap;
-}
-.tabs a:hover { color: var(--text); text-decoration: none; }
-.tabs a.active { color: var(--accent); border-bottom-color: var(--accent); }
-
-.context {
-  margin: 0 0 1.25rem; padding: 0.5rem 0.8rem; font-size: 0.85rem;
-  background: var(--bg-elev); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
-}
-.context strong { color: var(--accent); }
-
-main { min-height: 50vh; }
-.disclaimer { margin-top: 2.5rem; line-height: 1.5; }
+.topbar { position: relative; }
