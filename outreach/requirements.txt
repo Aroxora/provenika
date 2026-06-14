@@ -1,0 +1,5 @@
+# The agent core is STDLIB-ONLY (urllib, smtplib, imaplib) — no install needed to
+# run locally with STORE_BACKEND=local.
+#
+# Only needed if STORE_BACKEND=firestore:
+# google-cloud-firestore>=2.16

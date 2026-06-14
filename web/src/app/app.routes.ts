@@ -13,5 +13,6 @@ export const routes: Routes = [
   { path: 'pathways', loadComponent: () => import('./features/pathways/pathways').then((m) => m.Pathways) },
   { path: 'trials', loadComponent: () => import('./features/trials/trials').then((m) => m.Trials) },
   { path: 'report', loadComponent: () => import('./features/report/report').then((m) => m.Report) },
+  { path: 'outreach', loadComponent: () => import('./features/outreach/outreach').then((m) => m.Outreach) },
   { path: '**', redirectTo: 'overview' },
 ];

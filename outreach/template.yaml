@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Agentic investor-outreach agent (RAG memory in Firestore, scheduled on EventBridge).
+  Secrets are read from SSM Parameter Store at deploy time — NEVER hard-coded here.
+  Sending stays OFF (SEND_ENABLED=false) until you deliberately enable it.
+
+Parameters:
+  SendEnabled:
+    Type: String
+    Default: "false"
+    AllowedValues: ["false", "true"]
+    Description: Master kill-switch for actually sending email. Keep false until reviewed.
+
+Globals:
+  Function:
+    Timeout: 120
+    MemorySize: 512
+    Runtime: python3.12
+
+Resources:
+  OutreachFn:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      Handler: lambda_handler.handler
+      Environment:
+        Variables:
+          # Secrets resolved from SSM at deploy — store them with:
+          #   aws ssm put-parameter --name /outreach/LLM_API_KEY --type SecureString --value '...'
+          LLM_API_KEY: "{{resolve:ssm-secure:/outreach/LLM_API_KEY}}"
+          LLM_BASE_URL: "{{resolve:ssm:/outreach/LLM_BASE_URL}}"
+          LLM_MODEL: "{{resolve:ssm:/outreach/LLM_MODEL}}"
+          TAVILY_API_KEY: "{{resolve:ssm-secure:/outreach/TAVILY_API_KEY}}"
+          # Email: a local Proton Bridge is NOT reachable from Lambda. Use a relay the
+          # function can reach (e.g. an SES SMTP endpoint or a self-hosted bridge on a VPC host).
+          SMTP_HOST: "{{resolve:ssm:/outreach/SMTP_HOST}}"
+          SMTP_PORT: "{{resolve:ssm:/outreach/SMTP_PORT}}"
+          SMTP_USER: "{{resolve:ssm:/outreach/SMTP_USER}}"
+          SMTP_PASS: "{{resolve:ssm-secure:/outreach/SMTP_PASS}}"
+          SMTP_SECURITY: "{{resolve:ssm:/outreach/SMTP_SECURITY}}"
+          IMAP_HOST: "{{resolve:ssm:/outreach/IMAP_HOST}}"
+          IMAP_PORT: "{{resolve:ssm:/outreach/IMAP_PORT}}"
+          IMAP_USER: "{{resolve:ssm:/outreach/IMAP_USER}}"
+          IMAP_PASS: "{{resolve:ssm-secure:/outreach/IMAP_PASS}}"
+          IMAP_SECURITY: "{{resolve:ssm:/outreach/IMAP_SECURITY}}"
+          FROM_NAME: "{{resolve:ssm:/outreach/FROM_NAME}}"
+          FROM_EMAIL: "{{resolve:ssm:/outreach/FROM_EMAIL}}"
+          REPLY_TO: "{{resolve:ssm:/outreach/REPLY_TO}}"
+          STORE_BACKEND: "firestore"
+          GOOGLE_CLOUD_PROJECT: "{{resolve:ssm:/outreach/GCP_PROJECT}}"
+          # Firestore creds: attach a Google service-account JSON via a Lambda layer or
+          # GOOGLE_APPLICATION_CREDENTIALS pointing at a bundled file you do NOT commit.
+          FIRESTORE_COLLECTION: "outreach"
+          SEND_ENABLED: !Ref SendEnabled
+          DAILY_SEND_CAP: "20"
+          MIN_HOURS_BETWEEN_TOUCHES: "72"
+      Events:
+        DailyCycle:
+          Type: Schedule
+          Properties:
+            Schedule: rate(1 day)
+            Input: '{"action":"run_cycle"}'
+
+Outputs:
+  FunctionName:
+    Value: !Ref OutreachFn

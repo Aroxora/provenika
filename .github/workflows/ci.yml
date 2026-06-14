@@ -40,7 +40,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Syntax-check all Python
-        run: python -m compileall -q cad cicd
+        run: python -m compileall -q cad cicd outreach
       - name: Smoke-test cost-benefit (offline, deterministic)
         run: |
           python3 cad/cost_benefit.py --modality small_molecule --phase phase1 \

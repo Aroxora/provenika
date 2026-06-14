@@ -122,6 +122,12 @@ the comparables (Schrödinger, Certara, scite), and the only defensible wedges a
 **[`business/`](business/)**. Short version: not a classic venture rocket on its own, but a
 credible **open-core + provenance/audit** play and a strong research/credibility asset.
 
+## Pitch & fundraising — in the open
+
+- **[`pitch/`](pitch/)** — YC application draft, investor pitch, and one-pager. Honest by construction: every claim is grounded in the cited business analysis, and traction figures are `[fill in]` placeholders — never invented.
+- **[`outreach/`](outreach/)** — an agentic outreach system (RAG memory · AWS Lambda · Firestore) that researches prospects, drafts emails *grounded in the pitch docs* (so it can't fabricate traction), and — human-approved, **dry-run by default** — sends, classifies replies, and schedules follow-ups.
+- **Public outreach log** — the website's **Outreach** tab shows a **privacy-redacted, real-counts** history of who we've contacted and what came back. Secrets, email addresses, and message contents are **never** published; names appear only with consent.
+
 ## Docs
 
 - **[`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md)** — the no-fabrication architecture, exactly what's guaranteed, and what `verify.py` proves (and doesn't).

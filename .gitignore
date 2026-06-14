@@ -39,6 +39,13 @@ coverage/
 .env.*
 !.env.example
 
+# Outreach private state (contacts, message bodies, drafted emails) — NEVER commit.
+# Only the privacy-redacted public log under web/public/data/outreach/ is published.
+outreach/.state/
+outreach/.outbox/
+**/service-account*.json
+*credentials*.json
+
 # Logs
 *.log
 npm-debug.log*
