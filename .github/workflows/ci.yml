@@ -71,6 +71,8 @@ jobs:
           print('LE+cluster OK:', [(r['id'], r['le'], r['cluster']) for r in rs])"
       - name: Anti-hallucination enforcement tests (offline)
         run: python3 cad/test_provenance.py
+      - name: Outreach agent E2E + edge cases (offline, no network, never sends)
+        run: python3 outreach/test_e2e.py
       - name: Verify a deterministic artifact end-to-end (offline)
         run: |
           mkdir -p /tmp/run

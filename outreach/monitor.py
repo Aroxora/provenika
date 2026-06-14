@@ -29,6 +29,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import agent
 import control
 import emailer
+import health
 from config import cfg
 
 PUBLISH_EVERY = 600  # seconds between follow-up checks + public-log refresh
@@ -67,6 +68,7 @@ def _idle_once(timeout: int) -> bool:
 
 
 def _process_and_maintain(last_publish: float) -> float:
+    health.beat()  # liveness heartbeat every loop
     res = agent.process_inbox()
     errs = [r for r in res if isinstance(r, dict) and r.get("error")]
     if errs:
@@ -81,6 +83,7 @@ def _process_and_maintain(last_publish: float) -> float:
             sent = agent.send_approved()           # send human-approved drafts (within caps)
             ref = agent.refresh_contacts()         # Tavily-refresh the list
             pub = agent.export_public_log()
+            health.write_public(health.gather(deep=False))  # refresh public status page
             n_sent = sum(1 for s in sent if isinstance(s, dict) and s.get("sent"))
             cs = control.summary()
             log(f"maintenance: {len(fu)} follow-up(s), {n_sent} sent, {len(ref)} refreshed; "

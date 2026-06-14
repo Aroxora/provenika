@@ -51,6 +51,7 @@ def main(argv=None) -> int:
     mon = sub.add_parser("monitor"); mon.add_argument("--once", action="store_true")
     ctl = sub.add_parser("control")
     ctl.add_argument("--send", choices=["on", "off"]); ctl.add_argument("--autoreply", choices=["on", "off"])
+    h = sub.add_parser("health"); h.add_argument("--deep", action="store_true", help="also ping LLM + Tavily")
     args = p.parse_args(argv)
 
     if args.cmd == "seed-memory":
@@ -79,6 +80,19 @@ def main(argv=None) -> int:
     elif args.cmd == "monitor":
         import monitor
         return monitor.main(["--once"] if args.once else [])
+    elif args.cmd == "health":
+        import health
+        g = health.gather(deep=args.deep)
+        path = health.write_public(g)
+        icon = {"ok": "✅", "warn": "⚠️ ", "fail": "❌"}
+        print(f"\n=== Outreach health — overall: {icon[g['overall']]} {g['overall'].upper()} ===\n")
+        for c in g["checks"]:
+            print(f"  {icon[c['status']]} {c['name']:<24} {c['detail']}")
+        sw = g["switch"]
+        print(f"\n  switch[{sw['source']}]: send={sw['send_enabled']} auto_reply={sw['auto_reply_enabled']}")
+        print(f"  pipeline: {g['pipeline']}")
+        print(f"\n  public status -> {path}")
+        return 1 if g["overall"] == "fail" else 0
     elif args.cmd == "control":
         import control
         if args.send or args.autoreply:

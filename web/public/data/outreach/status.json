@@ -1,0 +1,48 @@
+{
+  "generated": "2026-06-14T05:41:52Z",
+  "overall": "fail",
+  "services": [
+    {
+      "name": "LLM",
+      "status": "ok",
+      "detail": "operational"
+    },
+    {
+      "name": "Tavily",
+      "status": "ok",
+      "detail": "operational"
+    },
+    {
+      "name": "IMAP (Proton Bridge)",
+      "status": "ok",
+      "detail": "operational"
+    },
+    {
+      "name": "SMTP (Proton Bridge)",
+      "status": "ok",
+      "detail": "operational"
+    },
+    {
+      "name": "Firestore control",
+      "status": "warn",
+      "detail": "degraded"
+    },
+    {
+      "name": "Outreach monitor",
+      "status": "fail",
+      "detail": "unavailable"
+    }
+  ],
+  "switch": {
+    "send_enabled": false,
+    "auto_reply_enabled": false,
+    "source": "local"
+  },
+  "pipeline": {
+    "contacts": 4,
+    "drafts": 4,
+    "sent": 0,
+    "replied": 0,
+    "bounced": 0
+  }
+}
