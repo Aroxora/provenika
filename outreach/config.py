@@ -70,6 +70,15 @@ class Config:
     FROM_NAME = property(lambda self: get("FROM_NAME", "Founder"))
     FROM_EMAIL = property(lambda self: get("FROM_EMAIL"))
     REPLY_TO = property(lambda self: get("REPLY_TO") or get("FROM_EMAIL"))
+    # The human a recipient can contact directly (disclosed in every message).
+    HUMAN_NAME = property(lambda self: get("HUMAN_NAME", "Bo Shang"))
+    HUMAN_EMAIL = property(lambda self: get("HUMAN_EMAIL", "bo@shang.software"))
+    # Agentic auto-reply to inbound replies (in addition to the master SEND_ENABLED).
+    AUTO_REPLY_ENABLED = property(lambda self: flag("AUTO_REPLY_ENABLED", False))
+    MAX_AUTO_REPLIES_PER_CONTACT = property(lambda self: int(num("MAX_AUTO_REPLIES_PER_CONTACT", 3)))
+    # 24/7 monitor: prefer IMAP IDLE, fall back to polling this often.
+    MONITOR_POLL_SECONDS = property(lambda self: int(num("MONITOR_POLL_SECONDS", 30)))
+    MONITOR_USE_IDLE = property(lambda self: flag("MONITOR_USE_IDLE", True))
     # Store
     STORE_BACKEND = property(lambda self: get("STORE_BACKEND", "local").lower())
     LOCAL_STORE_PATH = property(lambda self: get("LOCAL_STORE_PATH", str(HERE / ".state" / "store.json")))

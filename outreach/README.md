@@ -17,6 +17,10 @@ irreversible without a human.**
 - **Opt-out + identity** are appended to every message (it's individual founder outreach, not bulk mail).
 - **No fabrication.** Drafts use only facts retrieved from the committed `pitch/` + `business/` corpus;
   the system prompt forbids inventing metrics, users, or partnerships.
+- **Full disclosure on every email.** A mandatory footer states the message was sent by an automated
+  agent on behalf of `HUMAN_NAME` (Bo Shang), invites a reply (handled agentically) and gives the
+  human contact (`HUMAN_EMAIL`, e.g. bo@shang.software). Auto-replies set `Auto-Submitted: auto-replied`
+  to prevent loops and are capped per contact; anything needing a decision escalates to the human.
 - **Secrets never in the repo.** Local: gitignored `outreach/.env`. Cloud: SSM/Secrets Manager.
 - **Private state never in the repo.** `outreach/.state/` (contacts, bodies) and `.outbox/` are
   gitignored. Only the redacted `web/public/data/outreach/log.json` is published.
@@ -65,6 +69,55 @@ Add `--public` to `add` to allow a contact's name/firm in the **public** log (de
 3. `sam build && sam deploy --guided` (see `template.yaml`). EventBridge runs `run_cycle` daily.
 4. **Email from Lambda:** a local Proton Bridge isn't reachable from AWS — point SMTP/IMAP at a relay
    the function can reach (SES SMTP, or a bridge on a VPC host). Keep `SendEnabled=false` until ready.
+
+## 24/7 monitoring & auto-start (macOS)
+
+Because Proton Bridge runs locally, `monitor.py` watches the mailbox in real time (IMAP IDLE,
+falling back to polling) for **replies and bounces** — classifying replies, marking bounced
+addresses invalid, drafting follow-ups, and refreshing the public log. It's crash- and
+bridge-tolerant: if the Bridge is closed it just keeps retrying until it's back.
+
+Run it once to watch live:
+
+```bash
+python3 outreach/cli.py monitor          # foreground, runs forever
+python3 outreach/cli.py monitor --once   # single pass (testing)
+```
+
+**Auto-run without launching anything** — install it as a macOS LaunchAgent (starts at login,
+restarts on crash, independent of any terminal/editor):
+
+```bash
+bash outreach/install_monitor.sh             # install + start now
+launchctl print gui/$(id -u)/com.cancercure.outreach-monitor | grep -i state   # -> running
+tail -f outreach/.state/monitor.log          # live activity
+bash outreach/install_monitor.sh uninstall   # stop + remove
+```
+
+Running it 24/7 is safe: it obeys `SEND_ENABLED`/`AUTO_REPLY_ENABLED`, so by default it
+**monitors + drafts and sends nothing**. (Lambda can't hold an IMAP connection open, so real-time
+monitoring is this local agent; the cloud `run_cycle` is the scheduled fallback.)
+
+## Go-live checklist (sending is OFF until you do this on purpose)
+
+1. **Rotate** every secret that was ever shared in plaintext; update `outreach/.env` (local) + SSM (cloud).
+2. `python3 outreach/cli.py check` → both `imap` and `smtp` should be `ok`.
+   - Proton Bridge: `IMAP_SECURITY=STARTTLS` (1143), `SMTP_SECURITY=SSL` (1025) — verified.
+3. `seed-memory`, then `add` real prospects (use `--public` only with consent).
+4. `draft` → **read every draft** (`drafts`) → `approve` the ones you want.
+5. Set `SEND_ENABLED=true`, keep `DAILY_SEND_CAP` low to start; `send`.
+6. `ingest` (or `cycle`) to pull replies; `publish` to refresh the public log.
+
+**Self-test before real sends:** email your own address first (we verified the full
+SMTP→IMAP loop this way) so you can see exactly what recipients will get.
+
+**From AWS Lambda, a local Proton Bridge is unreachable.** Use a relay the function can
+reach — simplest is **Amazon SES SMTP**:
+- Verify your domain/sender in SES, request production access (leave the SES sandbox).
+- Create SES SMTP credentials; store them in SSM (`/outreach/SMTP_*`), set
+  `SMTP_HOST=email-smtp.<region>.amazonaws.com`, `SMTP_PORT=465`, `SMTP_SECURITY=SSL`.
+- Keep `SendEnabled=false` in `template.yaml` until you've reviewed drafts; SES also enforces
+  its own sending quota, which doubles as a guardrail.
 
 ## Provider notes
 

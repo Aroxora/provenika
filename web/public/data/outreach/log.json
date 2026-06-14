@@ -5,6 +5,7 @@
     "contacted": 0,
     "replied": 0,
     "interested": 0,
+    "bounced": 0,
     "in_pipeline": 0
   },
   "entries": []

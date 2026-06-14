@@ -48,6 +48,7 @@ def main(argv=None) -> int:
     sub.add_parser("publish")
     sub.add_parser("cycle")
     sub.add_parser("check")
+    mon = sub.add_parser("monitor"); mon.add_argument("--once", action="store_true")
     args = p.parse_args(argv)
 
     if args.cmd == "seed-memory":
@@ -73,6 +74,9 @@ def main(argv=None) -> int:
         out = agent.run_cycle()
     elif args.cmd == "check":
         out = emailer.check_connectivity()
+    elif args.cmd == "monitor":
+        import monitor
+        return monitor.main(["--once"] if args.once else [])
     else:
         out = {"error": "unknown command"}
     print(json.dumps(out, indent=2, default=str))

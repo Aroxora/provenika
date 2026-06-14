@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import email
 import imaplib
+import re
 import smtplib
 import ssl
 import time
@@ -35,7 +36,8 @@ def _ctx(host: str) -> ssl.SSLContext:
     return ctx
 
 
-def send(to_email: str, subject: str, body: str, *, force: bool = False) -> dict:
+def send(to_email: str, subject: str, body: str, *, force: bool = False,
+         in_reply_to: str = "", references: str = "", auto_reply: bool = False) -> dict:
     """Send (or dry-run) one plain-text email. Returns {sent, dry_run, path?}."""
     msg = EmailMessage()
     msg["From"] = f"{cfg.FROM_NAME} <{cfg.FROM_EMAIL}>"
@@ -43,6 +45,11 @@ def send(to_email: str, subject: str, body: str, *, force: bool = False) -> dict
     msg["Subject"] = subject
     if cfg.REPLY_TO:
         msg["Reply-To"] = cfg.REPLY_TO
+    if in_reply_to:
+        msg["In-Reply-To"] = in_reply_to
+        msg["References"] = references or in_reply_to
+    if auto_reply:
+        msg["Auto-Submitted"] = "auto-replied"   # RFC 3834: prevents auto-responder loops
     msg.set_content(body)
 
     if not (cfg.SEND_ENABLED and force):
@@ -118,8 +125,29 @@ def _body_text(msg: email.message.Message) -> str:
         return str(msg.get_payload())
 
 
+_BOUNCE_SUBJECT = re.compile(
+    r"undeliver|delivery (status|failure)|failure notice|returned mail|"
+    r"mail delivery failed|delivery has failed|message not delivered", re.I)
+_FINAL_RCPT = re.compile(r"final-recipient:\s*rfc822;\s*([^\s]+)", re.I)
+_ORIG_RCPT = re.compile(r"original-recipient:\s*rfc822;\s*([^\s]+)", re.I)
+
+
+def _analyze_bounce(msg: "email.message.Message", from_addr: str, subject: str, body: str) -> dict:
+    """Detect a non-delivery report and extract the address that failed."""
+    ctype = (msg.get_content_type() or "").lower()
+    daemon = any(t in from_addr.lower() for t in ("mailer-daemon", "postmaster", "mail-daemon"))
+    is_report = ctype == "multipart/report" or "report-type=delivery-status" in (msg.get("Content-Type", "") or "")
+    is_bounce = daemon or is_report or bool(_BOUNCE_SUBJECT.search(subject or ""))
+    failed = ""
+    if is_bounce:
+        m = _FINAL_RCPT.search(body) or _ORIG_RCPT.search(body)
+        failed = (m.group(1).strip("<>").strip() if m else "")
+    return {"is_bounce": is_bounce, "failed_recipient": failed}
+
+
 def fetch_unseen(limit: int = 25, mark_seen: bool = True) -> list[dict]:
-    """Read UNSEEN inbox messages (read-only beyond the optional Seen flag)."""
+    """Read UNSEEN inbox messages (read-only beyond the optional Seen flag).
+    Each item includes bounce analysis and the Auto-Submitted header (loop guard)."""
     m = _imap_connect()
     try:
         m.select("INBOX")
@@ -132,11 +160,19 @@ def fetch_unseen(limit: int = 25, mark_seen: bool = True) -> list[dict]:
             if not msg_data or not msg_data[0]:
                 continue
             msg = email.message_from_bytes(msg_data[0][1])
+            from_addr = parseaddr(msg.get("From", ""))[1]
+            subject = msg.get("Subject", "")
+            body = _body_text(msg)[:8000]
+            auto = (msg.get("Auto-Submitted", "") or "").lower()
             out.append({
-                "from": parseaddr(msg.get("From", ""))[1],
-                "subject": msg.get("Subject", ""),
+                "from": from_addr,
+                "to": parseaddr(msg.get("To", ""))[1],
+                "subject": subject,
                 "message_id": msg.get("Message-ID", ""),
-                "body": _body_text(msg)[:5000],
+                "references": msg.get("References", ""),
+                "auto_submitted": auto and auto != "no",
+                "body": body[:5000],
+                **_analyze_bounce(msg, from_addr, subject, body),
             })
         return out
     finally:

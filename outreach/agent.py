@@ -31,8 +31,29 @@ from store import get_store
 ROOT = Path(__file__).parent.parent
 DAY = 86400
 
-OPT_OUT = ("\n\n— Reply STOP and I won't contact you again. "
-           "This is an individual founder's outreach, not bulk mail.")
+def _footer() -> str:
+    """Mandatory disclosure on EVERY outbound message (cold + agentic replies)."""
+    return (
+        f"\n\n—\n"
+        f"Sent by an automated outreach agent on behalf of {cfg.HUMAN_NAME}. "
+        f"Just reply and the agent will respond; if you'd prefer a human, email "
+        f"{cfg.HUMAN_NAME} directly at {cfg.HUMAN_EMAIL}. "
+        f"Reply STOP to opt out — you won't be contacted again."
+    )
+
+
+AUTO_REPLY_SYSTEM = """You are an automated agent replying to someone who replied to outreach about an \
+OPEN-SOURCE oncology research tool ("an auditable evidence engine — compute or cite, never assert"), \
+on behalf of the founder Bo Shang.
+
+HARD RULES:
+- Answer their actual question using ONLY the CONTEXT facts. Never invent traction, numbers, users, \
+partnerships, dates, or availability. If you don't know, say so plainly.
+- It is research software over PUBLIC data — NOT a cure, drug, or medical advice. Never imply otherwise.
+- If they ask to meet, schedule, negotiate terms, or anything needing a human decision, DO NOT fabricate \
+or commit to anything — say Bo will follow up personally and give his email (provided below). Append [ESCALATE].
+- Be brief (90-140 words), specific, honest, and warm. No hype. Plain text. Do NOT add a signature or \
+disclaimer (the system appends one). Return ONLY the reply body."""
 
 DRAFT_SYSTEM = """You write concise, personalized investor outreach emails for the founder of an \
 OPEN-SOURCE oncology research tool ("an auditable evidence engine — compute or cite, never assert").
@@ -121,7 +142,7 @@ def draft(email: str, kind: str = "first_touch") -> dict:
                          {"role": "user", "content": user}], temperature=0.5)
     except Exception as e:
         return {"error": f"LLM draft failed: {e}"}
-    body = body.strip() + OPT_OUT
+    body = body.strip() + _footer()
     subject = _subject(c, kind)
     store.add_interaction(email, "draft", subject=subject, body=body, kind_of=kind, approved=False)
     store.set_status(email, "drafted")
@@ -186,26 +207,101 @@ def send_approved() -> list[dict]:
 
 
 # --------------------------------------------------------------------------- replies
-def ingest_replies() -> list[dict]:
+def process_inbox(max_msgs: int = 25) -> list[dict]:
+    """Handle new mail: bounces -> mark invalid; replies -> classify + agentic respond.
+    This is what the 24/7 monitor and the scheduled cycle both call."""
     store = get_store()
     by_addr = {c["email"].lower(): c for c in store.all_contacts()}
     out = []
     try:
-        msgs = emailer.fetch_unseen()
+        msgs = emailer.fetch_unseen(limit=max_msgs)
     except Exception as e:
         return [{"error": f"IMAP fetch failed: {e}"}]
+
     for msg in msgs:
-        addr = (msg.get("from") or "").lower()
-        c = by_addr.get(addr)
+        frm = (msg.get("from") or "").lower()
+
+        # 1) Bounce / non-delivery report -> mark the failed address invalid, stop contacting.
+        if msg.get("is_bounce"):
+            target = (msg.get("failed_recipient") or "").lower()
+            c = by_addr.get(target) or by_addr.get(frm)
+            if c:
+                store.add_interaction(c["email"], "bounce", failed=target or c["email"])
+                store.set_status(c["email"], "bounced")
+                store.upsert_contact(c["email"], invalid=True, next_followup=0)
+                out.append({"email": c["email"], "event": "bounce"})
+            else:
+                out.append({"event": "bounce", "unmatched": target})
+            continue
+
+        # 2) Only engage replies from people we actually contacted (don't reply to strangers/spam).
+        c = by_addr.get(frm)
         if not c:
             continue
+        if msg.get("auto_submitted"):                 # vacation responders etc. — log, don't loop
+            store.add_interaction(c["email"], "auto_received", subject=msg.get("subject"))
+            continue
+
         label = _classify(msg.get("body", ""))
         store.add_interaction(c["email"], "reply", subject=msg.get("subject"),
                               classification=label, message_id=msg.get("message_id"))
         store.set_status(c["email"], f"replied:{label}")
-        store.upsert_contact(c["email"], next_followup=0)  # stop auto follow-up once they reply
-        out.append({"email": c["email"], "classification": label})
+        store.upsert_contact(c["email"], next_followup=0)
+
+        if label == "unsubscribe":
+            store.set_status(c["email"], "unsubscribed")
+            store.upsert_contact(c["email"], invalid=True)
+            out.append({"email": c["email"], "classification": label})
+            continue
+        if label == "out_of_office":
+            out.append({"email": c["email"], "classification": label})
+            continue
+
+        out.append({"email": c["email"], "classification": label,
+                    **_agentic_reply(store, c, msg, label)})
     return out
+
+
+# Backwards-compatible alias.
+def ingest_replies() -> list[dict]:
+    return process_inbox()
+
+
+def _agentic_reply(store, c: dict, msg: dict, label: str) -> dict:
+    """Generate (and, if enabled, send) an honest agentic reply. Escalates to a human
+    for anything requiring a decision; never fabricates."""
+    prior = sum(1 for i in store.interactions_for(c["email"]) if i["kind"] in ("auto_reply_sent",))
+    if prior >= cfg.MAX_AUTO_REPLIES_PER_CONTACT:
+        store.upsert_contact(c["email"], needs_human=True)
+        return {"auto_reply": "skipped (max auto-replies reached) -> needs human"}
+
+    context = _retrieve(store, f"reply to investor about: {msg.get('subject','')} {msg.get('body','')[:300]}")
+    user = (f"They wrote (from {c.get('name') or c['email']} at {c.get('firm') or '?'}, "
+            f"classified '{label}'):\n\"\"\"\n{msg.get('body','')[:1500]}\n\"\"\"\n\n"
+            f"Bo's email for escalation: {cfg.HUMAN_EMAIL}\n\nCONTEXT (facts you may use):\n{context}")
+    try:
+        body = llm.chat([{"role": "system", "content": AUTO_REPLY_SYSTEM},
+                         {"role": "user", "content": user}], temperature=0.4)
+    except Exception as e:
+        store.upsert_contact(c["email"], needs_human=True)
+        return {"auto_reply": f"draft failed -> needs human: {e}"}
+
+    escalate = "[ESCALATE]" in body or label in ("meeting_request",)
+    body = body.replace("[ESCALATE]", "").strip() + _footer()
+    subject = "Re: " + re.sub(r"^(re:\s*)+", "", msg.get("subject", ""), flags=re.I).strip()
+    if escalate:
+        store.upsert_contact(c["email"], needs_human=True)
+
+    if cfg.SEND_ENABLED and cfg.AUTO_REPLY_ENABLED:
+        res = emailer.send(c["email"], subject, body, force=True,
+                           in_reply_to=msg.get("message_id", ""),
+                           references=msg.get("references", ""), auto_reply=True)
+        store.add_interaction(c["email"], "auto_reply_sent", subject=subject,
+                              dry_run=res.get("dry_run", True), escalated=escalate)
+        store.record_touch(c["email"])
+        return {"auto_reply": "sent" if res.get("sent") else "dry-run", "escalated": escalate}
+    store.add_interaction(c["email"], "auto_reply_draft", subject=subject, body=body, escalated=escalate)
+    return {"auto_reply": "drafted (auto-reply disabled)", "escalated": escalate}
 
 
 def _classify(body: str) -> str:
@@ -248,7 +344,8 @@ def export_public_log(path: str | None = None) -> dict:
     out_path = Path(path) if path else (ROOT / "web" / "public" / "data" / "outreach" / "log.json")
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
-    entries, totals = [], {"contacted": 0, "replied": 0, "interested": 0}
+    entries, totals = [], {"contacted": 0, "replied": 0, "interested": 0, "bounced": 0}
+    shown = ("sent", "reply", "bounce", "auto_reply_sent")
     for c in sorted(store.all_contacts(), key=lambda x: x.get("created", 0)):
         ints = sorted(store.interactions_for(c["email"]), key=lambda i: i["ts"])
         sent = [i for i in ints if i["kind"] == "sent"]
@@ -260,13 +357,15 @@ def export_public_log(path: str | None = None) -> dict:
         timeline = [{"date": _date(i["ts"]),
                      "event": i["kind"],
                      "label": i.get("classification") or ("dry-run" if i.get("dry_run") else "")}
-                    for i in ints if i["kind"] in ("sent", "reply")]
+                    for i in ints if i["kind"] in shown]
         if sent:
             totals["contacted"] += 1
         if replies:
             totals["replied"] += 1
         if any(r.get("classification") in ("interested", "meeting_request") for r in replies):
             totals["interested"] += 1
+        if c.get("status") == "bounced" or c.get("invalid"):
+            totals["bounced"] += 1
         entries.append({
             "id": anon_id,
             "name": c.get("name") if public else None,
