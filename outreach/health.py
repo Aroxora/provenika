@@ -80,11 +80,11 @@ def _llm_check(deep: bool) -> dict:
     if not cfg.LLM_API_KEY:
         return _c("LLM", FAIL, "LLM_API_KEY not set")
     if not deep:
-        return _c("LLM", OK, f"configured ({cfg.LLM_MODEL}); --deep to ping")
+        return _c("LLM", OK, f"configured ({cfg.LLM_PROVIDER}/{cfg.LLM_MODEL}, format={cfg.LLM_FORMAT}); --deep to ping")
     try:
         import llm
         llm.chat([{"role": "user", "content": "ping"}], max_tokens=3)
-        return _c("LLM", OK, f"reachable ({cfg.LLM_MODEL})")
+        return _c("LLM", OK, f"reachable ({cfg.LLM_PROVIDER}/{cfg.LLM_MODEL} via {llm.active_format()})")
     except Exception as e:
         return _c("LLM", FAIL, f"ping failed: {str(e)[:80]}")
 

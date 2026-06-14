@@ -76,6 +76,13 @@ def send(to_email: str, subject: str, body: str, *, force: bool = False,
     return {"sent": True, "dry_run": False, "to": to_email}
 
 
+def notify(subject: str, body: str, *, force: bool = False) -> dict:
+    """Send an operational UPDATE email to NOTIFY_EMAIL (bo@shang.software by default).
+    Same gating as send(): dry-runs to the outbox unless sending is enabled. Use for
+    deploy/health/reply alerts — not for prospect outreach."""
+    return send(cfg.NOTIFY_EMAIL, f"[Provenika] {subject}", body, force=force)
+
+
 def _imap_connect() -> imaplib.IMAP4:
     host, port = cfg.IMAP_HOST, cfg.IMAP_PORT
     if cfg.IMAP_SECURITY == "SSL":

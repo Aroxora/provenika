@@ -228,19 +228,24 @@ def test_health_structure():
 
 
 def test_missing_llm_key():
-    saved = os.environ.get("LLM_API_KEY")
-    os.environ["LLM_API_KEY"] = ""
+    # Clear the active key AND switch to a keyless provider so no fallback key resolves.
+    saved = {k: os.environ.get(k) for k in ("LLM_API_KEY", "LLM_PROVIDER", "OPENAI_API_KEY")}
+    os.environ.update({"LLM_API_KEY": "", "LLM_PROVIDER": "openai", "OPENAI_API_KEY": ""})
     raised = False
     try:
-        # bypass the fake; call the real chec via a fresh import path
         import importlib, llm as _llm
-        importlib.reload(_llm)
+        importlib.reload(_llm)  # un-mock; use the real chat
         try:
             _llm.chat([{"role": "user", "content": "x"}])
         except RuntimeError:
             raised = True
     finally:
-        os.environ["LLM_API_KEY"] = saved or "test-key"
+        for k, v in saved.items():
+            if v is None:
+                os.environ.pop(k, None)
+            else:
+                os.environ[k] = v
+        os.environ.setdefault("LLM_API_KEY", "test-key")
         import importlib, llm as _llm2
         importlib.reload(_llm2)
     check("missing key: llm.chat raises (no silent fabrication)", raised)

@@ -52,6 +52,10 @@ def main(argv=None) -> int:
     ctl = sub.add_parser("control")
     ctl.add_argument("--send", choices=["on", "off"]); ctl.add_argument("--autoreply", choices=["on", "off"])
     h = sub.add_parser("health"); h.add_argument("--deep", action="store_true", help="also ping LLM + Tavily")
+    k = sub.add_parser("keys", help="save user-submitted keys (gitignored .state/keys.json)")
+    k.add_argument("--llm-key"); k.add_argument("--llm-base-url"); k.add_argument("--llm-anthropic-base-url")
+    k.add_argument("--llm-format", choices=["openai", "anthropic", "auto"]); k.add_argument("--llm-model")
+    k.add_argument("--tavily-key")
     args = p.parse_args(argv)
 
     if args.cmd == "seed-memory":
@@ -93,6 +97,24 @@ def main(argv=None) -> int:
         print(f"  pipeline: {g['pipeline']}")
         print(f"\n  public status -> {path}")
         return 1 if g["overall"] == "fail" else 0
+    elif args.cmd == "keys":
+        import json as _json
+        from pathlib import Path as _Path
+        path = _Path(__file__).parent / ".state" / "keys.json"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        cur = {}
+        if path.exists():
+            cur = _json.loads(path.read_text())
+        mapping = {"LLM_API_KEY": args.llm_key, "LLM_BASE_URL": args.llm_base_url,
+                   "LLM_ANTHROPIC_BASE_URL": args.llm_anthropic_base_url,
+                   "LLM_FORMAT": args.llm_format, "LLM_MODEL": args.llm_model,
+                   "TAVILY_API_KEY": args.tavily_key}
+        for kk, vv in mapping.items():
+            if vv:
+                cur[kk] = vv
+        path.write_text(_json.dumps(cur, indent=2))
+        out = {"saved": sorted(k for k, v in mapping.items() if v), "path": str(path),
+               "note": "gitignored; overrides .env, not real env vars"}
     elif args.cmd == "control":
         import control
         if args.send or args.autoreply:

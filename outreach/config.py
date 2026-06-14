@@ -24,18 +24,49 @@ def _load_dotenv(path: Path) -> None:
         if not line or line.startswith("#") or "=" not in line:
             continue
         key, _, val = line.partition("=")
-        key, val = key.strip(), val.strip().strip('"').strip("'")
-        # strip trailing inline comments only when value is unquoted+simple
-        if " #" in val and not val.startswith(("http", "/")):
-            val = val.split(" #", 1)[0].strip()
-        os.environ.setdefault(key, val)
+        import re as _re
+        # strip a trailing " #inline comment" (whitespace + #), then quotes/space.
+        val = _re.sub(r"\s+#.*$", "", val).strip().strip('"').strip("'")
+        os.environ.setdefault(key.strip(), val)
 
 
+def _load_saved_keys(path: Path) -> None:
+    """User-submitted saved keys (JSON). Override .env defaults but not real env vars.
+    Written by `cli.py keys ...`; lives under gitignored .state/ — never committed."""
+    try:
+        import json
+        for k, v in (json.loads(path.read_text()) or {}).items():
+            if v not in (None, ""):
+                os.environ.setdefault(k, str(v))
+    except Exception:
+        pass
+
+
+# Precedence: real env vars > saved keys.json > .env file > defaults.
+_load_saved_keys(HERE / ".state" / "keys.json")
 _load_dotenv(HERE / ".env")
 
 
 def get(key: str, default: str = "") -> str:
     return os.environ.get(key, default)
+
+
+# Provider presets — pick with LLM_PROVIDER; any field overridable via LLM_* env vars.
+# All are OpenAI-compatible except where an Anthropic base is given (DeepSeek offers both).
+PROVIDERS = {
+    "deepseek":  {"base": "https://api.deepseek.com/v1", "anthropic": "https://api.deepseek.com/anthropic",
+                  "model": "deepseek-chat", "format": "auto", "key_env": "DEEPSEEK_API_KEY"},
+    "xai":       {"base": "https://api.x.ai/v1", "anthropic": "",
+                  "model": "grok-4.3", "format": "openai", "key_env": "XAI_API_KEY"},
+    "openai":    {"base": "https://api.openai.com/v1", "anthropic": "",
+                  "model": "gpt-4o-mini", "format": "openai", "key_env": "OPENAI_API_KEY"},
+    "anthropic": {"base": "", "anthropic": "https://api.anthropic.com",
+                  "model": "claude-opus-4-8", "format": "anthropic", "key_env": "ANTHROPIC_API_KEY"},
+}
+
+
+def _prov() -> dict:
+    return PROVIDERS.get(get("LLM_PROVIDER", "deepseek").lower(), PROVIDERS["deepseek"])
 
 
 def flag(key: str, default: bool = False) -> bool:
@@ -50,10 +81,17 @@ def num(key: str, default: float) -> float:
 
 
 class Config:
-    # LLM (OpenAI-compatible)
-    LLM_API_KEY = property(lambda self: get("LLM_API_KEY"))
-    LLM_BASE_URL = property(lambda self: get("LLM_BASE_URL", "https://api.deepseek.com/v1"))
-    LLM_MODEL = property(lambda self: get("LLM_MODEL", "deepseek-chat"))
+    # LLM — supports DeepSeek's two surfaces with auto-switching:
+    #   OpenAI format     : LLM_BASE_URL        (POST /chat/completions, Bearer)
+    #   Anthropic format  : LLM_ANTHROPIC_BASE_URL (POST /v1/messages, x-api-key)
+    # LLM_FORMAT: "openai" | "anthropic" | "auto" (try one, fall back to the other).
+    LLM_PROVIDER = property(lambda self: get("LLM_PROVIDER", "deepseek").lower())
+    LLM_API_KEY = property(lambda self: get("LLM_API_KEY") or get(_prov()["key_env"]))
+    LLM_BASE_URL = property(lambda self: get("LLM_BASE_URL") or _prov()["base"])
+    LLM_ANTHROPIC_BASE_URL = property(lambda self: get("LLM_ANTHROPIC_BASE_URL") or _prov()["anthropic"])
+    LLM_FORMAT = property(lambda self: (get("LLM_FORMAT") or _prov()["format"]).lower())
+    ANTHROPIC_VERSION = property(lambda self: get("ANTHROPIC_VERSION", "2023-06-01"))
+    LLM_MODEL = property(lambda self: get("LLM_MODEL") or _prov()["model"])
     # Tavily
     TAVILY_API_KEY = property(lambda self: get("TAVILY_API_KEY"))
     # Email
@@ -75,6 +113,8 @@ class Config:
     HUMAN_EMAIL = property(lambda self: get("HUMAN_EMAIL", "bo@shang.software"))
     HUMAN_EMAIL_ALT = property(lambda self: get("HUMAN_EMAIL_ALT", "bo@trenchwork.org"))
     HUMAN_PHONE = property(lambda self: get("HUMAN_PHONE", "+1 508-260-0326"))
+    # Where operational update/alert emails are sent.
+    NOTIFY_EMAIL = property(lambda self: get("NOTIFY_EMAIL") or get("HUMAN_EMAIL", "bo@shang.software"))
     # Agentic auto-reply to inbound replies (in addition to the master SEND_ENABLED).
     AUTO_REPLY_ENABLED = property(lambda self: flag("AUTO_REPLY_ENABLED", False))
     MAX_AUTO_REPLIES_PER_CONTACT = property(lambda self: int(num("MAX_AUTO_REPLIES_PER_CONTACT", 3)))
