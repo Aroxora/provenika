@@ -46,9 +46,10 @@ confirmation.
   ChEMBL over **raw HTTP (a separate code path)** and requires **byte-equality** with `hits.csv` —
   catching an edited or transposed structure that still "parses."
 - **Deterministic artifacts** (`cost_benefit.json`, the triage score, the **docking box** —
-  re-derived from the structure's co-crystal ligand envelope — and the **PAINS/Brenk liability
-  counts**, re-derived from the saved SMILES) are **recomputed** and must reproduce **exactly** —
-  a mismatch means the file was edited/fabricated after the fact.
+  re-derived from the structure's co-crystal ligand envelope — and the **per-hit liability
+  fields** — PAINS/Brenk + GSK/Pfizer developability + SA score, re-derived from the saved
+  SMILES) are **recomputed** and must reproduce **exactly** — a mismatch means the file was
+  edited/fabricated after the fact.
 - It checks that numbers are **real and re-derivable** — never that a molecule *works*. **Triage ≠ validation.**
 
 ### 3. No fabricated docking — `cad/dock.py`

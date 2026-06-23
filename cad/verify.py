@@ -21,8 +21,9 @@ What this DOES and does NOT prove (read this — honesty is the point):
     SMILES straight from ChEMBL over raw HTTP (not via the triage code) and
     requires byte-equality with hits.csv — catching an edited/transposed SMILES.
   * Deterministic artifacts (cost_benefit.json, the triage score, the docking box —
-    re-derived from the co-crystal ligand — and the PAINS/Brenk liability counts) are
-    recomputed and must reproduce EXACTLY — a mismatch means the file was edited/fabricated.
+    re-derived from the co-crystal ligand — and the per-hit liability fields: PAINS/Brenk
+    + GSK/Pfizer developability + SA score) are recomputed and must reproduce EXACTLY —
+    a mismatch means the file was edited/fabricated.
   * NOT covered: narrative text (SUMMARY.md prose, target_report read-outs) and
     the news_update.py `intel/` digests, which are unverified leads, not figures.
 
@@ -294,19 +295,27 @@ def verify_liabilities(liab: dict, checks: list, max_rows: int = 25) -> None:
         if not a:
             continue
         checked += 1
-        if (a.get("pains_alerts") != r.get("pains_alerts")
-                or a.get("brenk_alerts") != r.get("brenk_alerts")):
+        # Deterministic per-hit liability fields must all reproduce.
+        bad = (a.get("pains_alerts") != r.get("pains_alerts")
+               or a.get("brenk_alerts") != r.get("brenk_alerts")
+               or a.get("gsk_ok") != r.get("gsk_ok")
+               or a.get("pfizer_tox_risk") != r.get("pfizer_tox_risk"))
+        # SA score is RDKit-Contrib-dependent — only compare when both sides computed it.
+        if (a.get("sa_score") is not None and r.get("sa_score") is not None
+                and a["sa_score"] != r["sa_score"]):
+            bad = True
+        if bad:
             mism += 1
     if not checked:
         checks.append(("liabilities recompute", SKIP, "no SMILES to recompute", ""))
     elif mism:
         checks.append((f"liabilities recompute ({checked} hits)", FAIL,
-                       f"{mism} hits' PAINS/Brenk counts differ from saved — the file was edited, or "
-                       "your RDKit alert catalog differs from the one that wrote it (re-run the pipeline)",
-                       "cad/cheminformatics.py"))
+                       f"{mism} hits' liability fields (PAINS/Brenk/GSK/Pfizer/SA) differ from saved — "
+                       "the file was edited, or your RDKit version differs from the one that wrote it "
+                       "(re-run the pipeline)", "cad/cheminformatics.py"))
     else:
         checks.append((f"liabilities recompute ({checked} hits)", PASS,
-                       "PAINS/Brenk alert counts reproduce from the saved SMILES",
+                       "PAINS/Brenk + GSK/Pfizer (and SA where available) reproduce from the saved SMILES",
                        "cad/cheminformatics.py"))
 
 
