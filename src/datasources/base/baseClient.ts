@@ -64,8 +64,11 @@ export class DataSourceError extends Error {
  * Default configuration values
  */
 const DEFAULT_CONFIG = {
-  timeout: 30000,
-  retries: 3,
+  // Tuned for an interactive CLI: a healthy public API answers in <5s, so a 15s timeout
+  // and 2 attempts (1 retry) still ride out a single blip while failing fast during a
+  // sustained outage — instead of making the user wait ~30-95s (30s x 3 retries).
+  timeout: 15000,
+  retries: 2,
   retryDelay: 1000,
   rateLimitPerSecond: 10,
   cacheTtlMs: 300000, // 5 minutes
@@ -195,12 +198,17 @@ export abstract class BaseClient {
       });
 
       if (!response.ok) {
+        // Retry only genuinely-transient statuses: 429 (rate limit) and 502/503/504
+        // (gateway / temporarily unavailable). A plain 500 is a server error that won't
+        // self-heal within a retry window, so retrying it just multiplies the wait during
+        // an outage (e.g. a multi-request handler hanging 30-90s).
+        const retryable = [429, 502, 503, 504].includes(response.status);
         throw new DataSourceError(
           `HTTP ${response.status}: ${response.statusText}`,
           this.sourceName,
           response.status,
           `HTTP_${response.status}`,
-          response.status >= 500 || response.status === 429
+          retryable
         );
       }
 
