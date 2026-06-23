@@ -28,9 +28,10 @@ Because a promise is worth nothing in medicine, the rule is **enforced and re-ch
 | Mechanism | File | What it guarantees |
 |-----------|------|--------------------|
 | **Provenance manifest** | `cad/provenance.py` → `provenance.json` | Every reported figure is tagged `fetched`/`computed`, with its source and a **re-verification URL**. The code *cannot* record a value whose origin is "model" — it raises. |
-| **Independent verifier** | `cad/verify.py` | Re-pulls every figure from its live source → `PASS` / `DRIFT` / `FAIL`. Checks SMILES are **byte-equal to ChEMBL** (raw HTTP, separate code path) and recomputes deterministic scores. Non-zero exit gates CI. |
-| **No fabricated docking** | `cad/dock.py` | A thin wrapper on AutoDock Vina. If the binary is absent it prints install steps and exits — it **never** invents a score. |
-| **Heuristics labeled as heuristics** | `cad/cost_benefit.py`, `cad/virtual_triage.py` | Scoring weights and priors are marked as transparent, editable, **non-validated** design choices — not dressed up as data. |
+| **Independent verifier** | `cad/verify.py` | Re-pulls every figure from its live source → `PASS` / `DRIFT` / `FAIL`. Checks SMILES are **byte-equal to ChEMBL** (raw HTTP, separate code path) and recomputes deterministic scores. Non-zero exit gates CI. A run with **no target-specific evidence never earns a green banner.** |
+| **No fabricated docking** | `cad/dock.py` | A thin wrapper on AutoDock Vina. If the binary is absent it prints exact install steps and exits — it **never** invents a score. (`--check` reports what you have.) |
+| **No verdict without a target** | `cad/run_pipeline.py` | If a target can't be resolved (unknown gene, or a fictional one), the pipeline **refuses to emit a feasibility verdict and exits non-zero** — it will not hand you a confident "proceed" for a target it never assessed. |
+| **Heuristics labeled as heuristics** | `cad/cost_benefit.py`, `cad/virtual_triage.py` | Scoring weights and priors are marked as transparent, editable, **non-validated** design choices — not dressed up as data. The feasibility verdict is a **modality/phase-level benchmark, not a target-specific prediction**, and says so. |
 | **A hard line on advice** | repo-wide | No per-patient recommendations, survival estimates, or treatment plans. Tools that crossed that line were neutralized (see [`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md)). |
 
 **Honest scope:** the guarantee covers *figures in machine-readable artifacts*. Free-text
@@ -51,6 +52,41 @@ python3 cad/verify.py --target EGFR     # fetch-and-cite EGFR's headline figures
 ✅ PASS  EGFR: PDB structures = 354               verify: https://www.uniprot.org/uniprotkb/P00533/entry
 ```
 Open any URL. The number is there, in the public database — not in this tool's imagination.
+(Exact counts above are illustrative; the live values are what print, and they grow over time.)
+
+This needs **only Python 3** — no build, no pip install, no key. (Don't want to run anything?
+Browse a committed real run in [`examples/sample-run-egfr/`](examples/sample-run-egfr/).)
+
+---
+
+## Install
+
+```bash
+git clone https://github.com/Aroxora/provenika && cd provenika
+
+# 1) Python CADD pipeline — the science. stdlib-only; RDKit is the ONE optional dep.
+python3 --version                       # 3.10+ recommended (CI uses 3.12)
+pip install -r cad/requirements.txt     # installs RDKit (similarity, PAINS/Brenk, QED, scaffolds)
+python3 cad/verify.py --target EGFR      # confirm it works — live, cited, no build needed
+
+# 2) Node OSINT tools + cancer-cli — optional, for the live literature/trials/gene search
+npm install && npm run build            # builds dist/bin/cancer-cli.js
+```
+
+**Optional extras** (only if you need them):
+
+```bash
+# Docking (stage 6) needs two non-pip binaries on PATH — conda is the reliable path:
+conda install -c conda-forge vina openbabel
+python3 cad/dock.py --check             # ✅/❌ for vina + obabel, then the next command works
+# (`pip install vina` does NOT build on recent Python; there's no Homebrew vina formula.)
+
+# The research website (Angular) is a separate build, not needed for the pipeline:
+cd web && npm ci && npx ng build        # or `npm start` for a dev server
+```
+
+> Without RDKit the pipeline still runs end-to-end (it uses ChEMBL-computed properties and
+> turns off 2-D similarity). Docking is the only part that needs non-pip software.
 
 ---
 
@@ -62,7 +98,7 @@ python3 cad/run_pipeline.py --target EGFR --modality small_molecule --phase phas
 python3 cad/verify.py --run runs/egfr          # re-prove every figure it wrote
 ```
 
-Produces in `runs/egfr/`:
+Produces in `runs/egfr/` (see a committed real example in [`examples/sample-run-egfr/`](examples/sample-run-egfr/)):
 
 | Artifact | What it is | Source |
 |----------|-----------|--------|
@@ -74,9 +110,31 @@ Produces in `runs/egfr/`:
 | **`provenance.json`** | **Every figure → origin + source + verify URL** | this repo |
 | `SUMMARY.md` | One-page tie-together + the exact next command | this repo |
 
+**If the target isn't real** (or can't be resolved): the pipeline prints a clear message,
+writes **nothing**, and **exits non-zero** — it will not fabricate a "Favorable — proceed"
+verdict for a gene it never found. Try it: `--target NOTAREALGENE`.
+
 **Single stages:** `target_report.py` · `virtual_triage.py` · `fetch_structure.py` ·
 `binding_site.py` · `cost_benefit.py` · `dock.py` — each takes `--json`. Full design &
 validity caveats: **[`docs/REAL-CAD-ROADMAP.md`](docs/REAL-CAD-ROADMAP.md)**.
+
+---
+
+## Verifying a run (what the labels mean)
+
+`python3 cad/verify.py --run <dir>` re-pulls every figure from its live source:
+
+- **`PASS`** — the saved figure reproduces from the source today.
+- **`DRIFT`** — it changed but is the same order of magnitude (a living database gained
+  records). **Not** a failure; re-run the pipeline to refresh.
+- **`FAIL`** — could not be reproduced, differs wildly, or the source returns nothing where a
+  value was claimed → treat as suspect. **Non-zero exit gates CI.**
+
+A run that contains **no target-specific evidence** (no dossier, no hits) does **not** get the
+"every figure reproduced" banner — an empty/unresolved run is flagged, not blessed. The SMILES
+identity check (byte-equal to ChEMBL) and the deterministic recomputes are the genuinely
+independent checks; the count checks prove *reproducibility/freshness*, not that the query
+design is the right one. See [`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md).
 
 ---
 
@@ -105,15 +163,6 @@ cancer-cli "find clinical trials <cancer>" # ClinicalTrials  cancer-cli "pathway
 free, no key, queried live: PubMed · ClinicalTrials.gov · cBioPortal · ChEMBL · KEGG · RCSB PDB ·
 UniProt · Europe PMC · Reactome · Open Targets.
 
-## Prerequisites
-
-```bash
-git clone https://github.com/Aroxora/provenika && cd provenika
-npm install && npm run build      # TypeScript OSINT tools + CLI
-python3 --version                 # 3.10+  (CAD tools are stdlib-only)
-pip install rdkit                 # optional: similarity, PAINS/Brenk, scaffolds
-```
-
 ## Can this be a real business? (honest analysis)
 
 We asked it seriously, with cited market data and a skeptical investor's eye — including the
@@ -139,7 +188,7 @@ credible **open-core + provenance/audit** play and a strong research/credibility
 
 - **Triage ≠ validation.** Scores rank hypotheses; docking/ADMET/wet-lab confirm them.
 - **Cite the source.** Every figure points to a public record — `verify.py` re-pulls it for you.
-- Cost-benefit numbers are rough public benchmarks (BIO/Informa, DiMasi, Wong et al.), not a valuation.
+- Cost-benefit numbers are rough public benchmarks (BIO/Informa, DiMasi, Wong et al.), modality/phase-level — not a target-specific prediction and not a valuation.
 
 ## License
 
@@ -147,4 +196,4 @@ MIT — research and decision-support only; not a substitute for professional me
 
 ---
 
-*Strategy & disclaimers maintained by hand; operational sections regenerated by `cicd/generate_readme.py`.*
+*Strategy & disclaimers maintained by hand; operational sections regenerated by `cicd/generate_readme.py` (62 tools).*

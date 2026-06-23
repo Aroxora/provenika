@@ -251,9 +251,11 @@ def verify_target_live(target: str, checks: list) -> None:
 
 def run(args) -> int:
     checks: list[tuple[str, str, str, str]] = []
+    target_evidence = False  # did this run contain anything TARGET-specific to verify?
 
     if args.target:
         verify_target_live(args.target, checks)
+        target_evidence = True
     else:
         run_dir = Path(args.run)
         if not run_dir.exists():
@@ -262,13 +264,24 @@ def run(args) -> int:
         dossier_p = run_dir / "dossier.json"
         if dossier_p.exists():
             verify_dossier(json.loads(dossier_p.read_text()), checks)
+            target_evidence = True
         else:
             checks.append(("dossier.json present", SKIP, "no dossier to verify", ""))
         if (run_dir / "hits.csv").exists():
             verify_hits(run_dir / "hits.csv", checks)
+            target_evidence = True
         cb_p = run_dir / "cost_benefit.json"
         if cb_p.exists():
             verify_cost_benefit(json.loads(cb_p.read_text()), checks)
+
+        # A run with NO target-specific evidence (no dossier, no hits) must never earn a
+        # green "every figure verified" banner — that would bless an unresolved/fictional
+        # target. If there is also nothing deterministic to recompute, it is a hard FAIL;
+        # a cost-benefit-only dir (target-independent) stays PASS but the banner is qualified.
+        if not target_evidence and not any(s != SKIP for _, s, _, _ in checks):
+            checks.append(("target-derived figures present", FAIL,
+                           "run has no dossier, hits, or cost-benefit — nothing to verify; an "
+                           "unresolved target produces no figures to re-prove", ""))
 
     n_fail = sum(1 for _, s, _, _ in checks if s == FAIL)
     n_drift = sum(1 for _, s, _, _ in checks if s == DRIFT)
@@ -277,6 +290,7 @@ def run(args) -> int:
         print(json.dumps({
             "checks": [{"figure": f, "status": s, "note": n, "verify_url": u} for f, s, n, u in checks],
             "fail": n_fail, "drift": n_drift, "ok": n_fail == 0,
+            "target_evidence": target_evidence,
         }, indent=2))
         return 1 if n_fail else 0
 
@@ -292,6 +306,10 @@ def run(args) -> int:
     print()
     if n_fail:
         print(f"❌ {n_fail} figure(s) could not be reproduced from their source. Treat as SUSPECT.")
+    elif not target_evidence:
+        print("⚠️  No target-specific figures in this run (no dossier/hits). Any deterministic "
+              "artifact present reproduced exactly, but NOTHING target-derived was verified — "
+              "this is not a clean bill of health for a target.")
     elif n_drift:
         print(f"✅ No fabrications. {n_drift} figure(s) DRIFTed (databases grow) — re-run to refresh.")
     else:

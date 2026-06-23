@@ -37,19 +37,37 @@ import sys
 INSTALL_HELP = """\
 AutoDock Vina and/or Open Babel were not found on PATH.
 
-Install (open source, free):
-  conda install -c conda-forge vina openbabel        # recommended
-  # or: pip install vina ; brew install open-babel    (macOS)
-  # AutoDock Vina:  https://github.com/ccsb-scripps/AutoDock-Vina
-  # Open Babel:     https://openbabel.org
+Install (open source, free). The reliable cross-platform path is conda:
+  conda install -c conda-forge vina openbabel        # recommended (Linux/macOS/Windows)
 
-Then re-run this command. This wrapper only ever runs the real Vina binary —
-it does not estimate or fabricate docking scores.\
+Without conda:
+  # Open Babel:  macOS `brew install open-babel`  ·  Debian/Ubuntu `apt install openbabel`
+  # AutoDock Vina: download a release binary and put it on PATH —
+  #   https://github.com/ccsb-scripps/AutoDock-Vina/releases
+  # NOTE: `pip install vina` is unreliable on recent Python (no wheels, needs Boost)
+  #       and there is no Homebrew `vina` formula — prefer conda or the release binary.
+
+Then re-run this command (or `python3 cad/dock.py --check` to confirm). This wrapper
+only ever runs the real Vina binary — it does not estimate or fabricate docking scores.\
 """
 
 
 def _have(binary: str) -> bool:
     return shutil.which(binary) is not None
+
+
+def check_deps() -> int:
+    """Report whether the docking binaries are installed. Exit 0 iff both present."""
+    have_vina, have_obabel = _have("vina"), _have("obabel")
+    mark = lambda ok: "found" if ok else "MISSING"
+    print("Docking dependencies (cad/dock.py — AutoDock Vina + Open Babel on PATH):")
+    print(f"  AutoDock Vina (`vina`):  {mark(have_vina)}")
+    print(f"  Open Babel (`obabel`):   {mark(have_obabel)}")
+    if have_vina and have_obabel:
+        print("\nReady to dock.")
+        return 0
+    print("\n" + INSTALL_HELP, file=sys.stderr)
+    return 3
 
 
 def _run(cmd: list[str]) -> subprocess.CompletedProcess:
@@ -167,7 +185,9 @@ def run(args) -> int:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Dock a ligand into a receptor with AutoDock Vina.")
-    p.add_argument("--receptor", required=True, help="Receptor .pdb/.pdbqt (e.g. from fetch_structure.py).")
+    p.add_argument("--check", action="store_true",
+                   help="Report whether AutoDock Vina + Open Babel are installed, then exit.")
+    p.add_argument("--receptor", help="Receptor .pdb/.pdbqt (e.g. from fetch_structure.py).")
     p.add_argument("--ligand", help="Ligand file (.pdb/.sdf/.mol2/.smi/.pdbqt).")
     p.add_argument("--smiles", help="Ligand as a SMILES string (3-D generated via Open Babel).")
     p.add_argument("--box-json", help="binding_site.json (center+size) from cad/binding_site.py.")
@@ -178,6 +198,10 @@ def main(argv=None) -> int:
     p.add_argument("--exhaustiveness", type=int, default=8, help="Vina search effort (default 8).")
     p.add_argument("--out", default="docking", help="Output directory (default ./docking).")
     args = p.parse_args(argv)
+    if args.check:
+        return check_deps()
+    if not args.receptor:
+        p.error("--receptor is required (or pass --check to test your install)")
     return run(args)
 
 

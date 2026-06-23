@@ -21,6 +21,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import csv
 import json
 import subprocess
 import sys
@@ -66,12 +67,26 @@ def main(argv=None) -> int:
     args = p.parse_args(argv)
 
     out = Path(args.out)
-    out.mkdir(parents=True, exist_ok=True)
 
-    print(f"[1/4] Target dossier for {args.target}…")
+    print(f"[1/5] Target dossier for {args.target}…")
     dossier = _run_json("target_report.py", ["--target", args.target])
-    if dossier:
-        (out / "dossier.json").write_text(json.dumps(dossier, indent=2))
+    if not dossier:
+        print(
+            f"\n✗ Could not resolve '{args.target}' to a ChEMBL/UniProt target "
+            "(unknown gene/protein, or the lookup failed).",
+            file=sys.stderr,
+        )
+        print(
+            "  Refusing to write a feasibility verdict for an unresolved target: a go/no-go\n"
+            "  number with no target evidence behind it is exactly the fabrication this tool\n"
+            "  exists to prevent. The cost-benefit model is target-independent, so emitting it\n"
+            f"  here would falsely imply '{args.target}' was assessed.",
+            file=sys.stderr,
+        )
+        print(f"  Nothing written to {out}/. Check the target name and re-run.", file=sys.stderr)
+        return 2
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "dossier.json").write_text(json.dumps(dossier, indent=2))
 
     print(f"[2/5] Ligand triage…")
     _run("virtual_triage.py", ["--target", args.target, "--min-pchembl", str(args.min_pchembl),
@@ -147,8 +162,16 @@ def main(argv=None) -> int:
             "",
         ]
     if (out / "hits.csv").exists():
-        n = max(0, sum(1 for _ in (out / "hits.csv").open()) - 1)
-        lines += ["## Ligand triage", f"- {n} ranked candidates → `hits.csv` (SMILES + ChEMBL links)", ""]
+        with (out / "hits.csv").open() as fh:
+            hit_rows = list(csv.DictReader(fh))
+        lines += ["## Ligand triage",
+                  f"- {len(hit_rows)} ranked candidates → `hits.csv` (SMILES + ChEMBL links)"]
+        top = hit_rows[:10]
+        no_props = sum(1 for r in top if not (r.get("qed") or "").strip())
+        if no_props:
+            lines.append(f"- ⚠️ {no_props}/{len(top)} top hits lack computed drug-likeness "
+                         "(e.g. macrocycles/peptides) — those rows are ranked on potency alone; treat with care.")
+        lines.append("")
     structs = sorted((out / "structures").glob("*")) if (out / "structures").exists() else []
     if structs:
         lines += ["## Structure", f"- {structs[0].name} → `structures/`", ""]
@@ -163,6 +186,9 @@ def main(argv=None) -> int:
     if cb:
         lines += [
             "## Cost-benefit / feasibility",
+            f"_Modality/phase-level benchmark ({args.modality} @ {args.phase}) from public priors —"
+            " **not** a target-specific prediction. Identical inputs give identical figures for any"
+            " target; it does not 'know' this target. Treat as a transparent planning heuristic._",
             f"- P(approval) from {cb['phase']}: {cb['probability_of_approval']*100:.1f}%",
             f"- Expected remaining cost: ${cb['expected_remaining_cost_musd']:,.0f}M over {cb['expected_time_to_market_years']} yr",
             f"- Risk-adjusted revenue: ${cb['risk_adjusted_revenue_musd']:,.0f}M; benefit/cost {cb['benefit_cost_ratio']:.2f}",
@@ -171,6 +197,7 @@ def main(argv=None) -> int:
         ]
     lines.append("## Next step: dock (stage 6)")
     if box and structs:
+        lines.append("- Confirm AutoDock Vina + Open Babel are installed: `python3 cad/dock.py --check`")
         lines.append(f"- `python3 cad/dock.py --receptor {out}/structures/{structs[0].name} "
                      f"--smiles \"<hit SMILES from hits.csv>\" --box-json {out}/binding_site.json`")
     else:
@@ -184,8 +211,11 @@ def main(argv=None) -> int:
     ]
     (out / "SUMMARY.md").write_text("\n".join(lines))
 
-    print(f"\nDone → {out}/  (SUMMARY.md, dossier.json, hits.csv, structures/, binding_site.json, "
-          f"cost_benefit.json, provenance.json)")
+    # Report only what actually got written — never list files that don't exist.
+    expected = ["SUMMARY.md", "dossier.json", "hits.csv", "structures", "binding_site.json",
+                "cost_benefit.json", "provenance.json"]
+    written = [name for name in expected if (out / name).exists()]
+    print(f"\nDone → {out}/  ({', '.join(written)})")
     print(f"Verify every figure is real:  python3 cad/verify.py --run {out}")
     return 0
 

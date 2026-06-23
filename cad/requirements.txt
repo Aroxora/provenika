@@ -1,0 +1,37 @@
+# Provenika — CADD pipeline Python dependencies
+# =============================================================================
+# The cad/ and cicd/ tools are STANDARD-LIBRARY ONLY except for RDKit, which is
+# needed by just three modules (cheminformatics.py, virtual_triage.py --query,
+# precompute_site_data.py). All of them degrade gracefully — if RDKit is absent
+# they print `pip install rdkit` and exit cleanly (code 3); they never fake a
+# result. So the *minimum* to run target triage, structure fetch, the docking
+# box, cost-benefit, the full pipeline, and verify.py is: nothing but Python.
+#
+# Install everything below with:  pip install -r cad/requirements.txt
+# Python floor: 3.10+ (the code runs on 3.9+ thanks to `from __future__ import
+# annotations`, but 3.10 is the supported/tested floor; CI uses 3.12).
+# =============================================================================
+
+rdkit>=2024.3        # cheminformatics: descriptors, QED, PAINS/Brenk, scaffolds,
+                     # ECFP4 Tanimoto similarity. Wheel name is `rdkit` (NOT the
+                     # old `rdkit-pypi`). Without it the pipeline still runs;
+                     # ChEMBL-computed properties are used and similarity is off.
+
+# -----------------------------------------------------------------------------
+# NOT pip-installable — required ONLY by cad/dock.py (optional stage 6, docking).
+# AutoDock Vina + Open Babel must be on PATH. The reliable cross-platform path is
+# conda; `pip install vina` does NOT build on recent Python (no wheels, needs
+# Boost) and there is no Homebrew `vina` formula, so do not rely on it.
+#
+#   conda install -c conda-forge vina openbabel        # recommended (all OSes)
+#   # macOS without conda: brew install open-babel, then install a Vina release
+#   #   binary from https://github.com/ccsb-scripps/AutoDock-Vina/releases on PATH
+#
+# Check what you have:  python3 cad/dock.py --check
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Optional — only for the agentic outreach system (outreach/), not the science.
+# Already pinned in outreach/requirements.txt; listed here for discoverability.
+#   google-cloud-firestore>=2.11   # lazily imported; outreach runs offline w/o it
+# -----------------------------------------------------------------------------

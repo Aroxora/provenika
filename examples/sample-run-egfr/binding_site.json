@@ -1,0 +1,21 @@
+{
+  "pdb": "8A27",
+  "ligand": {
+    "resName": "KY9",
+    "chain": "A",
+    "resSeq": "1102"
+  },
+  "ligandAtoms": 48,
+  "center": [
+    23.81,
+    -10.62,
+    -11.55
+  ],
+  "size": [
+    34.2,
+    24.1,
+    30.0
+  ],
+  "dockCommand": "python3 cad/dock.py --receptor structures/8A27.pdb --smiles \"<ligand SMILES>\" --center 23.81 -10.62 -11.55 --size 34.2 24.1 30.0",
+  "disclaimer": "Box derived from the co-crystal ligand envelope. Research only."
+}

@@ -1,0 +1,41 @@
+# Optional packaging for the Provenika CADD tools.
+#
+# You do NOT need this to use the pipeline — `pip install -r cad/requirements.txt`
+# and `python3 cad/<tool>.py ...` work as-is. This file exists so you can instead do
+# `pip install -e .` and get the tools on your PATH (provenika-verify, provenika-pipeline,
+# provenika-triage, provenika-chem), and so the Python floor is enforced at install time.
+#
+# The Node CLI/OSINT tools and the Angular web app have their own package.json files.
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "provenika-cad"
+version = "0.1.0"
+description = "Provenika — auditable oncology evidence engine (CADD triage, cheminformatics, docking wrapper, provenance verifier)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+# Core pipeline is standard-library only — verify.py, target triage, structure fetch,
+# the docking box, cost-benefit, and the orchestrator all run with zero pip installs.
+dependencies = []
+
+[project.optional-dependencies]
+# Cheminformatics: descriptors, QED, PAINS/Brenk, scaffolds, ECFP4 similarity.
+chem = ["rdkit>=2024.3"]
+# Agentic outreach system (outreach/) — not the science. Lazily imported.
+outreach = ["google-cloud-firestore>=2.11"]
+# NOTE: docking (cad/dock.py) also needs the AutoDock Vina + Open Babel *binaries* on
+# PATH. Those are NOT pip-installable on recent Python — use `conda install -c
+# conda-forge vina openbabel`, then `python3 cad/dock.py --check`.
+
+[project.scripts]
+provenika-verify = "cad.verify:main"
+provenika-pipeline = "cad.run_pipeline:main"
+provenika-triage = "cad.virtual_triage:main"
+provenika-chem = "cad.cheminformatics:main"
+
+[tool.setuptools]
+packages = ["cad", "cicd"]

@@ -1,0 +1,278 @@
+{
+  "query": "EGFR",
+  "chembl_target": {
+    "id": "CHEMBL203",
+    "name": "Epidermal growth factor receptor",
+    "type": "SINGLE PROTEIN",
+    "organism": "Homo sapiens"
+  },
+  "chembl": {
+    "potent_activity_records": 21342,
+    "known_mechanism_drugs": [
+      {
+        "molecule_chembl_id": "CHEMBL1201827",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1201577",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1079742",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL939",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1201179",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2105712",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545063",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1743047",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1645462",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1947204",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL422872",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL258940",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2029988",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL598797",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3786343",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL5314410",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL5314411",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3109738",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL6067986",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545196",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1963502",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545200",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1614725",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4545915",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3647420",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL587723",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545311",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2103842",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2408045",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545396",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545308",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL607707",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3544983",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3787344",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3353410",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL545315",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL180022",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2105719",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545235",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2107861",
+        "action_type": "ANTAGONIST",
+        "mechanism": "Epidermal growth factor receptor erbB1 antagonist"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2108038",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2109390",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2109391",
+        "action_type": "CROSS-LINKING AGENT",
+        "mechanism": "Epidermal growth factor receptor erbB1 cross-linking agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2109389",
+        "action_type": "ANTAGONIST",
+        "mechanism": "Epidermal growth factor receptor erbB1 antagonist"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2108359",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2109388",
+        "action_type": "ANTAGONIST",
+        "mechanism": "Epidermal growth factor receptor erbB1 antagonist"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3707277",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Epidermal growth factor receptor erbB1 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3137345",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2110732",
+        "action_type": "INHIBITOR",
+        "mechanism": "Epidermal growth factor receptor erbB1 inhibitor"
+      }
+    ]
+  },
+  "uniprot": {
+    "accession": "P00533",
+    "name": "Epidermal growth factor receptor",
+    "length": 1210,
+    "function": "Receptor tyrosine kinase binding ligands of the EGF family and activating several signaling cascades to convert extracellular cues into appropriate cellular responses (PubMed:10805725, PubMed:27153536, PubMed:2790960, PubMed:35538033). Known ligands include EGF, TGFA/TGF-alpha, AREG, epigen/EPGN, BTC/betacellulin, epiregulin/EREG and HBEGF/heparin-binding EGF (PubMed:12297049, PubMed:15611079, PubMed:17909029, PubMed:20837704, PubMed:27153536, PubMed:2790960, PubMed:7679104, PubMed:8144591, PubMed:9419975). Ligand binding triggers receptor homo- and/or heterodimerization and autophosphorylation on key cytoplasmic residues. The phosphorylated receptor recruits adapter proteins like GRB2 which in turn activates complex downstream signaling cascades. Activates at least 4 major downstream signaling cascades including the RAS-RAF-MEK-ERK, PI3 kinase-AKT, PLCgamma-PKC and STATs modules (PubMed:27153536). May also activate the NF-kappa-B signaling cascade (PubMed:11116146). Also directly phosphorylates other proteins like RGS16, activating its GTPase activity and probably coupling the EGF receptor signaling to the G protein-coupled receptor signaling (PubMed:11602604). Also phosphorylates MUC1 and increases its interaction with SRC and CTNNB1/beta-catenin (PubMed:11483589). Positively regulates cell migration via interaction with CCDC88A/GIV which retains EGFR at the cell membrane following ligand stimulation, promoting EGFR signaling which triggers cell migration (PubMed:20462955). Plays a role in enhancing learning and memory performance (By similarity). Plays a role in mammalian pain signaling (long-lasting hypersensitivity) (By similarity)",
+    "pdb_count": 354,
+    "pdb_examples": [
+      "1IVO",
+      "1M14",
+      "1M17",
+      "1MOX",
+      "1NQL",
+      "1XKK",
+      "1YY9",
+      "1Z9I"
+    ]
+  },
+  "next": "python3 cad/virtual_triage.py --target \"EGFR\" --out hits.csv",
+  "disclaimer": "Public-data orientation only. Not validation, not medical advice."
+}

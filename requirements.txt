@@ -1,0 +1,5 @@
+# Provenika — Python dependencies (root).
+# The CADD pipeline's only pip dependency is RDKit, and even that is optional
+# (the pipeline runs stdlib-only without it). See cad/requirements.txt for the
+# full story, including the non-pip docking binaries (AutoDock Vina + Open Babel).
+-r cad/requirements.txt
