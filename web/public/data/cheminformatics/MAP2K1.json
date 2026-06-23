@@ -2,7 +2,7 @@
   "target": "MAP2K1",
   "targetId": "CHEMBL3587",
   "targetName": "Dual specificity mitogen-activated protein kinase kinase 1",
-  "generated": "2026-05-30",
+  "generated": "2026-06-23",
   "count": 25,
   "clusterCount": 15,
   "byChembl": {
@@ -15,6 +15,9 @@
       "eganOk": true,
       "fractionCsp3": 0.381,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.05,
       "le": 0.457,
       "lle": 6.01,
       "cluster": 14
@@ -28,6 +31,9 @@
       "eganOk": true,
       "fractionCsp3": 0.368,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 4.35,
       "le": 0.458,
       "lle": 7.1,
       "cluster": 4
@@ -45,6 +51,9 @@
       "eganOk": false,
       "fractionCsp3": 0.405,
       "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.81,
       "le": 0.196,
       "lle": 4.27,
       "cluster": 13
@@ -60,6 +69,9 @@
       "eganOk": true,
       "fractionCsp3": 0.0,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 2.26,
       "le": 0.564,
       "lle": 3.58,
       "cluster": 12
@@ -73,6 +85,9 @@
       "eganOk": true,
       "fractionCsp3": 0.368,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 4.35,
       "le": 0.45,
       "lle": 6.94,
       "cluster": 4
@@ -89,6 +104,9 @@
       "eganOk": true,
       "fractionCsp3": 0.188,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.14,
       "le": 0.5,
       "lle": 7.01,
       "cluster": 0
@@ -104,6 +122,9 @@
       "eganOk": true,
       "fractionCsp3": 0.381,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 3.35,
       "le": 0.443,
       "lle": 5.92,
       "cluster": 11
@@ -119,6 +140,9 @@
       "eganOk": true,
       "fractionCsp3": 0.188,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.32,
       "le": 0.482,
       "lle": 7.16,
       "cluster": 10
@@ -134,6 +158,9 @@
       "eganOk": true,
       "fractionCsp3": 0.2,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.87,
       "le": 0.521,
       "lle": 7.09,
       "cluster": 2
@@ -147,6 +174,9 @@
       "eganOk": true,
       "fractionCsp3": 0.4,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 4.66,
       "le": 0.434,
       "lle": 6.67,
       "cluster": 1
@@ -162,6 +192,9 @@
       "eganOk": true,
       "fractionCsp3": 0.235,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.76,
       "le": 0.443,
       "lle": 6.52,
       "cluster": 3
@@ -179,6 +212,9 @@
       "eganOk": true,
       "fractionCsp3": 0.125,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.77,
       "le": 0.532,
       "lle": 7.0,
       "cluster": 0
@@ -192,6 +228,9 @@
       "eganOk": true,
       "fractionCsp3": 0.321,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 4.95,
       "le": 0.353,
       "lle": 4.68,
       "cluster": 9
@@ -207,6 +246,9 @@
       "eganOk": true,
       "fractionCsp3": 0.278,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.26,
       "le": 0.42,
       "lle": 5.29,
       "cluster": 8
@@ -223,6 +265,9 @@
       "eganOk": true,
       "fractionCsp3": 0.188,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.14,
       "le": 0.486,
       "lle": 6.75,
       "cluster": 0
@@ -236,6 +281,9 @@
       "eganOk": true,
       "fractionCsp3": 0.429,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 4.63,
       "le": 0.405,
       "lle": 6.01,
       "cluster": 1
@@ -251,6 +299,9 @@
       "eganOk": true,
       "fractionCsp3": 0.235,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.71,
       "le": 0.438,
       "lle": 6.35,
       "cluster": 3
@@ -264,6 +315,9 @@
       "eganOk": true,
       "fractionCsp3": 0.4,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 4.66,
       "le": 0.422,
       "lle": 6.44,
       "cluster": 1
@@ -280,6 +334,9 @@
       "eganOk": true,
       "fractionCsp3": 0.125,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.69,
       "le": 0.507,
       "lle": 5.16,
       "cluster": 0
@@ -295,6 +352,9 @@
       "eganOk": true,
       "fractionCsp3": 0.214,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.1,
       "le": 0.505,
       "lle": 7.42,
       "cluster": 2
@@ -310,6 +370,9 @@
       "eganOk": true,
       "fractionCsp3": 0.211,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.42,
       "le": 0.393,
       "lle": 7.87,
       "cluster": 7
@@ -323,6 +386,9 @@
       "eganOk": true,
       "fractionCsp3": 0.217,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.92,
       "le": 0.379,
       "lle": 4.37,
       "cluster": 6
@@ -339,6 +405,9 @@
       "eganOk": true,
       "fractionCsp3": 0.176,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.3,
       "le": 0.477,
       "lle": 7.34,
       "cluster": 0
@@ -356,6 +425,9 @@
       "eganOk": true,
       "fractionCsp3": 0.125,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.0,
       "le": 0.505,
       "lle": 5.78,
       "cluster": 5
@@ -372,6 +444,9 @@
       "eganOk": true,
       "fractionCsp3": 0.222,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.77,
       "le": 0.465,
       "lle": 4.7,
       "cluster": 0

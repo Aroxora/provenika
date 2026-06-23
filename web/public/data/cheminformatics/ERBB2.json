@@ -2,7 +2,7 @@
   "target": "ERBB2",
   "targetId": "CHEMBL1824",
   "targetName": "Receptor tyrosine-protein kinase erbB-2",
-  "generated": "2026-05-30",
+  "generated": "2026-06-23",
   "count": 25,
   "clusterCount": 18,
   "byChembl": {
@@ -15,6 +15,9 @@
       "eganOk": true,
       "fractionCsp3": 0.294,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 2.64,
       "le": 0.54,
       "lle": 7.03,
       "cluster": 17
@@ -30,6 +33,9 @@
       "eganOk": true,
       "fractionCsp3": 0.059,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 2.74,
       "le": 0.491,
       "lle": 5.44,
       "cluster": 0
@@ -43,6 +49,9 @@
       "eganOk": true,
       "fractionCsp3": 0.241,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.33,
       "le": 0.378,
       "lle": 5.63,
       "cluster": 16
@@ -58,6 +67,9 @@
       "eganOk": true,
       "fractionCsp3": 0.0,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 2.58,
       "le": 0.511,
       "lle": 5.17,
       "cluster": 15
@@ -73,6 +85,9 @@
       "eganOk": true,
       "fractionCsp3": 0.056,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": true,
+      "saScore": 2.13,
       "le": 0.516,
       "lle": 4.85,
       "cluster": 14
@@ -88,6 +103,9 @@
       "eganOk": true,
       "fractionCsp3": 0.0,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": true,
+      "saScore": 2.4,
       "le": 0.519,
       "lle": 5.01,
       "cluster": 13
@@ -103,6 +121,9 @@
       "eganOk": true,
       "fractionCsp3": 0.304,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.87,
       "le": 0.38,
       "lle": 6.01,
       "cluster": 0
@@ -118,6 +139,9 @@
       "eganOk": true,
       "fractionCsp3": 0.273,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.86,
       "le": 0.39,
       "lle": 5.87,
       "cluster": 0
@@ -133,6 +157,9 @@
       "eganOk": true,
       "fractionCsp3": 0.273,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.93,
       "le": 0.398,
       "lle": 5.97,
       "cluster": 0
@@ -148,6 +175,9 @@
       "eganOk": true,
       "fractionCsp3": 0.056,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 2.55,
       "le": 0.457,
       "lle": 5.58,
       "cluster": 12
@@ -163,6 +193,9 @@
       "eganOk": true,
       "fractionCsp3": 0.158,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.67,
       "le": 0.426,
       "lle": 5.08,
       "cluster": 11
@@ -178,6 +211,9 @@
       "eganOk": true,
       "fractionCsp3": 0.2,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.02,
       "le": 0.379,
       "lle": 4.9,
       "cluster": 10
@@ -193,6 +229,9 @@
       "eganOk": true,
       "fractionCsp3": 0.304,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.82,
       "le": 0.372,
       "lle": 4.32,
       "cluster": 0
@@ -206,6 +245,9 @@
       "eganOk": true,
       "fractionCsp3": 0.136,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.76,
       "le": 0.393,
       "lle": 5.03,
       "cluster": 9
@@ -221,6 +263,9 @@
       "eganOk": true,
       "fractionCsp3": 0.292,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.28,
       "le": 0.351,
       "lle": 4.31,
       "cluster": 8
@@ -236,6 +281,9 @@
       "eganOk": true,
       "fractionCsp3": 0.292,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.22,
       "le": 0.355,
       "lle": 4.41,
       "cluster": 1
@@ -249,6 +297,9 @@
       "eganOk": true,
       "fractionCsp3": 0.25,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.11,
       "le": 0.374,
       "lle": 4.28,
       "cluster": 7
@@ -262,6 +313,9 @@
       "eganOk": true,
       "fractionCsp3": 0.136,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.81,
       "le": 0.39,
       "lle": 4.71,
       "cluster": 2
@@ -275,6 +329,9 @@
       "eganOk": true,
       "fractionCsp3": 0.136,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.78,
       "le": 0.389,
       "lle": 4.69,
       "cluster": 2
@@ -288,6 +345,9 @@
       "eganOk": true,
       "fractionCsp3": 0.333,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.74,
       "le": 0.352,
       "lle": 5.65,
       "cluster": 6
@@ -303,6 +363,9 @@
       "eganOk": true,
       "fractionCsp3": 0.304,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.93,
       "le": 0.386,
       "lle": 6.05,
       "cluster": 0
@@ -319,6 +382,9 @@
       "eganOk": true,
       "fractionCsp3": 0.273,
       "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": true,
+      "saScore": 2.48,
       "le": 0.411,
       "lle": 5.29,
       "cluster": 5
@@ -334,6 +400,9 @@
       "eganOk": true,
       "fractionCsp3": 0.32,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.26,
       "le": 0.344,
       "lle": 4.02,
       "cluster": 1
@@ -347,6 +416,9 @@
       "eganOk": true,
       "fractionCsp3": 0.136,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.7,
       "le": 0.384,
       "lle": 4.18,
       "cluster": 4
@@ -360,6 +432,9 @@
       "eganOk": true,
       "fractionCsp3": 0.167,
       "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.59,
       "le": 0.361,
       "lle": 4.06,
       "cluster": 3

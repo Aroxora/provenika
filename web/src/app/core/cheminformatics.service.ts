@@ -6,11 +6,13 @@ export interface ChemInfo {
   painsAlerts: number; pains: string[];
   brenkAlerts: number; brenk: string[];
   scaffold: string; eganOk: boolean; fractionCsp3: number; clean: boolean;
-  le?: number; lle?: number; cluster?: number;
+  gskOk: boolean; pfizerToxRisk: boolean;
+  le?: number; lle?: number; saScore?: number; cluster?: number;
 }
 
 /**
- * Loads precomputed RDKit cheminformatics (PAINS/Brenk/scaffold/Egan) for a target.
+ * Loads precomputed RDKit cheminformatics (PAINS/Brenk/scaffold/Egan, GSK 4/400 + Pfizer
+ * 3/75 developability, synthetic accessibility) for a target.
  * Generated server-side by cad/precompute_site_data.py since RDKit can't run in-browser.
  * Returns null when no precomputed file exists for the target.
  */

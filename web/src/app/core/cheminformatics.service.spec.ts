@@ -32,13 +32,17 @@ describe('CheminformaticsService', () => {
       byChembl: {
         CHEMBL1: {
           painsAlerts: 0, pains: [], brenkAlerts: 1, brenk: ['alert'], scaffold: 'c1ccccc1',
-          eganOk: true, fractionCsp3: 0.3, clean: true, le: 0.5, lle: 4.1, cluster: 0,
+          eganOk: true, fractionCsp3: 0.3, clean: true, gskOk: false, pfizerToxRisk: true,
+          le: 0.5, lle: 4.1, saScore: 3.21, cluster: 0,
         },
       },
     });
     const m = await p;
     expect(m?.size).toBe(1);
     expect(m?.get('CHEMBL1')?.brenkAlerts).toBe(1);
+    expect(m?.get('CHEMBL1')?.gskOk).toBe(false);
+    expect(m?.get('CHEMBL1')?.pfizerToxRisk).toBe(true);
+    expect(m?.get('CHEMBL1')?.saScore).toBe(3.21);
     expect(svc.clusterCount('EGFR')).toBe(3);
   });
 

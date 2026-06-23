@@ -115,8 +115,11 @@ interface CostResult {
               <span class="pill" [class.green]="c.painsAlerts === 0">PAINS {{ c.painsAlerts }}</span>
               <span class="pill" [class.green]="c.brenkAlerts === 0">Brenk {{ c.brenkAlerts }}</span>
               <span class="pill" [class.green]="c.eganOk">Egan {{ c.eganOk ? 'ok' : '✗' }}</span>
+              <span class="pill" [class.green]="c.gskOk">GSK 4/400 {{ c.gskOk ? 'ok' : '✗' }}</span>
+              <span class="pill" [class.green]="!c.pfizerToxRisk">Pfizer 3/75 {{ c.pfizerToxRisk ? 'risk' : 'ok' }}</span>
               @if (c.le != null) { <span class="tiny">LE {{ c.le | number:'1.2-2' }}</span> }
               @if (c.lle != null) { <span class="tiny">LLE {{ c.lle | number:'1.2-2' }}</span> }
+              @if (c.saScore != null) { <span class="tiny">SA {{ c.saScore | number:'1.1-2' }}</span> }
               @if (c.scaffold) { <span class="tiny mono">scaffold {{ c.scaffold }}</span> }
             </div>
           } @else if (selectedHit()) {
