@@ -119,11 +119,11 @@ The RDKit-only signals are precomputed into `web/public/data/cheminformatics/<TA
 (`forTarget()` → `Map<chembl_id, ChemInfo>`, null on 404; covered by
 `cheminformatics.service.spec.ts`), and `features/explorer/explorer.ts` injects the service,
 loads it (non-blocking) in `loadForTarget()`, and renders the selected hit's flags
-(PAINS/Brenk/Egan, LE/LLE, Murcko scaffold) in the Ligand Triage card — additive and null-safe:
-a target without precomputed data shows an honest "not precomputed" note. GSK/Pfizer/SA are
-computed by `cheminformatics.py` and in `liabilities.json`, but not yet in the web precompute
-output or `ChemInfo` interface — add them to `precompute_site_data.py` + re-precompute to surface
-them in `/explore`. The card's layout is build/type/test-verified; visually confirm before deploy.
+(PAINS/Brenk/Egan, GSK 4/400 + Pfizer 3/75 developability, LE/LLE, synthetic-accessibility
+score, Murcko scaffold) in the Ligand Triage card — additive and null-safe: a target without
+precomputed data shows an honest "not precomputed" note. The precompute merges by slug so a
+flaky-ChEMBL run can never shrink the committed set (`cad/test_precompute_index.py`). The card's
+layout is build/type/test-verified; visually confirm before deploy.
 
 See `docs/REAL-CAD-ROADMAP.md` for the full stage map and what is documented vs. implemented.
 
