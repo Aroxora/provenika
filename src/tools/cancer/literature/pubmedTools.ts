@@ -83,6 +83,9 @@ export function createPubMedTools(): ToolDefinition[] {
           for (const pub of result.items) {
             lines.push(`### ${pub.title}`);
             lines.push(`**PMID:** ${pub.pubmedId ?? 'N/A'} | **Year:** ${pub.publicationDate}`);
+            if (pub.pubmedId) {
+              lines.push(`**Source:** https://pubmed.ncbi.nlm.nih.gov/${pub.pubmedId}/`);
+            }
 
             if (pub.authors.length > 0) {
               const authorList = pub.authors.slice(0, 3).map(a => a.name).join(', ');

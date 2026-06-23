@@ -250,6 +250,7 @@ export function createTargetTools(): ToolDefinition[] {
           for (const drug of drugs) {
             lines.push(`### ${drug.name}`);
             lines.push(`- ChEMBL: ${drug.id}`);
+            lines.push(`- Source: https://www.ebi.ac.uk/chembl/compound_report_card/${drug.id}/`);
             lines.push(`- Status: ${drug.status}`);
             lines.push(`- Type: ${drug.type.replace(/_/g, ' ')}`);
             lines.push('');

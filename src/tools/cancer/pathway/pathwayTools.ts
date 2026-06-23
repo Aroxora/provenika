@@ -177,7 +177,9 @@ export function createPathwayTools(): ToolDefinition[] {
           ];
 
           for (const pathway of pathways) {
-            lines.push(`- **${pathway.id}**: ${pathway.name || 'Unknown'}`);
+            lines.push(
+              `- **${pathway.id}**: ${pathway.name || 'Unknown'} — https://www.kegg.jp/pathway/${pathway.id}`
+            );
           }
 
           lines.push('', 'Use GetPathwayDetails to get more information about a specific pathway.');
