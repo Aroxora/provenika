@@ -154,7 +154,7 @@ Produces in `runs/egfr/` (see a committed real example in [`examples/sample-run-
 | `dossier.json` | Druggability snapshot: function, # PDB structures, ChEMBL ligand count, known drugs | UniProt + ChEMBL |
 | `hits.csv` | Ranked ligand candidates (SMILES + ChEMBL links) for docking/ADMET | ChEMBL bioactivity |
 | `hits.sdf` | The same hits as 3-D structures (property-tagged) — load into PyMOL/Maestro/docking (optional; needs RDKit) | RDKit |
-| `liabilities.json` | Per-hit liabilities: PAINS/Brenk alerts + GSK 4/400 & Pfizer 3/75 developability/tox flags (optional; needs RDKit) | RDKit |
+| `liabilities.json` | Per-hit liabilities: PAINS/Brenk alerts, GSK 4/400 & Pfizer 3/75 developability flags, synthetic-accessibility score (optional; needs RDKit) | RDKit |
 | `structures/` | Best experimental PDB (or AlphaFold model) | RCSB PDB / AlphaFold |
 | `binding_site.json` | Docking box computed from the co-crystal ligand envelope | deterministic geometry |
 | `cost_benefit.json` | Approval prob., expected cost/time, risk-adjusted return (published priors) | BIO/Informa, DiMasi, Wong |
@@ -193,7 +193,8 @@ design is the right one. See [`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINAT
 
 **Does (real, today):** resolve a target to UniProt/ChEMBL; count structures & known drugs;
 rank measured-active ligands by potency + drug-likeness (RDKit); flag each hit's **structural
-liabilities** — PAINS / Brenk alerts and GSK 4/400 + Pfizer 3/75 developability/tox-risk (RDKit);
+liabilities** — PAINS / Brenk alerts, GSK 4/400 + Pfizer 3/75 developability/tox-risk, and
+synthetic accessibility (RDKit);
 fetch a 3-D structure; build a docking box; run a transparent feasibility model; emit a cited,
 re-verifiable dossier; and search PubMed / ClinicalTrials.gov / cBioPortal / KEGG / Reactome /
 Open Targets live ({tool_count} OSINT tools, see below). **Resilient:** if one data source is down

@@ -40,6 +40,21 @@ try:
 except Exception:
     _RDKIT = False
 
+# Optional: synthetic-accessibility score (Ertl & Schuffenhauer 2009). Ships in RDKit's
+# Contrib tree, which isn't present in every install — guard it so sa_score is simply None
+# when unavailable.
+try:
+    import os as _os
+
+    from rdkit.Chem import RDConfig
+
+    sys.path.append(_os.path.join(RDConfig.RDContribDir, "SA_Score"))
+    import sascorer  # type: ignore  # noqa: E402
+
+    _HAS_SASCORE = True
+except Exception:
+    _HAS_SASCORE = False
+
 INSTALL = "RDKit is required: `pip install rdkit` (or conda install -c conda-forge rdkit)."
 
 
@@ -82,9 +97,11 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
     pains_hits = [m.GetDescription() for m in pains.GetMatches(mol)]
     brenk_hits = [m.GetDescription() for m in brenk.GetMatches(mol)]
     scaffold = MurckoScaffold.MurckoScaffoldSmiles(mol=mol) or ""
+    sa = round(sascorer.calculateScore(mol), 2) if _HAS_SASCORE else None  # 1=easy … 10=hard
 
     return {
         "smiles": Chem.MolToSmiles(mol),
+        "sa_score": sa,
         "mw": round(mw, 1), "clogp": round(logp, 2), "tpsa": round(tpsa, 1),
         "hbd": hbd, "hba": hba, "rotb": rotb, "aromatic_rings": arom, "heavy_atoms": heavy,
         "fraction_csp3": round(fsp3, 3), "qed": round(qed, 3),
@@ -162,7 +179,7 @@ def collect_smiles(args) -> list[tuple[str, str, float | None]]:
     return rows
 
 
-_SDF_TAGS = ["id", "pchembl", "le", "lle", "qed", "mw", "clogp", "tpsa", "lipinski_ok",
+_SDF_TAGS = ["id", "pchembl", "le", "lle", "qed", "sa_score", "mw", "clogp", "tpsa", "lipinski_ok",
              "veber_ok", "egan_ok", "gsk_ok", "pfizer_tox_risk", "pains_alerts",
              "brenk_alerts", "cluster", "murcko_scaffold"]
 
@@ -231,7 +248,7 @@ def run(args) -> int:
 
     if args.out:
         cols = ["id", "smiles", "mw", "clogp", "tpsa", "hbd", "hba", "rotb", "aromatic_rings",
-                "heavy_atoms", "fraction_csp3", "qed", "pchembl", "le", "lle",
+                "heavy_atoms", "fraction_csp3", "qed", "sa_score", "pchembl", "le", "lle",
                 "ro5_violations", "lipinski_ok", "veber_ok", "egan_ok", "gsk_ok", "pfizer_tox_risk",
                 "pains_alerts", "brenk_alerts", "cluster", "murcko_scaffold", "clean"]
         if args.query:
@@ -256,8 +273,11 @@ def run(args) -> int:
         return 0
 
     has_le = any("le" in r for r in results)
+    has_sa = any(r.get("sa_score") is not None for r in results)
     print(f"\nCheminformatics analysis ({len(results)} molecule(s)):\n")
     hdr = f"{'id':<16} {'MW':>6} {'cLogP':>6} {'TPSA':>6} {'QED':>5}"
+    if has_sa:
+        hdr += f" {'SA':>5}"
     if has_le:
         hdr += f" {'LE':>5} {'LLE':>6}"
     hdr += f" {'Ro5':>4} {'Veb':>4} {'PAINS':>5} {'Brenk':>5} {'Tox':>4}"
@@ -268,6 +288,8 @@ def run(args) -> int:
     for r in results:
         line = (f"{str(r['id'])[:16]:<16} {r['mw']:>6.0f} {r['clogp']:>6.2f} {r['tpsa']:>6.0f} "
                 f"{r['qed']:>5.2f}")
+        if has_sa:
+            line += f" {(r['sa_score'] if r.get('sa_score') is not None else 0):>5.2f}"
         if has_le:
             le = r.get("le"); lle = r.get("lle")
             line += f" {(le if le is not None else 0):>5.2f} {(lle if lle is not None else 0):>6.2f}"
@@ -286,6 +308,8 @@ def run(args) -> int:
     print("PAINS = pan-assay interference (Baell 2010); Brenk = unwanted-fragment alerts (Brenk 2008).")
     print("Tox = Pfizer 3/75 zone: cLogP>3 & TPSA<75 → ~2.5x in-vivo tox risk (Hughes 2008). "
           "GSK 4/400 developability flag (Gleeson 2008) in --json/--csv.")
+    if has_sa:
+        print("SA = synthetic accessibility (Ertl & Schuffenhauer 2009): 1 = easy to make … 10 = hard.")
     print("⚠️  Computational triage/filtering — needs assay/wet-lab confirmation. Not medical advice.")
     return 0
 

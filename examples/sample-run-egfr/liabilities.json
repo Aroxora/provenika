@@ -3,6 +3,7 @@
   "results": [
     {
       "smiles": "COc1cc2ncnc(Nc3cccc(Br)c3)c2cc1OC",
+      "sa_score": 1.99,
       "mw": 360.2,
       "clogp": 4.15,
       "tpsa": 56.3,
@@ -33,6 +34,7 @@
     },
     {
       "smiles": "Cn1cnc2cc3ncnc(Nc4cccc(Br)c4)c3cc21",
+      "sa_score": 2.39,
       "mw": 354.2,
       "clogp": 4.02,
       "tpsa": 55.6,
@@ -63,6 +65,7 @@
     },
     {
       "smiles": "CN(C)c1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "sa_score": 2.38,
       "mw": 344.2,
       "clogp": 3.6,
       "tpsa": 53.9,
@@ -93,6 +96,7 @@
     },
     {
       "smiles": "COc1cc2ncnc(Nc3ccc(Br)cc3)c2cc1OC",
+      "sa_score": 1.94,
       "mw": 360.2,
       "clogp": 4.15,
       "tpsa": 56.3,
@@ -123,6 +127,7 @@
     },
     {
       "smiles": "CNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1",
+      "sa_score": 2.34,
       "mw": 330.2,
       "clogp": 3.57,
       "tpsa": 62.7,
@@ -153,6 +158,7 @@
     },
     {
       "smiles": "Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "sa_score": 2.29,
       "mw": 316.2,
       "clogp": 3.11,
       "tpsa": 76.7,
@@ -183,6 +189,7 @@
     },
     {
       "smiles": "Cn1cnc2cc3c(Nc4cccc(Br)c4)ncnc3cc21",
+      "sa_score": 2.41,
       "mw": 354.2,
       "clogp": 4.02,
       "tpsa": 55.6,
@@ -213,6 +220,7 @@
     },
     {
       "smiles": "Nc1ccc2c(Nc3cccc(Br)c3)ncnc2c1",
+      "sa_score": 2.05,
       "mw": 315.2,
       "clogp": 3.72,
       "tpsa": 63.8,
@@ -245,6 +253,7 @@
     },
     {
       "smiles": "CCC(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "sa_score": 2.03,
       "mw": 371.2,
       "clogp": 4.48,
       "tpsa": 66.9,
@@ -275,6 +284,7 @@
     },
     {
       "smiles": "CNc1cc2c(Nc3cccc(Cl)c3)ncnc2cn1",
+      "sa_score": 2.26,
       "mw": 285.7,
       "clogp": 3.46,
       "tpsa": 62.7,
@@ -305,6 +315,7 @@
     },
     {
       "smiles": "C=CC(=O)NC1=CC=C2N=CN=C(Nc3cccc(C)c3)C21",
+      "sa_score": 3.88,
       "mw": 292.3,
       "clogp": 2.55,
       "tpsa": 65.8,
@@ -337,6 +348,7 @@
     },
     {
       "smiles": "C=CC(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "sa_score": 2.2,
       "mw": 369.2,
       "clogp": 4.26,
       "tpsa": 66.9,
@@ -369,6 +381,7 @@
     },
     {
       "smiles": "COc1cc2ncnc(Nc3cccc(Cl)c3)c2cc1OC",
+      "sa_score": 1.93,
       "mw": 315.8,
       "clogp": 4.04,
       "tpsa": 56.3,
@@ -399,6 +412,7 @@
     },
     {
       "smiles": "COc1cc2ncnc(Nc3cccc(C(F)(F)F)c3)c2cc1OC",
+      "sa_score": 2.08,
       "mw": 349.3,
       "clogp": 4.41,
       "tpsa": 56.3,
@@ -429,6 +443,7 @@
     },
     {
       "smiles": "C=CC(=O)NC1=NC=C2N=CN=C(Nc3cccc(C)c3)C21",
+      "sa_score": 3.95,
       "mw": 293.3,
       "clogp": 2.02,
       "tpsa": 78.2,
@@ -461,6 +476,7 @@
     },
     {
       "smiles": "COc1cc2ncnc(Nc3ccc(Br)c(Br)c3)c2cc1OC",
+      "sa_score": 2.2,
       "mw": 439.1,
       "clogp": 4.92,
       "tpsa": 56.3,
@@ -491,6 +507,7 @@
     },
     {
       "smiles": "N#CCC(=O)Nc1ccc2ncnc(Nc3cccc(Br)c3)c2c1",
+      "sa_score": 2.25,
       "mw": 382.2,
       "clogp": 3.99,
       "tpsa": 90.7,
@@ -521,6 +538,7 @@
     },
     {
       "smiles": "C=CC(=O)N(C)c1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "sa_score": 2.7,
       "mw": 384.2,
       "clogp": 3.68,
       "tpsa": 71.0,
@@ -553,6 +571,7 @@
     },
     {
       "smiles": "CN(CCO)c1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "sa_score": 2.51,
       "mw": 374.2,
       "clogp": 2.96,
       "tpsa": 74.2,
@@ -583,6 +602,7 @@
     },
     {
       "smiles": "C=CC(=O)Nc1ccc2c(Nc3cccc(Cl)c3)ncnc2c1",
+      "sa_score": 2.15,
       "mw": 324.8,
       "clogp": 4.15,
       "tpsa": 66.9,
@@ -615,6 +635,7 @@
     },
     {
       "smiles": "CNc1cc2c(Nc3cccc(C)c3)ncnc2cn1",
+      "sa_score": 2.24,
       "mw": 265.3,
       "clogp": 3.12,
       "tpsa": 62.7,
@@ -645,6 +666,7 @@
     },
     {
       "smiles": "Nc1cc2ncnc(Nc3cccc(Br)c3)c2cc1N",
+      "sa_score": 2.3,
       "mw": 330.2,
       "clogp": 3.3,
       "tpsa": 89.8,
@@ -677,6 +699,7 @@
     },
     {
       "smiles": "Nc1ccc2c(Nc3cccc(Cl)c3)ncnc2c1",
+      "sa_score": 1.98,
       "mw": 270.7,
       "clogp": 3.61,
       "tpsa": 63.8,
@@ -709,6 +732,7 @@
     },
     {
       "smiles": "C=CC(=O)Nc1ccc2ncnc(Cc3cccc(C)c3)c2c1",
+      "sa_score": 2.25,
       "mw": 303.4,
       "clogp": 3.65,
       "tpsa": 54.9,
@@ -741,6 +765,7 @@
     },
     {
       "smiles": "C=CC(=O)C(C)c1cc2c(Nc3cccc(Br)c3)ncnc2cn1",
+      "sa_score": 3.2,
       "mw": 383.2,
       "clogp": 4.39,
       "tpsa": 67.8,

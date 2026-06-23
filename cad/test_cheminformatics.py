@@ -54,6 +54,9 @@ if getattr(ci, "_RDKIT", False):
     # Developability rules: GSK 4/400 (MW<=400 & cLogP<=4) and Pfizer 3/75 (cLogP>3 & TPSA<75).
     check("aspirin: GSK 4/400 ok, not in Pfizer 3/75 tox zone",
           a.get("gsk_ok") is True and a.get("pfizer_tox_risk") is False)
+    if getattr(ci, "_HAS_SASCORE", False):  # SA score ships in RDKit Contrib — not in every install
+        check("synthetic-accessibility score present and sane (aspirin easy, < 4)",
+              isinstance(a.get("sa_score"), float) and a["sa_score"] < 4)
     d = ci.analyze("CCCCCCCCCCc1ccccc1", pains, brenk)  # decylbenzene: high cLogP, ~0 TPSA
     check("lipophilic low-TPSA molecule: GSK fails, Pfizer 3/75 tox risk flagged",
           d.get("gsk_ok") is False and d.get("pfizer_tox_risk") is True)

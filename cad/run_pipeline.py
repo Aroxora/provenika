@@ -212,6 +212,13 @@ def main(argv=None) -> int:
             if flagged:
                 lines.append(f"- Scrutinize before pursuing: {', '.join(str(f) for f in flagged[:6])}"
                              + (" …" if len(flagged) > 6 else ""))
+            sa_vals = [r.get("sa_score") for r in rs if r.get("sa_score") is not None]
+            if sa_vals:
+                hard = sum(1 for s in sa_vals if s > 6)
+                med = sorted(sa_vals)[len(sa_vals) // 2]
+                lines.append(f"- Synthetic accessibility (Ertl 2009): median SA {med:.1f}/10"
+                             + (f"; {hard} hit(s) look hard to make (SA>6)." if hard
+                                else "; all readily synthesizable."))
             lines += ["_Structural alerts are heuristic medicinal-chemistry filters, not disqualifiers "
                       "— review each in context._", ""]
         else:
