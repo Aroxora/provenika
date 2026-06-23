@@ -24,12 +24,14 @@ import argparse
 import json
 import os
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
 UNIPROT = "https://rest.uniprot.org/uniprotkb/search"
 RCSB_FILES = "https://files.rcsb.org/download"
 ALPHAFOLD = "https://alphafold.ebi.ac.uk/files"
+ALPHAFOLD_API = "https://alphafold.ebi.ac.uk/api/prediction"
 UA = "oncology-osint-cad/1.0 (research)"
 
 
@@ -69,6 +71,28 @@ def resolve_uniprot(name: str) -> dict | None:
         pdbs.append({"id": x["id"], "method": props.get("Method", ""),
                      "resolution": res, "_res_num": res_num})
     return {"accession": e.get("primaryAccession"), "pdbs": pdbs}
+
+
+def alphafold_url(acc: str) -> str | None:
+    """Resolve the current AlphaFold model URL via the API, so the version is never
+    hardcoded — AlphaFold DB bumps the model over time (model_v4 -> v6 -> ...), and a
+    pinned version 404s for *every* target once it moves. Falls back to probing recent
+    versions newest-first if the API is unreachable."""
+    try:
+        data = _get_json(f"{ALPHAFOLD_API}/{acc}")
+        if isinstance(data, list) and data and data[0].get("pdbUrl"):
+            return data[0]["pdbUrl"]
+    except Exception:
+        pass
+    for v in (6, 5, 4):
+        url = f"{ALPHAFOLD}/AF-{acc}-F1-model_v{v}.pdb"
+        try:
+            req = urllib.request.Request(url, method="HEAD", headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=20):
+                return url
+        except Exception:
+            continue
+    return None
 
 
 def pick_best_pdb(pdbs: list[dict]) -> dict | None:
@@ -130,13 +154,16 @@ def run(args) -> int:
                  "alternatives": len(pdbs), "path": dest, "url": url}, args)
         return 0
 
-    # Fall back to AlphaFold model
+    # Fall back to AlphaFold predicted model (current version resolved live, not pinned).
+    url = alphafold_url(acc)
+    if not url:
+        print(f"No experimental PDB and no AlphaFold model for {acc}.", file=sys.stderr)
+        return 1
     dest = os.path.join(args.out, f"AF-{acc}-F1.pdb")
-    url = f"{ALPHAFOLD}/AF-{acc}-F1-model_v4.pdb"
     try:
         _download(url, dest)
     except urllib.error.HTTPError as e:
-        print(f"No experimental PDB and no AlphaFold model for {acc} ({e}).", file=sys.stderr)
+        print(f"AlphaFold model fetch failed for {acc} ({e}).", file=sys.stderr)
         return 1
     _report({"source": "AlphaFold DB (predicted model)", "uniprot": acc,
              "path": dest, "url": url,
