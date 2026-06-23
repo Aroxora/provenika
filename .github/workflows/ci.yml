@@ -84,7 +84,7 @@ jobs:
           print('verify gate OK:', [(c['figure'], c['status']) for c in r['checks']])"
 
   web-build:
-    name: Build web app (Angular)
+    name: Build & test web app (Angular)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -98,4 +98,6 @@ jobs:
           cache: npm
           cache-dependency-path: web/package-lock.json
       - run: npm ci
+      - name: Unit tests (vitest — incl. math-models known-value checks)
+        run: npx ng test --no-watch
       - run: npx ng build --configuration production

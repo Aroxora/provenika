@@ -226,7 +226,7 @@ with its canonical reference. The 8 model cards on the `/models` tab use them.
 
 | Workflow | Trigger | Jobs |
 |----------|---------|------|
-| `ci.yml` | every push / PR | **Node:** `npm ci` → `npm run build` → `tsc --noEmit` → `npm test -- --ci --forceExit`. **Python:** `compileall cad cicd` + CAD smoke tests. **Web:** `npm ci` + `ng build --configuration production`. |
+| `ci.yml` | every push / PR | **Node:** `npm ci` → `npm run build` → `tsc --noEmit` → `npm test -- --ci --forceExit`. **Python:** `compileall cad cicd` + CAD smoke tests. **Web:** `npm ci` → `ng test --no-watch` (vitest) → `ng build --configuration production`. |
 | `news-update.yml` | weekly cron + manual + `cad/watchlist.txt` change | runs `cad/news_update.py` with `TAVILY_API_KEY` secret, commits the digest to `cad/intel/`. |
 | `hosting-deploy.yml` | manual (`workflow_dispatch`) | builds the web app and deploys to Firebase Hosting **if** `FIREBASE_PROJECT_ID` + `FIREBASE_SERVICE_ACCOUNT` secrets exist (otherwise warns, never fails). |
 
@@ -242,7 +242,9 @@ identifier and intentionally in-bundle — that is not a secret.
 
 ## 8. Quality & verification
 
-- **Tests:** `npm test` (Jest, 469+). **Type safety:** `npm run build` / `npx tsc --noEmit`;
+- **Tests:** `npm test` (Jest, 469+, framework/CLI) and `cd web && npx ng test --no-watch`
+  (vitest — including the `math-models.ts` known-value checks that pin every quantitative
+  formula to its cited reference). **Type safety:** `npm run build` / `npx tsc --noEmit`;
   `cd web && npx ng build` for the app.
 - **Adversarial review workflows** (run via the Workflow tool during development):
   - *Web app review* — correctness / security / a11y / no-medical-overclaim, each finding refuted
