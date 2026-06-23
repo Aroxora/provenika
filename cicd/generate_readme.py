@@ -242,6 +242,7 @@ credible **open-core + provenance/audit** play and a strong research/credibility
 
 - **Triage ≠ validation.** Scores rank hypotheses; docking/ADMET/wet-lab confirm them.
 - **Cite the source.** Every figure points to a public record — `verify.py` re-pulls it for you.
+- **Live data.** Everything is fetched on demand from public APIs (no cache, no key). If a *known* target fails to resolve, the source (ChEMBL/UniProt/PDB) may be momentarily down or rate-limited — wait and retry; the tool fails loudly rather than guessing.
 - Cost-benefit numbers are rough public benchmarks (BIO/Informa, DiMasi, Wong et al.), modality/phase-level — not a target-specific prediction and not a valuation.
 
 ## License

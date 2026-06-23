@@ -84,7 +84,12 @@ def main(argv=None) -> int:
             f"  here would falsely imply '{args.target}' was assessed.",
             file=sys.stderr,
         )
-        print(f"  Nothing written to {out}/. Check the target name and re-run.", file=sys.stderr)
+        print(
+            f"  Nothing written to {out}/. If '{args.target}' is a known target, the public APIs\n"
+            "  (ChEMBL/UniProt) may be temporarily unavailable or rate-limited — wait and retry.\n"
+            "  Otherwise check the target name (gene symbol or protein name).",
+            file=sys.stderr,
+        )
         return 2
     out.mkdir(parents=True, exist_ok=True)
     (out / "dossier.json").write_text(json.dumps(dossier, indent=2))

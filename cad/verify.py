@@ -310,7 +310,9 @@ def verify_target_live(target: str, checks: list) -> None:
     import target_report as tr
     t = tr.resolve_target(target)
     if not t:
-        checks.append((f"resolve {target}", FAIL, "no ChEMBL target found", ""))
+        checks.append((f"resolve {target}", FAIL,
+                       "no ChEMBL target found — check the name, or the ChEMBL API may be "
+                       "temporarily unavailable/rate-limited (retry in a moment)", ""))
         return
     tid = t["target_chembl_id"]
     live = tr.chembl_snapshot(tid)
