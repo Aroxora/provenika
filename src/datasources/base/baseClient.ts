@@ -204,7 +204,11 @@ export abstract class BaseClient {
         );
       }
 
-      const data = await response.json() as T;
+      // Most sources return JSON, but some endpoints return text/plain (KEGG REST)
+      // or XML (certain NCBI E-utilities). Honor the caller's Accept header so those
+      // return the raw body as text instead of throwing inside response.json().
+      const wantsJson = (headers['Accept'] ?? 'application/json').includes('json');
+      const data = (wantsJson ? await response.json() : await response.text()) as T;
 
       return {
         data,

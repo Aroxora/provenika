@@ -354,7 +354,8 @@ export class UniProtClient extends BaseClient {
   async testConnection(): Promise<boolean> {
     try {
       await this.request<UniProtSearchResponse>('/uniprotkb/search', {
-        params: { query: 'accession:P53_HUMAN', format: 'json', size: '1' },
+        // P04637 = TP53. `accession:P53_HUMAN` (an entry NAME) is invalid syntax → HTTP 400.
+        params: { query: 'accession:P04637', format: 'json', size: '1' },
       });
       return true;
     } catch {

@@ -197,12 +197,16 @@ scores · prove a molecule is safe or effective · replace docking/ADMET/wet-lab
 ## OSINT one-liners (pick & justify a target)
 
 ```bash
+cancer-cli --self-test                     # keyless: live-check all 7 data sources
 cancer-cli "search literature <topic>"     # PubMed          cancer-cli "analyze gene <symbol>"     # cBioPortal
 cancer-cli "find clinical trials <cancer>" # ClinicalTrials  cancer-cli "pathway analysis <gene>"   # KEGG
 ```
-`cancer-cli` = `node dist/bin/cancer-cli.js`; `--self-test` checks API connectivity. All sources
-free, no key, queried live: PubMed · ClinicalTrials.gov · cBioPortal · ChEMBL · KEGG · RCSB PDB ·
-UniProt · Europe PMC · Reactome · Open Targets.
+`cancer-cli` = `node dist/bin/cancer-cli.js`. The **data sources are free and keyless** —
+`--self-test` queries all of them live with no key (PubMed · ClinicalTrials.gov · cBioPortal ·
+ChEMBL · KEGG · RCSB PDB · UniProt · Europe PMC · Reactome · Open Targets). The conversational
+one-liners run through an **LLM agent** that interprets your prompt, so they need a model key
+first (`cancer-cli --key <DEEPSEEK_API_KEY>`). For a **keyless, deterministic, fully-cited**
+workflow, use the Python `cad/` pipeline above — that is the scientific core and needs no key.
 
 ## Can this be a real business? (honest analysis)
 
