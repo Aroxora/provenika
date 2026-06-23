@@ -102,7 +102,9 @@ def main(argv=None) -> int:
     # cleanly (note in SUMMARY) when RDKit is absent, so the core stays stdlib-only.
     liabilities = None
     if (out / "hits.csv").exists():
-        liabilities = _run_json("cheminformatics.py", ["--csv", str(out / "hits.csv")])
+        # Also emit a 3-D SDF of the hits (with property tags) for docking/visualization tools.
+        liabilities = _run_json("cheminformatics.py",
+                                ["--csv", str(out / "hits.csv"), "--sdf", str(out / "hits.sdf")])
         if liabilities and liabilities.get("results"):
             (out / "liabilities.json").write_text(json.dumps(liabilities, indent=2))
 
@@ -186,6 +188,8 @@ def main(argv=None) -> int:
             hit_rows = list(csv.DictReader(fh))
         lines += ["## Ligand triage",
                   f"- {len(hit_rows)} ranked candidates → `hits.csv` (SMILES + ChEMBL links)"]
+        if (out / "hits.sdf").exists():
+            lines.append("- 3-D structures → `hits.sdf` (load directly into docking/visualization tools)")
         top = hit_rows[:10]
         no_props = sum(1 for r in top if not (r.get("qed") or "").strip())
         if no_props:
@@ -253,7 +257,7 @@ def main(argv=None) -> int:
     (out / "SUMMARY.md").write_text("\n".join(lines))
 
     # Report only what actually got written — never list files that don't exist.
-    expected = ["SUMMARY.md", "dossier.json", "hits.csv", "liabilities.json", "structures",
+    expected = ["SUMMARY.md", "dossier.json", "hits.csv", "hits.sdf", "liabilities.json", "structures",
                 "binding_site.json", "cost_benefit.json", "provenance.json"]
     written = [name for name in expected if (out / name).exists()]
     print(f"\nDone → {out}/  ({', '.join(written)})")

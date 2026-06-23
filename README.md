@@ -112,6 +112,7 @@ Produces in `runs/egfr/` (see a committed real example in [`examples/sample-run-
 |----------|-----------|--------|
 | `dossier.json` | Druggability snapshot: function, # PDB structures, ChEMBL ligand count, known drugs | UniProt + ChEMBL |
 | `hits.csv` | Ranked ligand candidates (SMILES + ChEMBL links) for docking/ADMET | ChEMBL bioactivity |
+| `hits.sdf` | The same hits as 3-D structures (property-tagged) — load into PyMOL/Maestro/docking (optional; needs RDKit) | RDKit |
 | `liabilities.json` | Per-hit liabilities: PAINS/Brenk alerts + GSK 4/400 & Pfizer 3/75 developability/tox flags (optional; needs RDKit) | RDKit |
 | `structures/` | Best experimental PDB (or AlphaFold model) | RCSB PDB / AlphaFold |
 | `binding_site.json` | Docking box computed from the co-crystal ligand envelope | deterministic geometry |

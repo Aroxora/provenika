@@ -34,7 +34,8 @@ then re-prove every number for yourself.
 | `SUMMARY.md` | One-page tie-together + the exact next (docking) command |
 | `dossier.json` | Druggability snapshot: function, # PDB structures, ChEMBL ligands, known drugs |
 | `hits.csv` | 25 ranked ligand candidates (SMILES + ChEMBL links) for docking/ADMET |
-| `liabilities.json` | PAINS / Brenk structural-alert flags on the hits (RDKit) |
+| `hits.sdf` | The same hits as 3-D structures (property-tagged) — load into PyMOL/Maestro/docking |
+| `liabilities.json` | Per-hit liabilities: PAINS/Brenk alerts + GSK 4/400 & Pfizer 3/75 developability flags (RDKit) |
 | `structures/8A27.pdb` | Best experimental EGFR structure (from RCSB PDB) |
 | `binding_site.json` | Docking box computed from the co-crystal ligand envelope |
 | `cost_benefit.json` | Modality/phase-level feasibility benchmark (**not** target-specific) |

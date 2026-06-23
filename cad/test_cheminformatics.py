@@ -57,6 +57,17 @@ if getattr(ci, "_RDKIT", False):
     d = ci.analyze("CCCCCCCCCCc1ccccc1", pains, brenk)  # decylbenzene: high cLogP, ~0 TPSA
     check("lipophilic low-TPSA molecule: GSK fails, Pfizer 3/75 tox risk flagged",
           d.get("gsk_ok") is False and d.get("pfizer_tox_risk") is True)
+    # SDF export → 3-D structures with property tags (for docking/viz tools).
+    import os as _os
+    import tempfile as _tf
+    from rdkit import Chem as _Chem  # noqa: N813
+    _sdf = _os.path.join(_tf.gettempdir(), "test_hits_export.sdf")
+    _n = ci.write_sdf([{"smiles": "CC(=O)Oc1ccccc1C(=O)O", "id": "ASPIRIN", "pchembl": 7.0,
+                        "pfizer_tox_risk": False}], _sdf)
+    _mols = [m for m in _Chem.SDMolSupplier(_sdf) if m]
+    check("write_sdf → loadable 3-D SDF with property tags",
+          _n == 1 and len(_mols) == 1 and _mols[0].GetNumConformers() > 0
+          and _mols[0].GetProp("id") == "ASPIRIN")
 else:
     print("  -- RDKit absent: descriptor checks skipped (the formula checks above are RDKit-free)")
 

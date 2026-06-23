@@ -162,6 +162,41 @@ def collect_smiles(args) -> list[tuple[str, str, float | None]]:
     return rows
 
 
+_SDF_TAGS = ["id", "pchembl", "le", "lle", "qed", "mw", "clogp", "tpsa", "lipinski_ok",
+             "veber_ok", "egan_ok", "gsk_ok", "pfizer_tox_risk", "pains_alerts",
+             "brenk_alerts", "cluster", "murcko_scaffold"]
+
+
+def write_sdf(results: list[dict], path: str) -> int:
+    """Write the analyzed hits as 3-D structures with property tags, so they load directly
+    into docking / visualization tools (PyMOL, Maestro, AutoDockTools, RDKit) — no manual
+    SMILES→3D conversion. Returns the number written."""
+    writer = Chem.SDWriter(path)
+    written = 0
+    try:
+        for r in results:
+            mol = Chem.MolFromSmiles(r.get("smiles", ""))
+            if mol is None:
+                continue
+            mol = Chem.AddHs(mol)
+            if AllChem.EmbedMolecule(mol, randomSeed=0xC0FFEE) != 0:
+                continue  # embedding failed — skip rather than emit a 2-D/garbage conformer
+            try:
+                AllChem.MMFFOptimizeMolecule(mol)
+            except Exception:  # pragma: no cover - force-field edge cases
+                pass
+            mol = Chem.RemoveHs(mol)
+            mol.SetProp("_Name", str(r.get("id", "")))
+            for k in _SDF_TAGS:
+                if r.get(k) is not None:
+                    mol.SetProp(k, str(r[k]))
+            writer.write(mol)
+            written += 1
+    finally:
+        writer.close()
+    return written
+
+
 def run(args) -> int:
     if not _RDKIT:
         print(INSTALL, file=sys.stderr)
@@ -208,6 +243,11 @@ def run(args) -> int:
                 w.writerow(r)
         if not args.json:
             print(f"Wrote {len(results)} annotated rows to {args.out}")
+
+    if args.sdf:
+        n = write_sdf(results, args.sdf)
+        if not args.json:
+            print(f"Wrote {n} 3-D structures to {args.sdf} (ready for docking/visualization tools).")
 
     if args.json:
         print(json.dumps({"count": len(results), "results": results,
@@ -259,6 +299,7 @@ def main(argv=None) -> int:
     p.add_argument("--query", help="Optional SMILES; also report ECFP4 Tanimoto similarity to it.")
     p.add_argument("--pchembl", type=float, help="pChEMBL for --smiles, to compute LE/LLE.")
     p.add_argument("--out", help="Write an annotated CSV to this path.")
+    p.add_argument("--sdf", help="Also write the hits as a 3-D SDF (with property tags) for docking/viz tools.")
     p.add_argument("--json", action="store_true", help="Emit JSON.")
     return run(p.parse_args(argv))
 
