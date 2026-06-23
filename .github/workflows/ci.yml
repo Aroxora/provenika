@@ -69,6 +69,8 @@ jobs:
           assert len(rs)==3, rs
           assert all('le' in r and 'lle' in r and isinstance(r['cluster'],int) for r in rs), rs
           print('LE+cluster OK:', [(r['id'], r['le'], r['cluster']) for r in rs])"
+      - name: Cheminformatics formula known-value tests (LE/LLE)
+        run: python3 cad/test_cheminformatics.py
       - name: Anti-hallucination enforcement tests (offline)
         run: python3 cad/test_provenance.py
       - name: Outreach agent E2E + edge cases (offline, no network, never sends)
