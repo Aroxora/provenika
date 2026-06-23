@@ -55,6 +55,10 @@ to a public record and re-proven with one command.
 **⚠️ Research only.** Generates hypotheses for experimental follow-up. **Not medical advice,
 not a treatment recommendation, not a diagnosis.** A computational hit is not proof of anything.
 
+**▶ Try it live, no install:** **[provenika.com](https://provenika.com)** — the same analyses,
+interactive in the browser (disease → targets → triage → structure → models), every figure
+traceable to its public source. The command-line pipeline below is the keyless, scriptable core.
+
 ---
 
 ## The one rule everything else serves

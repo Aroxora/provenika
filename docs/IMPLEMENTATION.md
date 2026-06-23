@@ -188,7 +188,7 @@ the result if it changed mid-flight) so rapid switching can't show mismatched da
 ## 6. Interactive math models
 
 All formulas live in **`web/src/app/core/math-models.ts`** as pure functions, each documented
-with its canonical reference. The 7 model cards on the `/models` tab use them.
+with its canonical reference. The 8 model cards on the `/models` tab use them.
 
 | Model | Function(s) | Reference |
 |-------|-------------|-----------|
