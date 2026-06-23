@@ -115,14 +115,15 @@ environment **only**; never fabricate a result (`dock.py` runs the real Vina bin
 install steps — it never invents scores); print a "verify at the primary source" disclaimer.
 The RDKit-only signals are precomputed into `web/public/data/cheminformatics/<TARGET>.json` by
 `precompute_site_data.py` (weekly Action) and contract-validated in CI
-(`cicd/check_cheminformatics_contract.cjs`). `core/cheminformatics.service.ts` loads them and
-they are **ready to surface in the triage drawer** — but that wiring is not in place yet: no
-feature component injects the service today, so the precomputed data is staged, not displayed.
-Concrete wiring task (data, service, and contract are all already in place): in
-`features/explorer/explorer.ts` inject `CheminformaticsService`, call `forTarget(target)` inside
-`loadForTarget()` into a `Map<string, ChemInfo>` signal, and render the selected hit's flags
-(PAINS/Brenk/Egan/scaffold; GSK/Pfizer/SA after a data re-precompute) in the Ligand Triage card —
-additive and null-safe (no file ⇒ show nothing). Verify the render in a browser before shipping.
+(`cicd/check_cheminformatics_contract.cjs`). `core/cheminformatics.service.ts` loads them
+(`forTarget()` → `Map<chembl_id, ChemInfo>`, null on 404; covered by
+`cheminformatics.service.spec.ts`), and `features/explorer/explorer.ts` injects the service,
+loads it (non-blocking) in `loadForTarget()`, and renders the selected hit's flags
+(PAINS/Brenk/Egan, LE/LLE, Murcko scaffold) in the Ligand Triage card — additive and null-safe:
+a target without precomputed data shows an honest "not precomputed" note. GSK/Pfizer/SA are
+computed by `cheminformatics.py` and in `liabilities.json`, but not yet in the web precompute
+output or `ChemInfo` interface — add them to `precompute_site_data.py` + re-precompute to surface
+them in `/explore`. The card's layout is build/type/test-verified; visually confirm before deploy.
 
 See `docs/REAL-CAD-ROADMAP.md` for the full stage map and what is documented vs. implemented.
 
