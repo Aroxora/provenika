@@ -222,6 +222,22 @@ Free sources, all live (the same 8 `--self-test` checks): PubMed · ClinicalTria
 ChEMBL · KEGG · RCSB PDB · UniProt · Open Targets. (Only open-ended, conversational queries fall
 through to the optional LLM agent, which needs a model key: `cancer-cli --key <DEEPSEEK_API_KEY>`.)
 
+### Worked example — from a disease to a triaged, cited lead (keyless)
+
+The one-liners and the pipeline chain into one research path:
+
+```bash
+cancer-cli "find targets for disease melanoma"  # → ranked targets + druggability; e.g. BRAF (small-molecule tractable)
+cancer-cli "find drug targets BRAF"             # → measured-active BRAF ligands (ChEMBL)
+python3 cad/run_pipeline.py --target BRAF --out runs/braf   # full dossier: ligands, structure, docking box, feasibility
+python3 cad/verify.py --run runs/braf           # re-prove every figure from its public source
+```
+
+Disease → association-scored, tractability-filtered targets → measured-active ligands → a cited,
+re-verifiable dossier. Every step keyless (docking is the only optional non-pip extra), and the
+last command re-derives every figure so nothing rests on trust. **Triage, not validation** — these
+are leads for wet-lab follow-up, never a claim a target or molecule works.
+
 ## Can this be a real business? (honest analysis)
 
 We asked it seriously, with cited market data and a skeptical investor's eye — including the
