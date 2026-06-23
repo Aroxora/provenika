@@ -5,6 +5,7 @@ End-to-end CADD triage pipeline — one command, real public data, real artifact
 Chains the stage tools for a target into an output directory:
   1. target_report.py   -> dossier.json        (druggability / structures / known drugs)
   2. virtual_triage.py  -> hits.csv            (ranked ligands + SMILES + ChEMBL links)
+  2b. cheminformatics.py -> liabilities.json    (PAINS/Brenk alerts on the hits; RDKit, optional)
   3. fetch_structure.py -> structures/          (best PDB or AlphaFold model)
   4. binding_site.py    -> binding_site.json    (docking box from the co-crystal ligand)
   5. cost_benefit.py    -> cost_benefit.json    (go/no-go feasibility for a modality)
@@ -92,6 +93,14 @@ def main(argv=None) -> int:
     _run("virtual_triage.py", ["--target", args.target, "--min-pchembl", str(args.min_pchembl),
                                "--limit", str(args.limit), "--out", str(out / "hits.csv")])
 
+    # Structural-liability flags (PAINS / Brenk) on the hits — RDKit, optional. Skipped
+    # cleanly (note in SUMMARY) when RDKit is absent, so the core stays stdlib-only.
+    liabilities = None
+    if (out / "hits.csv").exists():
+        liabilities = _run_json("cheminformatics.py", ["--csv", str(out / "hits.csv")])
+        if liabilities and liabilities.get("results"):
+            (out / "liabilities.json").write_text(json.dumps(liabilities, indent=2))
+
     print(f"[3/5] Structure acquisition…")
     struct = _run_json("fetch_structure.py", ["--target", args.target, "--out", str(out / "structures")])
 
@@ -172,6 +181,25 @@ def main(argv=None) -> int:
             lines.append(f"- ⚠️ {no_props}/{len(top)} top hits lack computed drug-likeness "
                          "(e.g. macrocycles/peptides) — those rows are ranked on potency alone; treat with care.")
         lines.append("")
+        # Structural-liability flags (RDKit). Surfaces PAINS / Brenk alerts a chemist should see.
+        if liabilities and liabilities.get("results"):
+            rs = liabilities["results"]
+            n_pains = sum(1 for r in rs if r.get("pains_alerts"))
+            n_brenk = sum(1 for r in rs if r.get("brenk_alerts"))
+            flagged = [r.get("id") for r in rs if r.get("pains_alerts") or r.get("brenk_alerts")]
+            lines += [
+                "## Structural liabilities (RDKit — PAINS / Brenk alerts)",
+                f"- {n_pains}/{len(rs)} hits carry a PAINS (assay-interference) alert; "
+                f"{n_brenk}/{len(rs)} carry a Brenk (reactive/unstable-group) alert → `liabilities.json`.",
+            ]
+            if flagged:
+                lines.append(f"- Scrutinize before pursuing: {', '.join(str(f) for f in flagged[:6])}"
+                             + (" …" if len(flagged) > 6 else ""))
+            lines += ["_Structural alerts are heuristic medicinal-chemistry filters, not disqualifiers "
+                      "— review each in context._", ""]
+        else:
+            lines += ["## Structural liabilities",
+                      "- (install RDKit — `pip install rdkit` — to flag PAINS/Brenk structural alerts on the hits)", ""]
     structs = sorted((out / "structures").glob("*")) if (out / "structures").exists() else []
     if structs:
         lines += ["## Structure", f"- {structs[0].name} → `structures/`", ""]
@@ -212,8 +240,8 @@ def main(argv=None) -> int:
     (out / "SUMMARY.md").write_text("\n".join(lines))
 
     # Report only what actually got written — never list files that don't exist.
-    expected = ["SUMMARY.md", "dossier.json", "hits.csv", "structures", "binding_site.json",
-                "cost_benefit.json", "provenance.json"]
+    expected = ["SUMMARY.md", "dossier.json", "hits.csv", "liabilities.json", "structures",
+                "binding_site.json", "cost_benefit.json", "provenance.json"]
     written = [name for name in expected if (out / name).exists()]
     print(f"\nDone → {out}/  ({', '.join(written)})")
     print(f"Verify every figure is real:  python3 cad/verify.py --run {out}")

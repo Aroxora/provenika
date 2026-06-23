@@ -9,6 +9,11 @@
 ## Ligand triage
 - 25 ranked candidates → `hits.csv` (SMILES + ChEMBL links)
 
+## Structural liabilities (RDKit — PAINS / Brenk alerts)
+- 0/25 hits carry a PAINS (assay-interference) alert; 10/25 carry a Brenk (reactive/unstable-group) alert → `liabilities.json`.
+- Scrutinize before pursuing: CHEMBL420624, CHEMBL474147, CHEMBL285063, CHEMBL516022, CHEMBL334697, CHEMBL52913 …
+_Structural alerts are heuristic medicinal-chemistry filters, not disqualifiers — review each in context._
+
 ## Structure
 - 8A27.pdb → `structures/`
 
