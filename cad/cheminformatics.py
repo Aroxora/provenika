@@ -220,7 +220,7 @@ def run(args) -> int:
     hdr = f"{'id':<16} {'MW':>6} {'cLogP':>6} {'TPSA':>6} {'QED':>5}"
     if has_le:
         hdr += f" {'LE':>5} {'LLE':>6}"
-    hdr += f" {'Ro5':>4} {'Veb':>4} {'PAINS':>5} {'Brenk':>5}"
+    hdr += f" {'Ro5':>4} {'Veb':>4} {'PAINS':>5} {'Brenk':>5} {'Tox':>4}"
     if args.query:
         hdr += f" {'Sim':>5}"
     print(hdr)
@@ -232,7 +232,8 @@ def run(args) -> int:
             le = r.get("le"); lle = r.get("lle")
             line += f" {(le if le is not None else 0):>5.2f} {(lle if lle is not None else 0):>6.2f}"
         line += (f" {('ok' if r['lipinski_ok'] else 'X'):>4} "
-                 f"{('ok' if r['veber_ok'] else 'X'):>4} {r['pains_alerts']:>5} {r['brenk_alerts']:>5}")
+                 f"{('ok' if r['veber_ok'] else 'X'):>4} {r['pains_alerts']:>5} {r['brenk_alerts']:>5} "
+                 f"{('RISK' if r.get('pfizer_tox_risk') else 'ok'):>4}")
         if args.query:
             line += f" {(r.get('similarity') or 0):>5.2f}"
         print(line)
@@ -243,6 +244,8 @@ def run(args) -> int:
     if has_le:
         print("LE = 1.37·pChEMBL/heavy-atoms (Hopkins 2004); LLE = pChEMBL − cLogP (Leeson 2007). Higher = better.")
     print("PAINS = pan-assay interference (Baell 2010); Brenk = unwanted-fragment alerts (Brenk 2008).")
+    print("Tox = Pfizer 3/75 zone: cLogP>3 & TPSA<75 → ~2.5x in-vivo tox risk (Hughes 2008). "
+          "GSK 4/400 developability flag (Gleeson 2008) in --json/--csv.")
     print("⚠️  Computational triage/filtering — needs assay/wet-lab confirmation. Not medical advice.")
     return 0
 
