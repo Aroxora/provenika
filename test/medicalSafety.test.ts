@@ -37,6 +37,15 @@ describe('medical-safety: no per-patient treatment advice', () => {
     expect(out).toMatch(DISCLAIMER);
   });
 
+  it('InterpretBiomarkerPanel carries a not-a-diagnosis disclaimer', async () => {
+    // It says things like "suggestive of malignancy / urgent referral" — diagnosis-adjacent.
+    const out = await runTool('InterpretBiomarkerPanel', {
+      panelName: 'breast',
+      results: [{ name: 'CA-125', value: 200, status: 'high' }],
+    });
+    expect(out).toMatch(/not a diagnosis|not medical advice/i);
+  });
+
   it('StratifyRisk stays neutralized (disclaimer, no prescribed therapy)', async () => {
     const out = await runTool('StratifyRisk', { cancerType: 'breast', stage: 'II' });
     expect(out).toMatch(DISCLAIMER);

@@ -406,7 +406,15 @@ export function createBiomarkerTools(): ToolDefinition[] {
       },
       handler: async (params) => {
         const result = interpretPanel(params as Parameters<typeof interpretPanel>[0]);
-        return JSON.stringify(result, null, 2);
+        return JSON.stringify(
+          {
+            __DISCLAIMER__:
+              'NOT MEDICAL ADVICE and NOT a diagnosis. This is a rule-based educational reading of biomarker values, not a clinical interpretation — "suggestive of malignancy" / referral notes are illustrative, not findings about any real patient, and must never inform care. Biomarker interpretation requires a qualified clinician and the full clinical context.',
+            ...result,
+          },
+          null,
+          2
+        );
       },
     },
     {

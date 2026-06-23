@@ -106,6 +106,7 @@ had crossed this line were **neutralized** in this codebase:
 | `cicd/patient_match.py` | printed "RECOMMENDED APPROACH" / "TREATMENT PROTOCOL" in a clinical-decision-support layout | reframed as **"published therapy options — evidence lookup"**; leads with the disclaimer; no plan |
 | `oralTherapyTools.ts` · `GetOralTherapyByTarget`, `oralDrugPipeline.ts` · `ListAllOralDrugCandidates` | listed drug **dosing** ("Osimertinib 80mg once daily", "300mg BID") with no disclaimer | now lead with a **reference-only / NOT-medical-advice / NOT-a-dose** banner; dosing labeled label-reference, verify against the FDA label |
 | `cadTools.ts` · `ListUnmetNeedCancers`, `gapAnalysisTools.ts` · `AnalyzeAllGaps` / `GetUnmetNeedStats` | population survival/unmet-need stats with no framing | labeled **"population statistics — not a prognosis for any individual; verify at source (SEER, ACS)"** |
+| `biomarkerTools.ts` · `InterpretBiomarkerPanel` | output a per-patient diagnostic read ("Pattern highly suggestive of malignancy. Urgent evaluation indicated") + referral/workup recommendations, no disclaimer | leads with a **NOT-medical-advice / NOT-a-diagnosis** banner; framed as a rule-based educational reading |
 
 This list is now **enforced, not just curated.** `cicd/audit_medical_safety.cjs` (run in CI after the
 build) invokes every tool's handler and **fails the build** if any output contains dosing, a treatment
