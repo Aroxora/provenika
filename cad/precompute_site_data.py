@@ -99,7 +99,13 @@ def main(argv=None) -> int:
                 "brenkAlerts": a["brenk_alerts"], "brenk": a["brenk"],
                 "scaffold": a["murcko_scaffold"], "eganOk": a["egan_ok"],
                 "fractionCsp3": a["fraction_csp3"], "clean": a["clean"],
+                # Developability / tox-risk heuristics (descriptor-only, cited in cheminformatics.py).
+                "gskOk": a["gsk_ok"], "pfizerToxRisk": a["pfizer_tox_risk"],
             }
+            # Synthetic-accessibility (Ertl & Schuffenhauer 2009) — only when the SA scorer
+            # Contrib is installed; omitted (not null) otherwise so the field stays optional.
+            if a.get("sa_score") is not None:
+                entry["saScore"] = a["sa_score"]
             if isinstance(pchembl, (int, float)):
                 from cheminformatics import ligand_efficiency, lipophilic_efficiency
                 entry["le"] = ligand_efficiency(pchembl, a["heavy_atoms"])
@@ -125,9 +131,30 @@ def main(argv=None) -> int:
         index.append({"target": target, "slug": slug(target), "file": fname, "count": len(by_chembl)})
         print(f"  {target}: {len(by_chembl)} compounds -> {fname}")
 
-    (OUT_DIR / "index.json").write_text(json.dumps({"generated": args.stamp, "targets": index}, indent=2))
-    print(f"Wrote {len(index)} target file(s) + index.json to {OUT_DIR.relative_to(ROOT)}")
-    return 0 if index else 1
+    idx_path = OUT_DIR / "index.json"
+    if not index:
+        # All triage attempts failed (e.g. a ChEMBL outage during the weekly Action). Leave the
+        # committed index.json untouched — wiping it would silently break /explore for every target.
+        print("No targets produced output (all triage failed — ChEMBL down?); "
+              "leaving existing index.json untouched.", file=sys.stderr)
+        return 1
+    # Merge into the existing index by slug so a partial or subset run UPDATES rather than SHRINKS
+    # the committed cheminformatics-ready set — a flaky data source must never silently shrink it.
+    merged: dict[str, dict] = {}
+    if idx_path.exists():
+        try:
+            for t in json.loads(idx_path.read_text()).get("targets", []):
+                if t.get("slug"):
+                    merged[t["slug"]] = t
+        except (json.JSONDecodeError, OSError):
+            pass
+    for t in index:
+        merged[t["slug"]] = t
+    out = sorted(merged.values(), key=lambda t: t["slug"])
+    idx_path.write_text(json.dumps({"generated": args.stamp, "targets": out}, indent=2))
+    print(f"Wrote {len(index)} target file(s); index.json now lists {len(out)} target(s) "
+          f"in {OUT_DIR.relative_to(ROOT)}")
+    return 0
 
 
 if __name__ == "__main__":

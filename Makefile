@@ -40,6 +40,7 @@ test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) cad/test_cheminformatics.py
 	$(PY) cad/test_no_rdkit.py
 	$(PY) cad/test_degradation.py
+	$(PY) cad/test_precompute_index.py
 	$(PY) outreach/test_e2e.py
 	@mkdir -p /tmp/provenika-test
 	$(PY) cad/cost_benefit.py --modality small_molecule --phase phase1 \
