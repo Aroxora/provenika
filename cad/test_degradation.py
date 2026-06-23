@@ -78,4 +78,36 @@ try:
 finally:
     tr._json = _orig_json
 
+# Scenario 3: virtual_triage's pagination respects a wall-clock budget so a slow ChEMBL
+# can't make it run for minutes — it stops early with partial results.
+import virtual_triage as vt  # noqa: E402
+
+_vt_get, _vt_mono = vt._get, vt.time.monotonic
+try:
+    calls = {"n": 0}
+
+    def fake_page(path, params):
+        calls["n"] += 1
+        base = calls["n"] * 1000
+        return {"activities": [
+            {"molecule_chembl_id": f"CHEMBL{base + i}", "pchembl_value": "8.0", "standard_type": "IC50"}
+            for i in range(1000)
+        ]}
+
+    clock = [0.0]
+
+    def fake_monotonic():  # advance 25s per read → exceeds a 40s budget after one page
+        v = clock[0]
+        clock[0] += 25.0
+        return v
+
+    vt._get = fake_page
+    vt.time.monotonic = fake_monotonic
+    best = vt.fetch_actives("CHEMBL203", 6.0, scan=4000, budget_s=40.0)
+    assert calls["n"] < 4, f"budget should stop pagination early, made {calls['n']} requests"
+    assert len(best) > 0, "partial results should still be returned"
+    ok(f"virtual_triage stops at the time budget ({calls['n']} of 4 pages) with partial results")
+finally:
+    vt._get, vt.time.monotonic = _vt_get, _vt_mono
+
 print(f"\n{_passed} degradation tests passed.")

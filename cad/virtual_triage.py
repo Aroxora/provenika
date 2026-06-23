@@ -35,6 +35,8 @@ import argparse
 import csv
 import json
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -57,7 +59,7 @@ def _get(path: str, params: dict) -> dict:
     params = {**params, "format": "json"}
     url = f"{CHEMBL}/{path}?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(req, timeout=30) as resp:
+    with urllib.request.urlopen(req, timeout=20) as resp:  # interactive tool — don't hang 30s/request
         return json.load(resp)
 
 
@@ -81,16 +83,25 @@ def resolve_target(name: str) -> dict | None:
     return targets_sorted[0]
 
 
-def fetch_actives(target_chembl_id: str, min_pchembl: float, scan: int) -> dict[str, dict]:
+def fetch_actives(target_chembl_id: str, min_pchembl: float, scan: int,
+                  budget_s: float = 40.0) -> dict[str, dict]:
     """Fetch the best (highest pChEMBL) potency activity per molecule for a target.
 
-    Returns {molecule_chembl_id: {pchembl, type}}.
+    Returns {molecule_chembl_id: {pchembl, type}}. Bounded by a wall-clock budget so a slow
+    ChEMBL can't make this paginate for minutes — it stops early with partial results (noted)
+    rather than hanging.
     """
     best: dict[str, dict] = {}
     offset = 0
     page = 1000
     fetched = 0
+    deadline = time.monotonic() + budget_s
     while fetched < scan:
+        if time.monotonic() > deadline:
+            print(f"  (ChEMBL slow — scanned {fetched} of {scan} records within {budget_s:.0f}s; "
+                  "triage is partial. Re-run when ChEMBL is faster for the full scan.)",
+                  file=sys.stderr)
+            break
         data = _get(
             "activity",
             {
