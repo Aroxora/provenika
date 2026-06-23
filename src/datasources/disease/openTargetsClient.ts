@@ -12,7 +12,16 @@ export interface DiseaseTarget {
   readonly symbol: string;
   readonly name: string;
   readonly score: number; // Open Targets overall association score, 0–1
+  readonly tractableModalities: string[]; // human-readable modalities with ≥1 positive bucket
 }
+
+// Open Targets tractability modality codes → human-readable.
+const MODALITY: Record<string, string> = {
+  SM: 'small-molecule',
+  AB: 'antibody',
+  PR: 'PROTAC',
+  OC: 'other-clinical',
+};
 
 export interface DiseaseTargets {
   readonly diseaseId: string; // EFO/MONDO id
@@ -54,9 +63,9 @@ export class OpenTargetsClient extends BaseClient {
     if (!hit) return null;
 
     const data = await this.gql<{
-      disease: { name: string; associatedTargets: { count: number; rows: Array<{ target: { approvedSymbol: string; approvedName: string }; score: number }> } };
+      disease: { name: string; associatedTargets: { count: number; rows: Array<{ target: { approvedSymbol: string; approvedName: string; tractability?: Array<{ modality: string; value: boolean }> }; score: number }> } };
     }>(
-      `{ disease(efoId:"${hit.id}") { name associatedTargets(page:{index:0,size:${size}}) { count rows { target { approvedSymbol approvedName } score } } } }`,
+      `{ disease(efoId:"${hit.id}") { name associatedTargets(page:{index:0,size:${size}}) { count rows { target { approvedSymbol approvedName tractability { modality value } } score } } } }`,
     );
     const at = data?.disease?.associatedTargets;
     return {
@@ -67,6 +76,14 @@ export class OpenTargetsClient extends BaseClient {
         symbol: r.target.approvedSymbol,
         name: r.target.approvedName,
         score: r.score,
+        // Distinct modalities with at least one positive tractability bucket (drug-able by that modality).
+        tractableModalities: [
+          ...new Set(
+            (r.target.tractability ?? [])
+              .filter((t) => t.value)
+              .map((t) => MODALITY[t.modality] ?? t.modality),
+          ),
+        ],
       })),
     };
   }

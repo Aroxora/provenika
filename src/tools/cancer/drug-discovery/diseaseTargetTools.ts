@@ -58,7 +58,10 @@ export function createDiseaseTargetTools(): ToolDefinition[] {
             '',
           ];
           for (const t of result.targets) {
-            lines.push(`- **${t.symbol}** — ${t.name}  ·  score ${t.score.toFixed(3)}`);
+            const drug = t.tractableModalities.length
+              ? `tractable: ${t.tractableModalities.join(', ')}`
+              : 'no tractability evidence';
+            lines.push(`- **${t.symbol}** — ${t.name}  ·  score ${t.score.toFixed(3)}  ·  ${drug}`);
           }
           lines.push(
             '',
