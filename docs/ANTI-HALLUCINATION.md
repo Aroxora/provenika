@@ -99,6 +99,8 @@ had crossed this line were **neutralized** in this codebase:
 | Tool | Was | Now |
 |------|-----|-----|
 | `treatmentTools.ts` · `StratifyRisk` | returned recurrence-risk % and 5/10-yr survival from an ad-hoc formula, framed as clinical | output + description marked **NON-VALIDATED illustrative heuristic; not a clinical estimate; never inform care**; points to validated tools |
+| `treatmentTools.ts` · `RecommendTreatment` | emitted a per-patient `primaryTherapy` recommendation (e.g. "Lobectomy… evidenceLevel: Category 1") with **no** disclaimer — and parsed stage "IV" as `0`, routing metastatic patients to the early-stage **curative-surgery** branch | handler **unwired**; now returns a NOT-MEDICAL-ADVICE notice + evidence-lookup pointers (never a therapy); the recommender function is dead code, marked do-not-re-wire |
+| `biomarkerTools.ts` · `GetPrognosticAssessment` | returned a risk category / prognosis with no disclaimer | leads with a **NON-VALIDATED, not-a-clinical-prognosis** disclaimer |
 | `curativeTools.ts` · `DesignCurativeProtocol` | emitted a "Proposed Treatment Protocol" with specific doses ("Fludarabine 30 mg/m²…") and a "Recommended Approach" | reframed as a general **educational description of how a therapy class is administered**; doses removed; leads with a NOT-MEDICAL-ADVICE banner; no recommendation |
 | `curativeTools.ts` · `AssessCurativePotential` | returned a `bestApproach` "recommendation" | relabeled **"most-studied option (evidence only — not a recommendation)"** |
 | `cicd/patient_match.py` | printed "RECOMMENDED APPROACH" / "TREATMENT PROTOCOL" in a clinical-decision-support layout | reframed as **"published therapy options — evidence lookup"**; leads with the disclaimer; no plan |

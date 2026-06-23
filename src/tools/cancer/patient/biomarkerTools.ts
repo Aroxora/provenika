@@ -444,7 +444,15 @@ export function createBiomarkerTools(): ToolDefinition[] {
         const result = getPrognosticAssessment(
           params as Parameters<typeof getPrognosticAssessment>[0]
         );
-        return JSON.stringify(result, null, 2);
+        return JSON.stringify(
+          {
+            __DISCLAIMER__:
+              'NON-VALIDATED educational heuristic, NOT a clinical prognosis. The risk category comes from a simple rule over individual biomarkers — not a validated prognostic model or real outcome data — and must never inform care. Use validated tools (e.g. PREDICT, published nomograms) with a clinician.',
+            ...result,
+          },
+          null,
+          2
+        );
       },
     },
   ];

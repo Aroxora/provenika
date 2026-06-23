@@ -74,7 +74,13 @@ interface RiskStratification {
 }
 
 /**
- * Generate treatment recommendations
+ * NEUTRALIZED & UNWIRED: a per-patient treatment recommender — exactly what this
+ * framework forbids (docs/ANTI-HALLUCINATION.md). No tool calls this anymore; the
+ * RecommendTreatment handler returns a not-medical-advice notice instead. Do NOT
+ * re-wire it without the no-medical-advice review. (It was also unsafe on its own:
+ * `stage` parsing strips non-digits, so roman numerals like "IV" parse to 0 and a
+ * stage-IV patient was routed to the "early-stage" curative-surgery branch.) Kept
+ * only as a record of what was removed.
  */
 function recommendTreatment(params: {
   cancerType: string;
@@ -553,7 +559,7 @@ export function createTreatmentTools(): ToolDefinition[] {
     {
       name: 'RecommendTreatment',
       description:
-        'Generate evidence-based treatment recommendations based on cancer type, stage, and molecular profile',
+        'Educational only: this framework does NOT generate patient-specific treatment recommendations (a clinical act). Returns a not-medical-advice notice and pointers to public evidence sources (trials, drugs, literature).',
       parameters: {
         type: 'object',
         properties: {
@@ -586,8 +592,27 @@ export function createTreatmentTools(): ToolDefinition[] {
         required: ['cancerType', 'stage'],
       },
       handler: async (params) => {
-        const result = recommendTreatment(params as Parameters<typeof recommendTreatment>[0]);
-        return JSON.stringify(result, null, 2);
+        // NEUTRALIZED: a per-patient treatment recommendation is a clinical act and is
+        // forbidden here (docs/ANTI-HALLUCINATION.md). Never emit one — point to public
+        // evidence sources and a clinician instead.
+        const p = (params ?? {}) as { cancerType?: string; stage?: string };
+        return JSON.stringify(
+          {
+            __DISCLAIMER__:
+              'NOT MEDICAL ADVICE and NOT a treatment recommendation. This research framework does not generate patient-specific treatment plans — that is a clinical act requiring a licensed oncologist and the full clinical picture. Use validated guidelines (e.g. NCCN, ESMO) with a clinician.',
+            cancerType: p.cancerType ?? null,
+            stage: p.stage ?? null,
+            whatThisDoesInstead:
+              'Surfaces public evidence you can verify yourself — it never tells anyone which therapy to use.',
+            evidenceLookups: [
+              'cancer-cli "find clinical trials <cancer>"   # ClinicalTrials.gov',
+              'cancer-cli "find drug targets <gene>"         # ChEMBL drugs by target',
+              'cancer-cli "search literature <topic>"        # PubMed',
+            ],
+          },
+          null,
+          2,
+        );
       },
     },
     {
