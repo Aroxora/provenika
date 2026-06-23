@@ -146,6 +146,15 @@ async function main(): Promise<void> {
     return;
   }
 
+  // Keyless OSINT fast-path: the documented research one-liners ("search literature X",
+  // "find clinical trials X", "analyze gene X", "pathway analysis X") run directly against
+  // the public data-source tools — no LLM/API key. Falls through to the agent if the prompt
+  // isn't one of these patterns.
+  {
+    const { runOsintMode } = await import('../headless/osintMode.js');
+    if (await runOsintMode(rawArgs)) return;
+  }
+
   // Quick mode
   if (rawArgs.includes('--quick') || rawArgs.includes('-q')) {
     const { runQuickMode } = await import('../headless/quickMode.js');
