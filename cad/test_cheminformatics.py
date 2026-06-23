@@ -51,6 +51,12 @@ if getattr(ci, "_RDKIT", False):
     check("aspirin parses → 13 heavy atoms", a is not None and a["heavy_atoms"] == 13)
     check("LE derives from real heavy-atom count",
           approx(ci.ligand_efficiency(7.0, a["heavy_atoms"]), round(1.37 * 7.0 / 13, 3)))
+    # Developability rules: GSK 4/400 (MW<=400 & cLogP<=4) and Pfizer 3/75 (cLogP>3 & TPSA<75).
+    check("aspirin: GSK 4/400 ok, not in Pfizer 3/75 tox zone",
+          a.get("gsk_ok") is True and a.get("pfizer_tox_risk") is False)
+    d = ci.analyze("CCCCCCCCCCc1ccccc1", pains, brenk)  # decylbenzene: high cLogP, ~0 TPSA
+    check("lipophilic low-TPSA molecule: GSK fails, Pfizer 3/75 tox risk flagged",
+          d.get("gsk_ok") is False and d.get("pfizer_tox_risk") is True)
 else:
     print("  -- RDKit absent: descriptor checks skipped (the formula checks above are RDKit-free)")
 

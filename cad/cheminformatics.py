@@ -75,6 +75,9 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
     ro5 = ro5_viol <= 1
     veber = rotb <= 10 and tpsa <= 140
     egan = tpsa <= 131.6 and logp <= 5.88
+    # Developability / tox-risk heuristics (descriptor-only, cited):
+    gsk_ok = mw <= 400 and logp <= 4          # GSK 4/400 (Gleeson, Nat Rev Drug Discov 2008) — favorable ADMET
+    pfizer_tox_risk = logp > 3 and tpsa < 75  # Pfizer 3/75 (Hughes, Bioorg Med Chem Lett 2008) — ~2.5x in-vivo tox risk
 
     pains_hits = [m.GetDescription() for m in pains.GetMatches(mol)]
     brenk_hits = [m.GetDescription() for m in brenk.GetMatches(mol)]
@@ -86,6 +89,7 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
         "hbd": hbd, "hba": hba, "rotb": rotb, "aromatic_rings": arom, "heavy_atoms": heavy,
         "fraction_csp3": round(fsp3, 3), "qed": round(qed, 3),
         "ro5_violations": ro5_viol, "lipinski_ok": ro5, "veber_ok": veber, "egan_ok": egan,
+        "gsk_ok": gsk_ok, "pfizer_tox_risk": pfizer_tox_risk,
         "pains_alerts": len(pains_hits), "pains": pains_hits[:5],
         "brenk_alerts": len(brenk_hits), "brenk": brenk_hits[:5],
         "murcko_scaffold": scaffold,
@@ -193,7 +197,7 @@ def run(args) -> int:
     if args.out:
         cols = ["id", "smiles", "mw", "clogp", "tpsa", "hbd", "hba", "rotb", "aromatic_rings",
                 "heavy_atoms", "fraction_csp3", "qed", "pchembl", "le", "lle",
-                "ro5_violations", "lipinski_ok", "veber_ok", "egan_ok",
+                "ro5_violations", "lipinski_ok", "veber_ok", "egan_ok", "gsk_ok", "pfizer_tox_risk",
                 "pains_alerts", "brenk_alerts", "cluster", "murcko_scaffold", "clean"]
         if args.query:
             cols.append("similarity")

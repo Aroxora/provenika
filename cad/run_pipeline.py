@@ -186,11 +186,13 @@ def main(argv=None) -> int:
             rs = liabilities["results"]
             n_pains = sum(1 for r in rs if r.get("pains_alerts"))
             n_brenk = sum(1 for r in rs if r.get("brenk_alerts"))
+            n_tox = sum(1 for r in rs if r.get("pfizer_tox_risk"))
             flagged = [r.get("id") for r in rs if r.get("pains_alerts") or r.get("brenk_alerts")]
             lines += [
-                "## Structural liabilities (RDKit — PAINS / Brenk alerts)",
+                "## Structural liabilities (RDKit — PAINS / Brenk / developability)",
                 f"- {n_pains}/{len(rs)} hits carry a PAINS (assay-interference) alert; "
                 f"{n_brenk}/{len(rs)} carry a Brenk (reactive/unstable-group) alert → `liabilities.json`.",
+                f"- {n_tox}/{len(rs)} fall in the Pfizer 3/75 zone (cLogP>3 & TPSA<75 — elevated in-vivo tox risk; Hughes 2008).",
             ]
             if flagged:
                 lines.append(f"- Scrutinize before pursuing: {', '.join(str(f) for f in flagged[:6])}"
