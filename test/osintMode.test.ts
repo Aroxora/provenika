@@ -22,6 +22,10 @@ describe('osintMode keyless dispatcher', () => {
         rule: { tool: 'FindPathwaysForGene', arg: 'gene' },
         payload: 'BRAF',
       });
+      expect(matchOsintQuery('find drug targets EGFR')).toMatchObject({
+        rule: { tool: 'FindDrugsForTarget', arg: 'target' },
+        payload: 'EGFR',
+      });
     });
 
     it('is case-insensitive, trims, and strips a leading "for"/"on"', () => {

@@ -259,21 +259,23 @@ export class ChEMBLClient extends BaseClient {
     const targetChemblId = targets[0]?.target_chembl_id;
     if (!targetChemblId) return [];
 
-    // Get activities for this target
+    // Get activities for this target. Many activities map to the same molecule, so
+    // fetching exactly `limit` rows yields far fewer unique drugs (e.g. EGFR → 6 of 10).
+    // Over-fetch a wider activity window, then dedupe and cap to the requested limit.
     const activityResponse = await this.request<ChEMBLResponse<ChEMBLActivity>>('/activity.json', {
       params: {
         target_chembl_id: targetChemblId,
         pchembl_value__gte: '5', // Filter for reasonable activity
-        limit: String(limit),
+        limit: String(Math.min(limit * 5, 1000)),
       },
     });
 
     const activities = activityResponse.data.activities ?? [];
-    const uniqueMoleculeIds = [...new Set(activities.map(a => a.molecule_chembl_id))];
+    const uniqueMoleculeIds = [...new Set(activities.map(a => a.molecule_chembl_id))].slice(0, limit);
 
     // Get molecule details
     const drugs: Drug[] = [];
-    for (const moleculeId of uniqueMoleculeIds.slice(0, limit)) {
+    for (const moleculeId of uniqueMoleculeIds) {
       const drug = await this.getMolecule(moleculeId);
       if (drug) drugs.push(drug);
     }

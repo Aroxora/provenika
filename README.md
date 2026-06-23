@@ -166,8 +166,9 @@ scores · prove a molecule is safe or effective · replace docking/ADMET/wet-lab
 cancer-cli --self-test                     # live-check all 7 data sources
 cancer-cli "search literature <topic>"     # PubMed          cancer-cli "analyze gene <symbol>"     # UniProt
 cancer-cli "find clinical trials <cancer>" # ClinicalTrials  cancer-cli "pathway analysis <gene>"   # KEGG
+cancer-cli "find drug targets <gene>"      # ChEMBL
 ```
-`cancer-cli` = `node dist/bin/cancer-cli.js`. **These four research one-liners (and `--self-test`)
+`cancer-cli` = `node dist/bin/cancer-cli.js`. **These five research one-liners (and `--self-test`)
 need no API key** — they dispatch straight to the public databases and print cited results live.
 Free sources, all live: PubMed · ClinicalTrials.gov · cBioPortal · ChEMBL · KEGG · RCSB PDB ·
 UniProt · Europe PMC · Reactome · Open Targets. (Only open-ended, conversational queries fall

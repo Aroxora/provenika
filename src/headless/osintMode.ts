@@ -1,8 +1,8 @@
 // Keyless OSINT fast-path for cancer-cli.
 //
 // The documented research one-liners ("search literature X", "find clinical trials X",
-// "analyze gene X", "pathway analysis X") are deterministic public-database lookups —
-// they should NOT require an LLM/API key. This module
+// "analyze gene X", "pathway analysis X", "find drug targets X") are deterministic
+// public-database lookups — they should NOT require an LLM/API key. This module
 // recognizes those patterns and dispatches them straight to the corresponding cancer
 // tool's handler (which calls the public API directly), printing the result. Anything
 // that doesn't match falls through to the normal LLM agent path.
@@ -21,6 +21,7 @@ const RULES: OsintRule[] = [
   { re: /^(?:find|search)\s+clinical\s+trials?\s+(?:for\s+|on\s+)?(.+)$/i, tool: 'ClinicalTrialSearch', arg: 'condition', source: 'ClinicalTrials.gov' },
   { re: /^analyze\s+gene\s+(.+)$/i, tool: 'GetProteinInfo', arg: 'gene', source: 'UniProt' },
   { re: /^pathway\s+analysis\s+(.+)$/i, tool: 'FindPathwaysForGene', arg: 'gene', source: 'KEGG' },
+  { re: /^find\s+drug\s+targets?\s+(?:for\s+|in\s+)?(.+)$/i, tool: 'FindDrugsForTarget', arg: 'target', source: 'ChEMBL' },
 ];
 
 export interface OsintMatch {
