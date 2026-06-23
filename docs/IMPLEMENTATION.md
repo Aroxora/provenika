@@ -114,7 +114,11 @@ Design rules for `cad/` tools: stdlib core, with RDKit/Vina optional and feature
 environment **only**; never fabricate a result (`dock.py` runs the real Vina binary or prints
 install steps — it never invents scores); print a "verify at the primary source" disclaimer.
 The RDKit-only signals are precomputed into `web/public/data/cheminformatics/<TARGET>.json` by
-`precompute_site_data.py` (weekly Action) and shown in the web triage drawer.
+`precompute_site_data.py` (weekly Action) and contract-validated in CI
+(`cicd/check_cheminformatics_contract.cjs`). `core/cheminformatics.service.ts` loads them and
+they are **ready to surface in the triage drawer** — but that wiring is not in place yet: no
+feature component injects the service today, so the precomputed data is staged, not displayed.
+(Wiring it into the triage view is a clean open task — the data, service, and contract are all there.)
 
 See `docs/REAL-CAD-ROADMAP.md` for the full stage map and what is documented vs. implemented.
 
