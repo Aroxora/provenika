@@ -39,6 +39,7 @@ DEFAULT_TARGETS = [
     # Expanded coverage — clinically validated oncology drug targets, each verified to resolve to
     # the correct ChEMBL single human protein (see resolve_target's exact-gene-symbol preference).
     "KIT", "MET", "AKT1", "AURKA", "CDK2", "FGFR2", "FGFR3", "NTRK1", "IDH1", "EZH2",
+    "PIK3CA", "IDH2", "SMO", "PDGFRA", "SRC", "CHEK1", "ATR", "PLK1", "WEE1", "CDK9",
 ]
 
 

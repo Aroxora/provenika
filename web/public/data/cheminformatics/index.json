@@ -20,6 +20,12 @@
       "count": 25
     },
     {
+      "target": "ATR",
+      "slug": "ATR",
+      "file": "ATR.json",
+      "count": 25
+    },
+    {
       "target": "AURKA",
       "slug": "AURKA",
       "file": "AURKA.json",
@@ -59,6 +65,18 @@
       "target": "CDK6",
       "slug": "CDK6",
       "file": "CDK6.json",
+      "count": 25
+    },
+    {
+      "target": "CDK9",
+      "slug": "CDK9",
+      "file": "CDK9.json",
+      "count": 25
+    },
+    {
+      "target": "CHEK1",
+      "slug": "CHEK1",
+      "file": "CHEK1.json",
       "count": 25
     },
     {
@@ -110,6 +128,12 @@
       "count": 25
     },
     {
+      "target": "IDH2",
+      "slug": "IDH2",
+      "file": "IDH2.json",
+      "count": 25
+    },
+    {
       "target": "JAK2",
       "slug": "JAK2",
       "file": "JAK2.json",
@@ -158,6 +182,24 @@
       "count": 25
     },
     {
+      "target": "PDGFRA",
+      "slug": "PDGFRA",
+      "file": "PDGFRA.json",
+      "count": 25
+    },
+    {
+      "target": "PIK3CA",
+      "slug": "PIK3CA",
+      "file": "PIK3CA.json",
+      "count": 25
+    },
+    {
+      "target": "PLK1",
+      "slug": "PLK1",
+      "file": "PLK1.json",
+      "count": 25
+    },
+    {
       "target": "RET",
       "slug": "RET",
       "file": "RET.json",
@@ -167,6 +209,24 @@
       "target": "ROS1",
       "slug": "ROS1",
       "file": "ROS1.json",
+      "count": 25
+    },
+    {
+      "target": "SMO",
+      "slug": "SMO",
+      "file": "SMO.json",
+      "count": 25
+    },
+    {
+      "target": "SRC",
+      "slug": "SRC",
+      "file": "SRC.json",
+      "count": 25
+    },
+    {
+      "target": "WEE1",
+      "slug": "WEE1",
+      "file": "WEE1.json",
       "count": 25
     }
   ]

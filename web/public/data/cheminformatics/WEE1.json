@@ -1,0 +1,452 @@
+{
+  "target": "WEE1",
+  "targetId": "CHEMBL5491",
+  "targetName": "Wee1-like protein kinase",
+  "generated": "2026-06-23",
+  "count": 25,
+  "clusterCount": 8,
+  "byChembl": {
+    "CHEMBL5278196": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-n2ccc3cnc(Nc4ccc(N5CCNCC5)cc4)nc32)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.37,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.84,
+      "le": 0.391,
+      "lle": 5.9,
+      "cluster": 1
+    },
+    "CHEMBL6065998": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.143,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.21,
+      "le": 0.415,
+      "lle": 6.29,
+      "cluster": 0
+    },
+    "CHEMBL379975": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "phthalimide"
+      ],
+      "scaffold": "O=C1NC(=O)c2c1c(-c1ccccc1)cc1[nH]c3ccccc3c21",
+      "eganOk": true,
+      "fractionCsp3": 0.0,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.53,
+      "le": 0.506,
+      "lle": 5.37,
+      "cluster": 7
+    },
+    "CHEMBL5963536": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.217,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.28,
+      "le": 0.391,
+      "lle": 6.37,
+      "cluster": 0
+    },
+    "CHEMBL5956499": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc(N4CCC4)cc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.25,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.23,
+      "le": 0.38,
+      "lle": 6.22,
+      "cluster": 0
+    },
+    "CHEMBL4443172": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1c(-c2ccccc2)c[nH]c2nc(Nc3ccc(N4CCNCC4)cc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.24,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 2.61,
+      "le": 0.384,
+      "lle": 4.72,
+      "cluster": 6
+    },
+    "CHEMBL5776395": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc4c(c3)CCNC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.36,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.05,
+      "le": 0.383,
+      "lle": 5.54,
+      "cluster": 3
+    },
+    "CHEMBL5761564": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.143,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.2,
+      "le": 0.408,
+      "lle": 5.6,
+      "cluster": 0
+    },
+    "CHEMBL5805001": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.304,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.29,
+      "le": 0.379,
+      "lle": 5.67,
+      "cluster": 2
+    },
+    "CHEMBL5842070": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc4c(c3)CNCC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.385,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.13,
+      "le": 0.372,
+      "lle": 4.98,
+      "cluster": 3
+    },
+    "CHEMBL5281278": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-n2ccc3cnc(Nc4ccc(N5CCNCC5)cc4)nc32)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.346,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.74,
+      "le": 0.372,
+      "lle": 5.37,
+      "cluster": 1
+    },
+    "CHEMBL5269524": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-n2ccc3cnc(Nc4ccc(N5CCNCC5)cc4)nc32)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.32,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.03,
+      "le": 0.364,
+      "lle": 5.31,
+      "cluster": 1
+    },
+    "CHEMBL5920450": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.238,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.22,
+      "le": 0.395,
+      "lle": 4.91,
+      "cluster": 0
+    },
+    "CHEMBL5840313": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.143,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.29,
+      "le": 0.386,
+      "lle": 5.76,
+      "cluster": 0
+    },
+    "CHEMBL5279054": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-n2ccc3cnc(Nc4ccc(N5CCNCC5)cc4)nc32)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.393,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.89,
+      "le": 0.357,
+      "lle": 4.72,
+      "cluster": 1
+    },
+    "CHEMBL5934516": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.182,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.29,
+      "le": 0.379,
+      "lle": 5.99,
+      "cluster": 0
+    },
+    "CHEMBL6029061": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.143,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.17,
+      "le": 0.398,
+      "lle": 5.73,
+      "cluster": 0
+    },
+    "CHEMBL5783648": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2ccccc2)c2nc(Nc3ccc4c(c3)CNCC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.37,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.99,
+      "le": 0.363,
+      "lle": 4.15,
+      "cluster": 3
+    },
+    "CHEMBL6172478": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "N=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc(N4CCNCC4)cc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.333,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.17,
+      "le": 0.352,
+      "lle": 6.51,
+      "cluster": 4
+    },
+    "CHEMBL5950374": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.273,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.19,
+      "le": 0.372,
+      "lle": 5.29,
+      "cluster": 2
+    },
+    "CHEMBL4878479": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2cccc(C3CC3)n2)c2nc(Nc3ccc4c(c3)CCNC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.37,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.49,
+      "le": 0.343,
+      "lle": 5.32,
+      "cluster": 5
+    },
+    "CHEMBL4873514": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2cccc(C3CC3)n2)c2nc(Nc3ccc4c(c3)CCNC43CC3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.37,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.91,
+      "le": 0.343,
+      "lle": 5.57,
+      "cluster": 5
+    },
+    "CHEMBL5941156": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.143,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.36,
+      "le": 0.374,
+      "lle": 5.46,
+      "cluster": 0
+    },
+    "CHEMBL4862622": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc4c(c3)CNCC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.308,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.13,
+      "le": 0.352,
+      "lle": 5.88,
+      "cluster": 4
+    },
+    "CHEMBL5273079": {
+      "painsAlerts": 1,
+      "pains": [
+        "anil_di_alk_A(478)"
+      ],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-n2ccc3cnc(Nc4ccc(N5CCNCC5)cc4)nc32)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.393,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.86,
+      "le": 0.345,
+      "lle": 4.57,
+      "cluster": 1
+    }
+  }
+}
