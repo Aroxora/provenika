@@ -66,18 +66,36 @@ def _get(path: str, params: dict) -> dict:
 def resolve_target(name: str) -> dict | None:
     """Resolve a free-text target name to a ChEMBL target.
 
-    Prefers a SINGLE PROTEIN in Homo sapiens; falls back to the first hit.
+    Prefers an EXACT gene-symbol match that is a SINGLE PROTEIN in Homo sapiens. Without this,
+    ChEMBL's text relevance can pick a substring/interactor over the real target — e.g. "AKT1"
+    resolves to "Proline-rich AKT1 substrate 1" (gene AKT1S1) instead of the AKT1 kinase (gene
+    AKT1), and "AURKA" to "AURKAIP1" instead of Aurora kinase A — silently triaging the wrong
+    protein. When no candidate's gene symbol matches the query (e.g. a mutation-qualified string
+    like "KRAS G12C"), this reduces to the previous single-protein/human/relevance ordering.
     """
     data = _get("target/search", {"q": name, "limit": 25})
     targets = data.get("targets", [])
     if not targets:
         return None
 
+    q = name.strip().upper()
+
+    def gene_symbols(t: dict) -> set:
+        return {
+            (s.get("component_synonym") or "").upper()
+            for c in t.get("target_components", [])
+            for s in c.get("target_component_synonyms", [])
+            if s.get("syn_type") == "GENE_SYMBOL"
+        }
+
     def score(t: dict) -> tuple:
+        exact_gene = q in gene_symbols(t)
         single = t.get("target_type") == "SINGLE PROTEIN"
         human = t.get("organism") == "Homo sapiens"
-        # ChEMBL sorts by relevance; keep that as the final tiebreak via index
-        return (single, human)
+        # Exact gene-symbol match dominates, then single-protein + human; ChEMBL relevance is the
+        # implicit final tiebreak via the stable sort. With no gene match every leading term is
+        # False, so this is identical to the original (single, human) ordering — a strict add-on.
+        return (exact_gene and single and human, exact_gene, single, human)
 
     targets_sorted = sorted(targets, key=score, reverse=True)
     return targets_sorted[0]

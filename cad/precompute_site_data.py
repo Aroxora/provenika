@@ -36,6 +36,9 @@ sys.path.insert(0, str(HERE))
 DEFAULT_TARGETS = [
     "EGFR", "ERBB2", "BTK", "ALK", "ROS1", "RET", "ABL1", "BRAF", "MAP2K1",
     "CDK4", "CDK6", "MTOR", "JAK2", "FLT3", "PARP1", "BCL2", "FGFR1", "KRAS G12C",
+    # Expanded coverage — clinically validated oncology drug targets, each verified to resolve to
+    # the correct ChEMBL single human protein (see resolve_target's exact-gene-symbol preference).
+    "KIT", "MET", "AKT1", "AURKA", "CDK2", "FGFR2", "FGFR3", "NTRK1", "IDH1", "EZH2",
 ]
 
 
