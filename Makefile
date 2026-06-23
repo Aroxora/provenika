@@ -9,7 +9,7 @@ OUT    ?= runs/$(shell printf '%s' "$(TARGET)" | tr '[:upper:]' '[:lower:]')
 PY     ?= python3
 
 .DEFAULT_GOAL := help
-.PHONY: help setup build verify pipeline example dock-check test readme clean
+.PHONY: help setup build verify pipeline example dock-check test smoke readme clean
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -44,6 +44,9 @@ test:  ## Run the offline checks CI runs (no network needed)
 		--incidence 60000 --price 150000 --json > /tmp/provenika-test/cost_benefit.json
 	$(PY) cad/verify.py --run /tmp/provenika-test --json | $(PY) -c \
 		"import sys,json; r=json.load(sys.stdin); assert r['ok'] and r['fail']==0, r; print('verify gate OK')"
+
+smoke:  ## Run every headline command the README promises (live; needs build + network)
+	bash cicd/check_readme.sh
 
 readme:  ## Regenerate README.md from cicd/generate_readme.py
 	$(PY) cicd/generate_readme.py

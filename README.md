@@ -78,7 +78,8 @@ npm install && npm run build            # builds dist/bin/cancer-cli.js
 ```
 
 **Shortcut:** `make setup && make verify`, then `make` to list every one-command target
-(`pipeline`, `test`, `dock-check`, `readme`, …). `make test` runs the offline checks CI runs.
+(`pipeline`, `test`, `smoke`, `dock-check`, …). `make test` runs the offline checks CI runs;
+`make smoke` re-runs every headline command in this README live, so it can't drift from reality.
 
 **Optional extras** (only if you need them):
 

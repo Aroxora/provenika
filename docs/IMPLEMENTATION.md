@@ -246,6 +246,10 @@ identifier and intentionally in-bundle — that is not a secret.
   (vitest — including the `math-models.ts` known-value checks that pin every quantitative
   formula to its cited reference). **Type safety:** `npm run build` / `npx tsc --noEmit`;
   `cd web && npx ng build` for the app.
+- **README contract:** `make smoke` (`cicd/check_readme.sh`) runs every headline command the
+  README promises against live data, so the docs can't silently drift from the code.
+- **Medical-safety guard:** `node cicd/audit_medical_safety.cjs` (in CI) fails the build if any
+  tool emits dosing / a treatment recommendation / a diagnosis / a prognosis without a disclaimer.
 - **Adversarial review workflows** (run via the Workflow tool during development):
   - *Web app review* — correctness / security / a11y / no-medical-overclaim, each finding refuted
     by a skeptic before it counts.
