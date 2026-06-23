@@ -61,6 +61,19 @@ fitted to any benchmark and not dressed up as data. The *inputs* are real (pChEM
 LOA priors); only their *combination* is heuristic, and the score is a triage ordering, never a
 prediction of efficacy. The constants are commented as such in the source.
 
+### 5. No verdict — and no green check — without a target
+Two failure modes specific to *triage* are closed in code:
+- **Unresolved target → no verdict.** If `run_pipeline.py` cannot resolve the target to a
+  ChEMBL/UniProt entry (an unknown or fictional gene), it writes **nothing**, prints why, and
+  **exits non-zero**. The cost-benefit model is target-*independent*, so emitting its
+  "Favorable — proceed" for a target that was never found would be a fabricated go-signal — the
+  pipeline refuses. (`SUMMARY.md` also labels that figure a modality/phase-level benchmark, not a
+  per-target prediction.)
+- **No target evidence → no clean bill of health.** `verify.py` will not print "every reported
+  figure reproduced" for a run that contains no target-specific figures (no `dossier.json`, no
+  `hits.csv`): a wholly empty run **FAILs**, and a cost-benefit-only run gets a qualified banner
+  (`target_evidence: false` in `--json`), never a green check.
+
 ## What is covered — and what is NOT
 
 **Covered** (the guarantee): the **figures** in machine-readable artifacts — `dossier.json`,
@@ -103,5 +116,6 @@ The real, provenance-tracked path is `cad/run_pipeline.py` + `cad/verify.py`.
 python3 cad/verify.py --target EGFR             # live fetch-and-cite, no saved run
 python3 cad/run_pipeline.py --target BRAF --out runs/braf
 python3 cad/verify.py --run runs/braf           # re-prove every figure it wrote
+python3 cad/run_pipeline.py --target NOTAREALGENE --out runs/x   # → clear error, writes nothing, exits non-zero
 ```
 Open any `verify:` URL. If the number isn't there in the public database, it didn't come from here.

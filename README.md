@@ -73,6 +73,9 @@ python3 cad/verify.py --target EGFR      # confirm it works — live, cited, no 
 npm install && npm run build            # builds dist/bin/cancer-cli.js
 ```
 
+**Shortcut:** `make setup && make verify`, then `make` to list every one-command target
+(`pipeline`, `test`, `dock-check`, `readme`, …). `make test` runs the offline checks CI runs.
+
 **Optional extras** (only if you need them):
 
 ```bash

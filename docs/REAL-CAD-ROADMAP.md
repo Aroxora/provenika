@@ -25,8 +25,11 @@ limits of each stage.
 **Strategy add-ons:** `cad/cost_benefit.py` scores a proposed program's approval probability,
 expected cost/time, and risk-adjusted return (public BIO/Informa/DiMasi benchmarks);
 `cad/news_update.py` (+ the `news-update` GitHub Action) keeps an intelligence digest current.
-`cad/run_pipeline.py` runs stages 1–4 end-to-end; docking (stage 5) is the explicit manual
-next step because it needs a chosen pocket and the Vina binary.
+`cad/run_pipeline.py` runs stages 1–4 plus the cost-benefit add-on end-to-end and writes the
+triage report (`SUMMARY.md`); structure-based docking (stage 5) is the explicit manual next step
+because it needs a chosen pocket and the Vina binary — run `python3 cad/dock.py --check` first to
+confirm Vina + Open Babel are installed. If the target can't be resolved, the pipeline writes
+nothing and exits non-zero (no fabricated verdict).
 
 ## Stages 1–2 — implemented today
 
