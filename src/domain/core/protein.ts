@@ -157,6 +157,8 @@ export interface ProteinSearchCriteria {
   readonly organism?: string;
   readonly hasStructure?: boolean;
   readonly hasDruggableSite?: boolean;
+  /** Restrict to reviewed (Swiss-Prot) entries — the canonical, manually-curated ones. */
+  readonly reviewed?: boolean;
   readonly limit?: number;
   readonly offset?: number;
 }

@@ -138,9 +138,12 @@ export class UniProtClient extends BaseClient {
    * Get protein by gene name
    */
   async getByGeneName(geneName: string, organism: string = 'human'): Promise<Protein | null> {
+    // Prefer the reviewed (Swiss-Prot) entry — without this, a gene like EGFR resolves
+    // to an unreviewed isoform (e.g. A2VCQ7) instead of the canonical P00533.
     const result = await this.search({
       geneName,
       organism,
+      reviewed: true,
       limit: 1,
     });
 
@@ -234,6 +237,10 @@ export class UniProtClient extends BaseClient {
       };
       const taxId = organismMap[criteria.organism.toLowerCase()] ?? criteria.organism;
       parts.push(`(organism_id:${taxId})`);
+    }
+
+    if (criteria.reviewed) {
+      parts.push('(reviewed:true)');
     }
 
     if (criteria.hasStructure) {

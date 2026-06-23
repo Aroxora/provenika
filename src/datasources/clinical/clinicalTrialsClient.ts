@@ -249,6 +249,9 @@ export class ClinicalTrialsClient extends BaseClient {
     const params: Record<string, string> = {
       format: 'json',
       pageSize: String(criteria.limit ?? 20),
+      // ClinicalTrials.gov v2 omits totalCount unless asked — without this the result
+      // count prints as "X of undefined".
+      countTotal: 'true',
     };
 
     // Build query terms
