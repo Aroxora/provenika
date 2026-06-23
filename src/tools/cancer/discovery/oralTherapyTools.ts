@@ -504,6 +504,7 @@ function getOralTherapyByTarget(params: { target: string }): string {
 
   const output: string[] = [];
   output.push(`# Oral Therapies Targeting ${params.target}\n`);
+  output.push('_Reference data only — NOT medical advice, NOT a treatment recommendation, NOT a dose for any patient. Dosing/response figures are label/literature references; verify against the current FDA label and a clinician._\n');
 
   if (matches.length === 0) {
     output.push('No approved oral therapies for this target.');

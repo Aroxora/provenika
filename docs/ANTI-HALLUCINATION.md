@@ -104,6 +104,13 @@ had crossed this line were **neutralized** in this codebase:
 | `curativeTools.ts` · `DesignCurativeProtocol` | emitted a "Proposed Treatment Protocol" with specific doses ("Fludarabine 30 mg/m²…") and a "Recommended Approach" | reframed as a general **educational description of how a therapy class is administered**; doses removed; leads with a NOT-MEDICAL-ADVICE banner; no recommendation |
 | `curativeTools.ts` · `AssessCurativePotential` | returned a `bestApproach` "recommendation" | relabeled **"most-studied option (evidence only — not a recommendation)"** |
 | `cicd/patient_match.py` | printed "RECOMMENDED APPROACH" / "TREATMENT PROTOCOL" in a clinical-decision-support layout | reframed as **"published therapy options — evidence lookup"**; leads with the disclaimer; no plan |
+| `oralTherapyTools.ts` · `GetOralTherapyByTarget`, `oralDrugPipeline.ts` · `ListAllOralDrugCandidates` | listed drug **dosing** ("Osimertinib 80mg once daily", "300mg BID") with no disclaimer | now lead with a **reference-only / NOT-medical-advice / NOT-a-dose** banner; dosing labeled label-reference, verify against the FDA label |
+| `cadTools.ts` · `ListUnmetNeedCancers`, `gapAnalysisTools.ts` · `AnalyzeAllGaps` / `GetUnmetNeedStats` | population survival/unmet-need stats with no framing | labeled **"population statistics — not a prognosis for any individual; verify at source (SEER, ACS)"** |
+
+This list is now **enforced, not just curated.** `cicd/audit_medical_safety.cjs` (run in CI after the
+build) invokes every tool's handler and **fails the build** if any output contains dosing, a treatment
+recommendation, or a prognosis **without** a disclaimer — so a newly-added tool that crosses the line is
+caught automatically. `test/medicalSafety.test.ts` additionally pins the highest-risk handlers.
 
 ## Fabricated example outputs, quarantined
 

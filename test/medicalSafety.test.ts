@@ -48,4 +48,18 @@ describe('medical-safety: no per-patient treatment advice', () => {
     expect(out).toMatch(DISCLAIMER);
     expect(out).not.toMatch(/recommended (treatment|therapy|approach)/i);
   });
+
+  it('drug-reference tools that show dosing carry a not-a-dose disclaimer', async () => {
+    // These legitimately surface label dosing (e.g. "80mg once daily"); they must frame it
+    // as a reference, never as a dose for a patient.
+    for (const [name, args] of [
+      ['GetOralTherapyByTarget', { target: 'EGFR' }],
+      ['ListAllOralDrugCandidates', {}],
+    ] as const) {
+      const out = await runTool(name, args as Record<string, unknown>);
+      if (/\b\d+\s*mg\b|\bBID\b|once daily/i.test(out)) {
+        expect(out).toMatch(/not medical advice|not a (dose|treatment|recommendation)|reference data only/i);
+      }
+    }
+  });
 });

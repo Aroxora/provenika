@@ -874,6 +874,8 @@ export function createOralDrugPipelineTools(): ToolDefinition[] {
         const phaseI = drugs.filter(d => d.phase.includes('Phase I')).length;
 
         return JSON.stringify({
+          __DISCLAIMER__:
+            'Reference data only — NOT medical advice, NOT a treatment recommendation, NOT a dose for any patient. `dosing` is a label/literature reference; verify status against ClinicalTrials.gov and the current FDA label, and consult a clinician.',
           category,
           totalDrugs: drugs.length,
           breakdown: { approved, phaseIII, phaseII, phaseI },

@@ -500,6 +500,7 @@ export function createCADTools(apiKey?: string): ToolDefinition[] {
       handler: async () => {
         const output: string[] = [];
         output.push('# Cancers with Highest Unmet Need for Curative Therapies\n');
+        output.push('_Population statistics from a static reference set — not a prognosis for any individual. Survival figures are approximate; verify at source (e.g. SEER, ACS)._\n');
         output.push('| Cancer Type | 5-Year Survival | Current Treatment | Unmet Need |');
         output.push('|-------------|-----------------|-------------------|------------|');
         for (const c of UNMET_NEED_CANCERS) {

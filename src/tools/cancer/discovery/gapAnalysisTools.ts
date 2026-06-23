@@ -300,6 +300,7 @@ export const EmergingCureTech = [
 async function analyzeGaps(params: { apiKey?: string }): Promise<string> {
   const output: string[] = [];
   output.push('# COMPREHENSIVE CANCER SCREENING & CURE GAP ANALYSIS\n');
+  output.push('_Population statistics from a static reference set — not a prognosis for any individual. Figures are approximate; verify at source (e.g. SEER, ACS)._\n');
   output.push(`Generated: ${new Date().toISOString()}\n`);
 
   // Section 1: No Screening
@@ -523,6 +524,7 @@ function getUnmetNeedStats(): string {
 
   const output: string[] = [];
   output.push('# CANCER UNMET NEEDS STATISTICS\n');
+  output.push('_Population statistics from a static reference set — not a prognosis for any individual. Figures are approximate; verify at source (e.g. SEER, ACS)._\n');
 
   output.push('## Summary');
   output.push(`- **${NoScreeningCancers.length} cancers** have no approved screening test`);

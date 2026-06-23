@@ -24,6 +24,8 @@ jobs:
       - run: npm ci
       - name: Build (tsc)
         run: npm run build
+      - name: Medical-safety audit (no undisclaimed dosing / treatment advice / prognosis)
+        run: node cicd/audit_medical_safety.cjs
       - name: Type-check
         run: npx tsc --noEmit
       - name: Test
