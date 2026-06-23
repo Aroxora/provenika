@@ -92,6 +92,7 @@ Research Commands (keyless — no API key, queried live):
   "find clinical trials <cancer>"   ClinicalTrials.gov
   "analyze gene <symbol>"           UniProt protein/gene info
   "find drug targets <gene>"        ChEMBL drugs for the target
+  "find targets for disease <name>" Open Targets druggable targets
   "pathway analysis <gene>"         KEGG pathways
 
 Options:
@@ -129,6 +130,7 @@ Examples (keyless):
   cancer-cli "find clinical trials pancreatic cancer"
   cancer-cli "analyze gene TP53"
   cancer-cli "find drug targets EGFR"
+  cancer-cli "find targets for disease melanoma"
   cancer-cli --self-test                      Check all data sources
 
 Free-form prompts (e.g. "Find PARP inhibitors for BRCA1 mutations") use the optional
@@ -253,6 +255,14 @@ async function runConnectivityTest(): Promise<void> {
       test: async () => {
         const { createChEMBLClient } = await import('../datasources/drug/chemblClient.js');
         const client = createChEMBLClient();
+        return client.testConnection();
+      },
+    },
+    {
+      name: 'Open Targets',
+      test: async () => {
+        const { createOpenTargetsClient } = await import('../datasources/disease/openTargetsClient.js');
+        const client = createOpenTargetsClient();
         return client.testConnection();
       },
     },

@@ -196,9 +196,10 @@ rank measured-active ligands by potency + drug-likeness (RDKit); flag each hit's
 liabilities** — PAINS / Brenk alerts, GSK 4/400 + Pfizer 3/75 developability/tox-risk, and
 synthetic accessibility (RDKit);
 fetch a 3-D structure; build a docking box; run a transparent feasibility model; emit a cited,
-re-verifiable dossier; and search PubMed / ClinicalTrials.gov / cBioPortal / ChEMBL / KEGG /
-RCSB PDB / UniProt live ({tool_count} OSINT tools, see below). **Resilient:** if one data source is
-down it degrades to a partial dossier (clearly marked) rather than failing outright.
+re-verifiable dossier; map a disease to its association-scored druggable targets (Open Targets);
+and search PubMed / ClinicalTrials.gov / cBioPortal / ChEMBL / KEGG / RCSB PDB / UniProt live
+({tool_count} OSINT tools, see below). **Resilient:** if one data source is down it degrades to a
+partial dossier (clearly marked) rather than failing outright.
 
 **Does not (by design):** cure, treat, or diagnose anyone · recommend a therapy or generate a
 treatment plan · estimate a patient's prognosis · design de-novo molecules with "validated"
@@ -210,16 +211,16 @@ scores · prove a molecule is safe or effective · replace docking/ADMET/wet-lab
 ## OSINT one-liners (pick & justify a target) — keyless
 
 ```bash
-cancer-cli --self-test                     # live-check all 7 data sources
-cancer-cli "search literature <topic>"     # PubMed          cancer-cli "analyze gene <symbol>"     # UniProt
-cancer-cli "find clinical trials <cancer>" # ClinicalTrials  cancer-cli "pathway analysis <gene>"   # KEGG
-cancer-cli "find drug targets <gene>"      # ChEMBL
+cancer-cli --self-test                       # live-check all 8 data sources
+cancer-cli "search literature <topic>"       # PubMed         cancer-cli "analyze gene <symbol>"      # UniProt
+cancer-cli "find clinical trials <cancer>"   # ClinicalTrials cancer-cli "pathway analysis <gene>"    # KEGG
+cancer-cli "find drug targets <gene>"        # ChEMBL         cancer-cli "find targets for disease <d>" # Open Targets
 ```
-`cancer-cli` = `node dist/bin/cancer-cli.js`. **These five research one-liners (and `--self-test`)
+`cancer-cli` = `node dist/bin/cancer-cli.js`. **These six research one-liners (and `--self-test`)
 need no API key** — they dispatch straight to the public databases and print cited results live.
-Free sources, all live (the same 7 `--self-test` checks): PubMed · ClinicalTrials.gov · cBioPortal ·
-ChEMBL · KEGG · RCSB PDB · UniProt. (Only open-ended, conversational queries fall through to the
-optional LLM agent, which needs a model key: `cancer-cli --key <DEEPSEEK_API_KEY>`.)
+Free sources, all live (the same 8 `--self-test` checks): PubMed · ClinicalTrials.gov · cBioPortal ·
+ChEMBL · KEGG · RCSB PDB · UniProt · Open Targets. (Only open-ended, conversational queries fall
+through to the optional LLM agent, which needs a model key: `cancer-cli --key <DEEPSEEK_API_KEY>`.)
 
 ## Can this be a real business? (honest analysis)
 

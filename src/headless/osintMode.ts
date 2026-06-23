@@ -22,6 +22,7 @@ const RULES: OsintRule[] = [
   { re: /^analyze\s+gene\s+(.+)$/i, tool: 'GetProteinInfo', arg: 'gene', source: 'UniProt' },
   { re: /^pathway\s+analysis\s+(.+)$/i, tool: 'FindPathwaysForGene', arg: 'gene', source: 'KEGG' },
   { re: /^find\s+drug\s+targets?\s+(?:for\s+|in\s+)?(.+)$/i, tool: 'FindDrugsForTarget', arg: 'target', source: 'ChEMBL' },
+  { re: /^(?:find\s+)?targets?\s+for\s+disease\s+(.+)$/i, tool: 'FindTargetsForDisease', arg: 'disease', source: 'Open Targets' },
 ];
 
 export interface OsintMatch {

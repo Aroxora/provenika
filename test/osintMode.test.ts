@@ -26,6 +26,22 @@ describe('osintMode keyless dispatcher', () => {
         rule: { tool: 'FindDrugsForTarget', arg: 'target' },
         payload: 'EGFR',
       });
+      expect(matchOsintQuery('find targets for disease melanoma')).toMatchObject({
+        rule: { tool: 'FindTargetsForDisease', arg: 'disease' },
+        payload: 'melanoma',
+      });
+    });
+
+    it('disambiguates "drug targets <gene>" (ChEMBL) from "targets for disease <name>" (Open Targets)', () => {
+      // The two target rules must not collide: "drug" → ChEMBL, "for disease" → Open Targets.
+      expect(matchOsintQuery('find drug targets BRAF')?.rule.tool).toBe('FindDrugsForTarget');
+      expect(matchOsintQuery('find targets for disease lung adenocarcinoma')).toMatchObject({
+        rule: { tool: 'FindTargetsForDisease' },
+        payload: 'lung adenocarcinoma',
+      });
+      expect(matchOsintQuery('targets for disease breast carcinoma')?.payload).toBe(
+        'breast carcinoma',
+      );
     });
 
     it('is case-insensitive, trims, and strips a leading "for"/"on"', () => {

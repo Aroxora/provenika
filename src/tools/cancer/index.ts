@@ -11,6 +11,7 @@ import { createPubMedTools } from './literature/pubmedTools.js';
 import { createClinicalTrialTools } from './clinical/trialTools.js';
 import { createVariantTools } from './genomics/variantTools.js';
 import { createTargetTools } from './drug-discovery/targetTools.js';
+import { createDiseaseTargetTools } from './drug-discovery/diseaseTargetTools.js';
 import { createPathwayTools } from './pathway/pathwayTools.js';
 import { createBiomarkerTools } from './patient/biomarkerTools.js';
 import { createTreatmentTools } from './patient/treatmentTools.js';
@@ -43,6 +44,7 @@ export function createCancerTools(tavilyApiKey?: string): ToolDefinition[] {
     ...createClinicalTrialTools(),
     ...createVariantTools(),
     ...createTargetTools(),
+    ...createDiseaseTargetTools(),
     ...createPathwayTools(),
     ...createBiomarkerTools(),
     ...createTreatmentTools(),

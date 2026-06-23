@@ -41,6 +41,7 @@ chk_cli "find clinical trials melanoma"
 chk_cli "analyze gene TP53"
 chk_cli "pathway analysis BRAF"
 chk_cli "find drug targets EGFR"
+chk_cli "find targets for disease melanoma"
 
 echo ""
 echo "README contract: $pass passed, $fail failed."
