@@ -92,12 +92,12 @@ standard-library only; **RDKit** (cheminformatics) and **AutoDock Vina + Open Ba
 |-------|------|--------------|------------------|
 | 1 | `target_report.py` | Druggability dossier (function, #PDB, ligand depth, known drugs) | UniProt + ChEMBL |
 | 2 | `virtual_triage.py` | Rank ligands by potency (pChEMBL) + drug-likeness; CSV; novelty filter; similarity | ChEMBL (RDKit optional) |
-| 2b | `cheminformatics.py` | RDKit: descriptors, **LE/LLE**, drug-likeness rules, **PAINS/Brenk** alerts, **Butina chemotype clustering**, Murcko scaffolds, similarity | **RDKit** |
+| 2b | `cheminformatics.py` | RDKit: descriptors, **LE/LLE**, drug-likeness rules (Ro5/Veber/Egan, **GSK 4/400** + **Pfizer 3/75** developability), **PAINS/Brenk** alerts, **Butina chemotype clustering**, Murcko scaffolds, similarity | **RDKit** |
 | 3 | `fetch_structure.py` | Best experimental PDB (X-ray, best res) or AlphaFold fallback | UniProt + RCSB + AlphaFold |
 | 4 | `binding_site.py` | Docking box (center+size) from the co-crystal ligand envelope | RCSB (stdlib) |
 | 5 | `dock.py` | AutoDock Vina wrapper: clean receptor prep, `--box-json`, parsed ΔG (gated on binaries) | **Vina + Open Babel** |
 | — | `cost_benefit.py` | Program feasibility: P(approval), cost/time, risk-adjusted return | static benchmarks |
-| — | `run_pipeline.py` | Orchestrates 1→4 + cost-benefit → `SUMMARY.md` (+ ready dock command) | orchestrator |
+| — | `run_pipeline.py` | Orchestrates 1→2b (incl. `liabilities.json`) → 3→4 + cost-benefit → `SUMMARY.md` (+ ready dock command); degrades to a partial dossier if a source is down | orchestrator |
 | — | `precompute_site_data.py` | triage→cheminformatics JSON per target for the web app (browser can't run RDKit) | ChEMBL + **RDKit** |
 | — | `news_update.py` | Tavily news digests → `cad/intel/` (key from env only) | Tavily |
 
