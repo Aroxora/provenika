@@ -9,8 +9,9 @@
 ## Ligand triage
 - 25 ranked candidates → `hits.csv` (SMILES + ChEMBL links)
 
-## Structural liabilities (RDKit — PAINS / Brenk alerts)
+## Structural liabilities (RDKit — PAINS / Brenk / developability)
 - 0/25 hits carry a PAINS (assay-interference) alert; 10/25 carry a Brenk (reactive/unstable-group) alert → `liabilities.json`.
+- 19/25 fall in the Pfizer 3/75 zone (cLogP>3 & TPSA<75 — elevated in-vivo tox risk; Hughes 2008).
 - Scrutinize before pursuing: CHEMBL420624, CHEMBL474147, CHEMBL285063, CHEMBL516022, CHEMBL334697, CHEMBL52913 …
 _Structural alerts are heuristic medicinal-chemistry filters, not disqualifiers — review each in context._
 
@@ -30,9 +31,9 @@ _Modality/phase-level benchmark (small_molecule @ phase1) from public priors —
 
 ## Next step: dock (stage 6)
 - Confirm AutoDock Vina + Open Babel are installed: `python3 cad/dock.py --check`
-- `python3 cad/dock.py --receptor examples/sample-run-egfr/structures/8A27.pdb --smiles "<hit SMILES from hits.csv>" --box-json examples/sample-run-egfr/binding_site.json`
+- `python3 cad/dock.py --receptor /tmp/egfr_final/structures/8A27.pdb --smiles "<hit SMILES from hits.csv>" --box-json /tmp/egfr_final/binding_site.json`
 ## Provenance
 - Every figure above is fetched-and-cited or deterministically computed — see `provenance.json`.
-- Re-prove it: `python3 cad/verify.py --run examples/sample-run-egfr`  (re-pulls each number from its live source).
+- Re-prove it: `python3 cad/verify.py --run /tmp/egfr_final`  (re-pulls each number from its live source).
 
 _Research only. Every figure points to a public source — verify before relying on it._
