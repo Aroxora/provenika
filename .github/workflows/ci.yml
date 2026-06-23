@@ -26,6 +26,8 @@ jobs:
         run: npm run build
       - name: Medical-safety audit (no undisclaimed dosing / treatment advice / prognosis)
         run: node cicd/audit_medical_safety.cjs
+      - name: Cheminformatics data contract (Python producer ↔ web ChemInfo consumer)
+        run: node cicd/check_cheminformatics_contract.cjs
       - name: Type-check
         run: npx tsc --noEmit
       - name: Test
