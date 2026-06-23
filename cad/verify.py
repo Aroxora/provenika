@@ -20,9 +20,9 @@ What this DOES and does NOT prove (read this — honesty is the point):
   * The SMILES check IS independent: it fetches each top ligand's canonical
     SMILES straight from ChEMBL over raw HTTP (not via the triage code) and
     requires byte-equality with hits.csv — catching an edited/transposed SMILES.
-  * Deterministic artifacts (cost_benefit.json, the triage score, and the docking
-    box — re-derived from the co-crystal ligand) are recomputed and must reproduce
-    EXACTLY — a mismatch means the file was edited/fabricated.
+  * Deterministic artifacts (cost_benefit.json, the triage score, the docking box —
+    re-derived from the co-crystal ligand — and the PAINS/Brenk liability counts) are
+    recomputed and must reproduce EXACTLY — a mismatch means the file was edited/fabricated.
   * NOT covered: narrative text (SUMMARY.md prose, target_report read-outs) and
     the news_update.py `intel/` digests, which are unverified leads, not figures.
 
@@ -261,6 +261,50 @@ def verify_binding_site(bs: dict, checks: list) -> None:
                        f"{fresh['center']}/{fresh['size']} (file edited or structure revised)", url))
 
 
+def verify_liabilities(liab: dict, checks: list, max_rows: int = 25) -> None:
+    """Recompute the PAINS / Brenk structural alerts from the saved SMILES. Deterministic
+    given a fixed RDKit alert catalog, so the counts must reproduce — catching an edited
+    liabilities.json. SKIP when RDKit is unavailable (never fabricate a pass/fail)."""
+    try:
+        import cheminformatics as ci
+    except Exception as e:  # pragma: no cover
+        checks.append(("liabilities recompute", SKIP, f"cheminformatics unavailable: {e}", ""))
+        return
+    if not getattr(ci, "_RDKIT", False):
+        checks.append(("liabilities recompute", SKIP,
+                       "RDKit not installed — cannot recompute PAINS/Brenk alerts", ""))
+        return
+    try:
+        pains, brenk = ci._catalogs()
+    except Exception as e:
+        checks.append(("liabilities recompute", SKIP, f"could not load alert catalogs: {e}", ""))
+        return
+
+    mism, checked = 0, 0
+    for r in (liab.get("results") or [])[:max_rows]:
+        smi = r.get("smiles")
+        if not smi:
+            continue
+        a = ci.analyze(smi, pains, brenk)
+        if not a:
+            continue
+        checked += 1
+        if (a.get("pains_alerts") != r.get("pains_alerts")
+                or a.get("brenk_alerts") != r.get("brenk_alerts")):
+            mism += 1
+    if not checked:
+        checks.append(("liabilities recompute", SKIP, "no SMILES to recompute", ""))
+    elif mism:
+        checks.append((f"liabilities recompute ({checked} hits)", FAIL,
+                       f"{mism} hits' PAINS/Brenk counts differ from saved — the file was edited, or "
+                       "your RDKit alert catalog differs from the one that wrote it (re-run the pipeline)",
+                       "cad/cheminformatics.py"))
+    else:
+        checks.append((f"liabilities recompute ({checked} hits)", PASS,
+                       "PAINS/Brenk alert counts reproduce from the saved SMILES",
+                       "cad/cheminformatics.py"))
+
+
 def verify_target_live(target: str, checks: list) -> None:
     """No saved run: just fetch-and-cite the headline figures live."""
     import target_report as tr
@@ -300,6 +344,10 @@ def run(args) -> int:
             checks.append(("dossier.json present", SKIP, "no dossier to verify", ""))
         if (run_dir / "hits.csv").exists():
             verify_hits(run_dir / "hits.csv", checks)
+            target_evidence = True
+        liab_p = run_dir / "liabilities.json"
+        if liab_p.exists():
+            verify_liabilities(json.loads(liab_p.read_text()), checks)
             target_evidence = True
         bs_p = run_dir / "binding_site.json"
         if bs_p.exists():
