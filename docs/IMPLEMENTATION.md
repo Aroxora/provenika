@@ -118,7 +118,11 @@ The RDKit-only signals are precomputed into `web/public/data/cheminformatics/<TA
 (`cicd/check_cheminformatics_contract.cjs`). `core/cheminformatics.service.ts` loads them and
 they are **ready to surface in the triage drawer** — but that wiring is not in place yet: no
 feature component injects the service today, so the precomputed data is staged, not displayed.
-(Wiring it into the triage view is a clean open task — the data, service, and contract are all there.)
+Concrete wiring task (data, service, and contract are all already in place): in
+`features/explorer/explorer.ts` inject `CheminformaticsService`, call `forTarget(target)` inside
+`loadForTarget()` into a `Map<string, ChemInfo>` signal, and render the selected hit's flags
+(PAINS/Brenk/Egan/scaffold; GSK/Pfizer/SA after a data re-precompute) in the Ligand Triage card —
+additive and null-safe (no file ⇒ show nothing). Verify the render in a browser before shipping.
 
 See `docs/REAL-CAD-ROADMAP.md` for the full stage map and what is documented vs. implemented.
 
