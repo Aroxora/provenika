@@ -20,8 +20,9 @@ What this DOES and does NOT prove (read this — honesty is the point):
   * The SMILES check IS independent: it fetches each top ligand's canonical
     SMILES straight from ChEMBL over raw HTTP (not via the triage code) and
     requires byte-equality with hits.csv — catching an edited/transposed SMILES.
-  * Deterministic artifacts (cost_benefit.json, the triage score) are recomputed
-    and must reproduce EXACTLY — a mismatch means the file was edited/fabricated.
+  * Deterministic artifacts (cost_benefit.json, the triage score, and the docking
+    box — re-derived from the co-crystal ligand) are recomputed and must reproduce
+    EXACTLY — a mismatch means the file was edited/fabricated.
   * NOT covered: narrative text (SUMMARY.md prose, target_report read-outs) and
     the news_update.py `intel/` digests, which are unverified leads, not figures.
 
@@ -230,6 +231,36 @@ def verify_cost_benefit(cb: dict, checks: list) -> None:
                    prov.source_url("benchmarks", "entry", None)))
 
 
+def verify_binding_site(bs: dict, checks: list) -> None:
+    """Recompute the docking box from the same PDB's co-crystal ligand envelope; a
+    deterministic 'computed' figure, so it must reproduce EXACTLY (like cost_benefit).
+    A mismatch means binding_site.json was edited or the structure changed."""
+    import binding_site as bsm
+
+    pid = bs.get("pdb")
+    if not pid:
+        checks.append(("binding_site.json pdb id", SKIP, "no pdb id recorded to recompute from", ""))
+        return
+    try:
+        lig = bsm.largest_ligand(bsm.fetch_pdb_text(pid))
+    except Exception as e:  # network/parse problem — don't fabricate a FAIL
+        checks.append(("docking box recompute", SKIP, f"could not refetch {pid}: {e}", ""))
+        return
+    if not lig:
+        checks.append(("docking box recompute", FAIL,
+                       f"{pid}: no co-crystal ligand found to reproduce the box", ""))
+        return
+    fresh = bsm.box(lig["atoms"])
+    url = prov.source_url("rcsb", "entry", pid)
+    if fresh["center"] == bs.get("center") and fresh["size"] == bs.get("size"):
+        checks.append(("docking box recompute", PASS,
+                       "center+size reproduce exactly from the co-crystal ligand envelope", url))
+    else:
+        checks.append(("docking box recompute", FAIL,
+                       f"saved center/size {bs.get('center')}/{bs.get('size')} != recomputed "
+                       f"{fresh['center']}/{fresh['size']} (file edited or structure revised)", url))
+
+
 def verify_target_live(target: str, checks: list) -> None:
     """No saved run: just fetch-and-cite the headline figures live."""
     import target_report as tr
@@ -269,6 +300,10 @@ def run(args) -> int:
             checks.append(("dossier.json present", SKIP, "no dossier to verify", ""))
         if (run_dir / "hits.csv").exists():
             verify_hits(run_dir / "hits.csv", checks)
+            target_evidence = True
+        bs_p = run_dir / "binding_site.json"
+        if bs_p.exists():
+            verify_binding_site(json.loads(bs_p.read_text()), checks)
             target_evidence = True
         cb_p = run_dir / "cost_benefit.json"
         if cb_p.exists():
