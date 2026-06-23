@@ -171,10 +171,16 @@ def main(argv=None) -> int:
             "## Target dossier",
             f"- UniProt: {u.get('accession')} ({u.get('length')} aa)",
             f"- PDB structures: {u.get('pdb_count')} (docking feasible: {'yes' if u.get('pdb_count') else 'no'})",
-            f"- Potent ChEMBL activities: {c.get('potent_activity_records')}",
-            f"- Known mechanism drugs: {len(c.get('known_mechanism_drugs', []))}",
-            "",
         ]
+        if "potent_activity_records" in c:
+            lines += [
+                f"- Potent ChEMBL activities: {c.get('potent_activity_records')}",
+                f"- Known mechanism drugs: {len(c.get('known_mechanism_drugs', []))}",
+            ]
+        else:
+            lines.append(f"- ChEMBL tractability: {c.get('status', 'unavailable')} — "
+                         "ligand triage skipped; re-run when ChEMBL is back.")
+        lines.append("")
     if (out / "hits.csv").exists():
         with (out / "hits.csv").open() as fh:
             hit_rows = list(csv.DictReader(fh))

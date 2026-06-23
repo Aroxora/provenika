@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -100,29 +101,70 @@ def uniprot_summary(name: str) -> dict | None:
     }
 
 
+def _reason(e: Exception) -> str:
+    code = getattr(e, "code", None)
+    return f"HTTP {code}" if code else str(getattr(e, "reason", e))[:60]
+
+
 def run(args) -> int:
-    target = resolve_target(args.target)
-    if not target:
-        print(f"No ChEMBL target found for '{args.target}'.", file=sys.stderr)
+    # ChEMBL gives tractability (ligands/drugs); UniProt gives function/structure. They are
+    # independent public services — tolerate one being down so a single outage (e.g. a ChEMBL
+    # 500) doesn't sink the whole dossier when the rest is reachable.
+    target = chembl = None
+    chembl_status = uni_status = "ok"
+    try:
+        target = resolve_target(args.target)
+        if target:
+            chembl = chembl_snapshot(target["target_chembl_id"])
+    except urllib.error.URLError as e:
+        chembl_status = f"unavailable ({_reason(e)})"
+
+    try:
+        uni = uniprot_summary(args.target)
+    except urllib.error.URLError as e:
+        uni, uni_status = None, f"unavailable ({_reason(e)})"
+
+    # Resolved if EITHER source identified the target. Only give up if neither did.
+    if not target and not uni:
+        if chembl_status != "ok" or uni_status != "ok":
+            print(f"Could not reach the public sources for '{args.target}' "
+                  f"(ChEMBL: {chembl_status}; UniProt: {uni_status}). Upstream outage, not your "
+                  "input — retry shortly.", file=sys.stderr)
+            return 2
+        print(f"No ChEMBL/UniProt target found for '{args.target}' (check the gene symbol / protein name).",
+              file=sys.stderr)
         return 1
-    tid = target["target_chembl_id"]
-    chembl = chembl_snapshot(tid)
-    uni = uniprot_summary(args.target)
+
+    tid = target["target_chembl_id"] if target else None
+    chembl_block = chembl if chembl is not None else {"available": False, "status": chembl_status}
+    degraded = {n: s for n, s in (("chembl", chembl_status), ("uniprot", uni_status)) if s != "ok"}
 
     if args.json:
-        print(json.dumps({
+        out = {
             "query": args.target,
-            "chembl_target": {"id": tid, "name": target.get("pref_name"),
-                              "type": target.get("target_type"), "organism": target.get("organism")},
-            "chembl": chembl,
+            "chembl_target": ({"id": tid, "name": target.get("pref_name"),
+                               "type": target.get("target_type"), "organism": target.get("organism")}
+                              if target else None),
+            "chembl": chembl_block,
             "uniprot": uni,
             "next": f"python3 cad/virtual_triage.py --target \"{args.target}\" --out hits.csv",
             "disclaimer": "Public-data orientation only. Not validation, not medical advice.",
-        }, indent=2))
+        }
+        if degraded:
+            out["degraded"] = degraded
+        print(json.dumps(out, indent=2))
         return 0
 
-    print(f"\n=== Target dossier: {target.get('pref_name')} [{tid}] ===")
-    print(f"    {target.get('target_type')}, {target.get('organism')}\n")
+    if degraded:
+        print(f"\n⚠️  Partial dossier — {', '.join(f'{k} {v}' for k, v in degraded.items())}. "
+              "Retry for the missing parts.", file=sys.stderr)
+
+    title = (target.get("pref_name") if target else None) or (uni.get("name") if uni else args.target)
+    print(f"\n=== Target dossier: {title}{f' [{tid}]' if tid else ''} ===")
+    if target:
+        print(f"    {target.get('target_type')}, {target.get('organism')}\n")
+    else:
+        print()
 
     if uni:
         print(f"UniProt {uni['accession']} — {uni['name']} ({uni['length']} aa)")
@@ -138,20 +180,27 @@ def run(args) -> int:
         print("UniProt: no reviewed human entry matched (try the gene symbol).")
 
     print(f"\nChEMBL tractability:")
-    print(f"  Potent measured activities on record: {chembl['potent_activity_records']:,}")
-    drugs = chembl["known_mechanism_drugs"]
-    if drugs:
-        print(f"  Known drugs/modulators with a defined mechanism: {len(drugs)}")
-        for d in drugs[:6]:
-            print(f"    - {d['molecule_chembl_id']}: {d['action_type']} — {d['mechanism']}")
+    drugs = []
+    if chembl is None:
+        print(f"  Unavailable — ChEMBL {chembl_status}. Ligand/drug tractability could not be fetched; retry.")
     else:
-        print("  No catalogued mechanism-of-action drugs (may be novel/undrugged).")
+        print(f"  Potent measured activities on record: {chembl['potent_activity_records']:,}")
+        drugs = chembl["known_mechanism_drugs"]
+        if drugs:
+            print(f"  Known drugs/modulators with a defined mechanism: {len(drugs)}")
+            for d in drugs[:6]:
+                print(f"    - {d['molecule_chembl_id']}: {d['action_type']} — {d['mechanism']}")
+        else:
+            print("  No catalogued mechanism-of-action drugs (may be novel/undrugged).")
 
     print("\nRead-out:")
-    tract = chembl["potent_activity_records"]
     bits = []
-    bits.append("rich ligand data" if tract > 500 else
-                "moderate ligand data" if tract > 50 else "sparse ligand data")
+    if chembl is not None:
+        tract = chembl["potent_activity_records"]
+        bits.append("rich ligand data" if tract > 500 else
+                    "moderate ligand data" if tract > 50 else "sparse ligand data")
+    else:
+        bits.append("ligand data pending (ChEMBL unavailable)")
     if uni and uni["pdb_count"]:
         bits.append("structure available for docking")
     if drugs:

@@ -91,28 +91,33 @@ def verify_dossier(dossier: dict, checks: list) -> None:
 
     query = dossier.get("query") or (dossier.get("chembl_target") or {}).get("name")
     tid = (dossier.get("chembl_target") or {}).get("id")
-
-    # ChEMBL: re-resolve the target if we don't have its id, then re-pull counts.
-    if not tid and query:
-        t = tr.resolve_target(query)
-        tid = t["target_chembl_id"] if t else None
-
     saved_chembl = dossier.get("chembl") or {}
-    if tid:
-        live = tr.chembl_snapshot(tid)
-        s, note = _count_status(saved_chembl.get("potent_activity_records", 0),
-                                live.get("potent_activity_records"))
-        checks.append(("ChEMBL potent activity records", s, note,
-                       prov.source_url("chembl", "activity_count", tid)))
 
-        saved_drugs = len(saved_chembl.get("known_mechanism_drugs", []))
-        live_drugs = len(live.get("known_mechanism_drugs", []))
-        s, note = _count_status(saved_drugs, live_drugs)
-        checks.append(("ChEMBL known-mechanism drugs", s, note,
-                       prov.source_url("chembl", "mechanisms", tid)))
+    # Only re-verify ChEMBL figures the dossier actually RECORDED. A degraded run (ChEMBL
+    # was down) carries no ChEMBL counts, so there is nothing to re-pull — skip it rather
+    # than hit the (possibly still-down) API and report a false FAIL.
+    if "potent_activity_records" not in saved_chembl:
+        checks.append(("ChEMBL figures", SKIP,
+                       "not recorded in this run (ChEMBL was unavailable) — nothing to re-verify", ""))
     else:
-        checks.append(("ChEMBL target resolution", FAIL,
-                       "could not resolve the target to re-check its figures", ""))
+        if not tid and query:  # re-resolve the target id if the dossier didn't store it
+            t = tr.resolve_target(query)
+            tid = t["target_chembl_id"] if t else None
+        if tid:
+            live = tr.chembl_snapshot(tid)
+            s, note = _count_status(saved_chembl.get("potent_activity_records", 0),
+                                    live.get("potent_activity_records"))
+            checks.append(("ChEMBL potent activity records", s, note,
+                           prov.source_url("chembl", "activity_count", tid)))
+
+            saved_drugs = len(saved_chembl.get("known_mechanism_drugs", []))
+            live_drugs = len(live.get("known_mechanism_drugs", []))
+            s, note = _count_status(saved_drugs, live_drugs)
+            checks.append(("ChEMBL known-mechanism drugs", s, note,
+                           prov.source_url("chembl", "mechanisms", tid)))
+        else:
+            checks.append(("ChEMBL target resolution", FAIL,
+                           "could not resolve the target to re-check its figures", ""))
 
     # UniProt: re-pull the PDB structure count (drives "docking feasible").
     saved_uni = dossier.get("uniprot") or {}
