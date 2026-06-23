@@ -87,12 +87,12 @@ Modes:
   cancer-cli -q "prompt"        Quick mode - single query
   echo "prompt" | cancer-cli    Pipe mode
 
-Research Commands:
-  "search literature <topic>"       Search PubMed for publications
-  "find clinical trials <cancer>"   Search ClinicalTrials.gov
-  "analyze gene <symbol>"           Get gene and mutation data
-  "find drug targets <gene>"        Search for drug targets
-  "pathway analysis <gene>"         Analyze pathway involvement
+Research Commands (keyless — no API key, queried live):
+  "search literature <topic>"       PubMed publications
+  "find clinical trials <cancer>"   ClinicalTrials.gov
+  "analyze gene <symbol>"           UniProt protein/gene info
+  "find drug targets <gene>"        ChEMBL drugs for the target
+  "pathway analysis <gene>"         KEGG pathways
 
 Options:
   -v, --version          Show version
@@ -102,8 +102,9 @@ Options:
   --key-name NAME        Specify which key to set
   --self-test            Run connectivity tests
 
-API Keys (set via --key or /secrets command):
-  NCBI_API_KEY           PubMed/NCBI E-utilities (free)
+API Keys (optional — the Research Commands above need NONE):
+  DEEPSEEK_API_KEY       Conversational/agent mode only (free-form prompts)
+  NCBI_API_KEY           Higher PubMed rate limits (free; not required)
   DRUGBANK_API_KEY       DrugBank database (paid)
   COSMIC_API_KEY         COSMIC mutations (registration)
   TAVILY_API_KEY         Web search capability
@@ -120,14 +121,21 @@ Available Agents:
   DrugDiscoveryAgent     Drug-target interactions, screening
   LiteratureAgent        Research papers, evidence synthesis
   ClinicalTrialAgent     Trial matching, eligibility analysis
-  PatientAnalysisAgent   Biomarkers, treatment recommendations
+  PatientAnalysisAgent   Biomarker & mutation interpretation (evidence only)
   PathwayAnalysisAgent   Signaling pathways, network analysis
 
-Examples:
-  cancer-cli "Find PARP inhibitors for BRCA1 mutations"
-  cancer-cli "Search clinical trials for melanoma immunotherapy"
-  cancer-cli "Analyze TP53 mutation pathogenicity"
-  cancer-cli "Find drug targets in PI3K/AKT pathway"
+Examples (keyless):
+  cancer-cli "search literature EGFR resistance"
+  cancer-cli "find clinical trials pancreatic cancer"
+  cancer-cli "analyze gene TP53"
+  cancer-cli "find drug targets EGFR"
+  cancer-cli --self-test                      Check all data sources
+
+Free-form prompts (e.g. "Find PARP inhibitors for BRCA1 mutations") use the optional
+LLM agent and need a model key: cancer-cli --key <DEEPSEEK_API_KEY>
+
+Research / decision-support only. Not medical advice, not a treatment recommendation,
+not a diagnosis. Every figure traces to a public source you can re-check.
 `);
   process.exit(0);
 } else {
