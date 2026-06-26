@@ -85,6 +85,8 @@ jobs:
         run: python3 cad/test_precompute_index.py
       - name: Target resolution prefers exact gene symbol (no substrate/interactor mis-match, offline)
         run: python3 cad/test_resolve_target.py
+      - name: Docking box picks the buried drug-like ligand, not the largest additive (offline)
+        run: python3 cad/test_binding_site.py
       - name: Outreach agent E2E + edge cases (offline, no network, never sends)
         run: python3 outreach/test_e2e.py
       - name: Verify a deterministic artifact end-to-end (offline)
