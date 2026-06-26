@@ -1,0 +1,32 @@
+{
+  "benchmark": "Provenika redocking starter benchmark (oncology co-crystal complexes)",
+  "results": [
+    {
+      "pdb": "1M17",
+      "ligand": "AQ4",
+      "rmsd": 7.855,
+      "correct_pose": false
+    },
+    {
+      "pdb": "1IEP",
+      "ligand": "STI",
+      "error": "obrms produced no RMSD (RMSD /tmp/validation_final/1IEP/ref_STI.pdb:= inf)"
+    },
+    {
+      "pdb": "3POZ",
+      "ligand": "03P",
+      "rmsd": 1.154,
+      "correct_pose": true
+    }
+  ],
+  "summary": {
+    "complexes": 2,
+    "mean_rmsd": 4.505,
+    "median_rmsd": 7.855,
+    "success_rate": 0.5,
+    "success_count": 1,
+    "threshold_A": 2.0
+  },
+  "skipped": 1,
+  "note": "Redocking reproduces a KNOWN binding mode \u2014 a necessary check, not proof of prospective accuracy. Research only; not medical advice."
+}
