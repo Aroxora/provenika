@@ -13,12 +13,18 @@ EVERY assumption is a published, editable benchmark printed alongside the result
 This is a rough go/no-go triage aid for prioritising programs — NOT financial
 advice, a valuation, or a clinical claim.
 
-Sources for the default benchmarks (override with flags):
-  * Phase success / LOA: BIO, Informa Pharma Intelligence & QLS, "Clinical
-    Development Success Rates 2011-2020" (overall, all therapeutic areas).
-  * Per-phase out-of-pocket cost & duration: Wong, Siah & Lo (2019, Biostatistics)
-    and DiMasi et al. (2016, J Health Econ). Oncology runs above these averages.
-Numbers are order-of-magnitude planning figures, not guarantees.
+Sources for the default benchmarks (override with flags) — read precisely, because the output
+blends sourced and invented numbers:
+  * Clinical-phase success / LOA (phase1..filed): BIO, Informa Pharma Intelligence & QLS,
+    "Clinical Development Success Rates 2011-2020" (overall, all therapeutic areas). The
+    PRECLINICAL LOA (0.060) is NOT in that report — it is a rough author estimate.
+  * Per-phase out-of-pocket cost: DiMasi et al. (2016, J Health Econ) lineage. Wong, Siah & Lo
+    (2019) is a source for trial SUCCESS RATES and DURATIONS, not costs — do not read it as the
+    cost source. Oncology runs above these averages.
+  * Modality multipliers, the oncology factor, gross margin, and the verdict thresholds are
+    transparent, editable HEURISTICS — not from any cited study.
+Numbers are order-of-magnitude planning figures, not guarantees, and carry no target- or
+molecule-specific signal (see ONCOLOGY/probability notes below).
 
 Usage:
   python3 cad/cost_benefit.py --modality small_molecule --phase phase1 \
@@ -32,9 +38,10 @@ import argparse
 import json
 import sys
 
-# Likelihood of approval FROM the start of each phase (overall, BIO 2011-2020).
+# Likelihood of approval FROM the start of each CLINICAL phase (overall, BIO/Informa CDSR
+# 2011-2020). NOTE: 'preclinical' is NOT in that report — it is a rough author estimate.
 LOA_FROM_PHASE = {
-    "preclinical": 0.060,  # rough: ~6% of programs entering IND-enabling work approve
+    "preclinical": 0.060,  # author estimate (NOT BIO): ~6% of IND-enabling programs approve
     "phase1": 0.079,
     "phase2": 0.151,
     "phase3": 0.460,
@@ -89,6 +96,8 @@ def analyze(modality: str, phase: str, incidence: int, price: float,
     cost_dollars = exp_cost * 1e6
     bcr = (risk_adj_rev / cost_dollars) if cost_dollars else 0.0
 
+    # Verdict bands: UNSOURCED heuristic cutoffs on an undiscounted gross-profit/cost ratio
+    # (editable, not derived or benchmarked) — they convert the BCR into the headline label.
     if bcr >= 5:
         verdict = "Strongly favorable — high risk-adjusted return vs. cost"
     elif bcr >= 1.5:
@@ -131,20 +140,25 @@ def run(args) -> int:
         return 0
 
     print(f"\n=== Cost-benefit / feasibility: {args.modality} @ {args.phase} ===\n")
-    print(f"  Probability of approval (from {args.phase}): {res['probability_of_approval']*100:.1f}%")
-    print(f"  Expected remaining cost:   ${res['expected_remaining_cost_musd']:,.0f}M")
+    print(f"  P(approval) from {args.phase}: {res['probability_of_approval']*100:.1f}%  "
+          f"(phase×modality×oncology benchmark — identical for EVERY program at this phase; "
+          f"no target/molecule signal)")
+    print(f"  Expected remaining cost:   ${res['expected_remaining_cost_musd']:,.0f}M  "
+          f"(full forward-path cost, NOT probability-weighted)")
     print(f"  Expected time to market:   {res['expected_time_to_market_years']} years")
     print(f"  Peak annual revenue:       ${res['peak_annual_revenue_musd']:,.0f}M  "
           f"({args.incidence:,} pts × ${args.price:,.0f} × {args.penetration:.0%})")
-    print(f"  Risk-adjusted revenue:     ${res['risk_adjusted_revenue_musd']:,.0f}M  "
-          f"(over {args.years_at_peak} yr at peak)")
-    print(f"  Benefit/cost ratio:        {res['benefit_cost_ratio']:.2f}")
-    print(f"\n  ➤ {res['verdict']}\n")
+    print(f"  Risk-adj. gross profit:    ${res['risk_adjusted_revenue_musd']:,.0f}M  "
+          f"(LOA × peak × {args.years_at_peak} yr × 80% margin — the 'revenue' JSON key is this "
+          f"GROSS-PROFIT figure, not revenue)")
+    print(f"  Benefit/cost ratio:        {res['benefit_cost_ratio']:.2f}  "
+          f"(undiscounted; benefit is LOA-weighted but cost is not — asymmetric, not a true rNPV)")
+    print(f"\n  ➤ {res['verdict']}  (verdict bands BCR 5/1.5/0.8 are unsourced heuristics)\n")
     print("  Assumptions (edit via flags):")
     for k, v in res["assumptions"].items():
         print(f"    - {k}: {v}")
-    print("\n⚠️  Rough planning heuristic from public benchmarks. Not financial advice, "
-          "not a valuation, not a clinical claim.")
+    print("\n⚠️  Rough planning heuristic; blends sourced LOA/cost with invented factors. Not "
+          "financial advice, not a valuation, not a clinical claim, not a target-specific prediction.")
     return 0
 
 
