@@ -34,6 +34,7 @@ import csv
 import json
 import math
 import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -153,6 +154,42 @@ def _extract_crystal_ligand(pdb_text: str, resname: str, out_dir: str):
     return mol, path
 
 
+def _chemcomp_smiles(lig_id: str) -> str | None:
+    """Fetch a PDB chemical component's SMILES from RCSB — the correct bond orders to map onto the
+    crystal ligand and the docked pose (a PDB/PDBQT has coordinates but no reliable bond orders)."""
+    import urllib.request
+    url = f"https://data.rcsb.org/rest/v1/core/chemcomp/{lig_id.upper()}"
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "provenika-validate/1.0"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            d = json.load(r)
+    except Exception:
+        return None
+    desc = d.get("rcsb_chem_comp_descriptor") or {}
+    return desc.get("SMILES_stereo") or desc.get("smilesstereo") or desc.get("SMILES") or desc.get("smiles")
+
+
+def _redock_rmsd(ref_pdb: str, docked_pdbqt: str, out_dir: str):
+    """Symmetry-aware, in-place (no realignment) RMSD between the docked best pose and the crystal
+    pose, via Open Babel's `obrms` — both are already in the receptor coordinate frame, so a smaller
+    value means the docking reproduced the crystallographic binding mode. Converts each input to SDF
+    first (consistent Open Babel bond perception, which RDKit's distance-based PDB perception
+    bungles). Returns (rmsd, None) or (None, reason). Never fabricates a number."""
+    import re
+    ref_sdf = os.path.join(out_dir, "ref.sdf")
+    docked_sdf = os.path.join(out_dir, "docked_best.sdf")
+    subprocess.run(["obabel", ref_pdb, "-O", ref_sdf], capture_output=True, text=True)
+    subprocess.run(["obabel", docked_pdbqt, "-O", docked_sdf, "-f", "1", "-l", "1"],
+                   capture_output=True, text=True)
+    if not (os.path.exists(ref_sdf) and os.path.exists(docked_sdf)):
+        return None, "could not convert reference/docked pose to SDF"
+    res = subprocess.run(["obrms", ref_sdf, docked_sdf], capture_output=True, text=True)
+    m = re.search(r":=\s*([\d.]+)", res.stdout)
+    if not m:
+        return None, f"obrms produced no RMSD ({(res.stdout or res.stderr).strip()[:120]})"
+    return round(float(m.group(1)), 3), None
+
+
 def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
     """Redock the co-crystal ligand of `resname` in `pdb_id` and measure pose RMSD vs crystal.
     Returns a dict with rmsd (float) or a 'skip'/'error' reason — never a fabricated number."""
@@ -182,30 +219,35 @@ def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
     Path(rec_pdb).write_text(pdb_text)
 
     from rdkit import Chem
-    smiles = Chem.MolToSmiles(ref_mol)
-    out_pose = os.path.join(out_dir, f"{pdb_id}_redock.pdbqt")
-    args = argparse.Namespace(receptor=rec_pdb, ligand=None, smiles=smiles, box_json=None,
+    # Dock the ligand's CORRECT structure from the RCSB SMILES template (a PDB-perceived SMILES of
+    # the crystal ligand is often wrong, which is what broke the earlier RMSD comparison).
+    template_smiles = _chemcomp_smiles(resname)
+    if not template_smiles:
+        rec["error"] = f"could not fetch a SMILES template for ligand {resname} (RCSB chemcomp)"
+        return rec
+    tmpl = Chem.MolFromSmiles(template_smiles)
+    dock_smiles = Chem.MolToSmiles(tmpl) if tmpl is not None else template_smiles
+    args = argparse.Namespace(receptor=rec_pdb, ligand=None, smiles=dock_smiles, box_json=None,
                               center=box["center"], size=box["size"], exhaustiveness=8, out=out_dir)
-    # Reuse dock.py's prep + run path indirectly: build and run the same command.
     try:
         rc = dockm.run(args)
     except SystemExit as e:
         rec["error"] = f"docking prep failed: {e}"
         return rec
     if rc != 0:
-        rec["error"] = "vina run failed (see stderr)"
+        rec["error"] = "vina ligand prep/run failed (e.g. an Open Babel PDBQT that Vina rejects)"
         return rec
 
-    docked = Chem.MolFromPDBFile(os.path.join(out_dir, "docked.pdbqt"), sanitize=False) \
-        if os.path.exists(os.path.join(out_dir, "docked.pdbqt")) else None
-    if docked is None or docked.GetNumConformers() == 0:
-        rec["error"] = "could not read docked pose"
+    docked_pdbqt = os.path.join(out_dir, "docked.pdbqt")
+    if not os.path.exists(docked_pdbqt):
+        rec["error"] = "no docked pose written"
         return rec
-    try:
-        rec["rmsd"] = pose_rmsd(ref_mol, docked)
-        rec["correct_pose"] = rec["rmsd"] <= RMSD_SUCCESS_A
-    except Exception as e:
-        rec["error"] = f"RMSD could not be computed (topology mismatch): {e}"
+    rmsd, err = _redock_rmsd(ref_info, docked_pdbqt, out_dir)
+    if rmsd is None:
+        rec["error"] = err
+    else:
+        rec["rmsd"] = rmsd
+        rec["correct_pose"] = rmsd <= RMSD_SUCCESS_A
     return rec
 
 
