@@ -55,6 +55,47 @@ def test_pick_among_substantial_takes_best_resolution():
     assert fs.pick_best_pdb(pdbs)["id"] == "B"
 
 
+def test_primary_gene_extracts_geneName_value():
+    assert fs._primary_gene({"genes": [{"geneName": {"value": "EGFR"}}]}) == "EGFR"
+    assert fs._primary_gene({"genes": [{}]}) is None        # gene present but no name
+    assert fs._primary_gene({"genes": []}) is None
+    assert fs._primary_gene({}) is None
+
+
+def test_pick_exact_gene_prefers_primary_symbol_match():
+    # 'AKT1' must resolve to AKT1 (P31749), not the substring hit AKT1S1 (Q96B36) that the
+    # UniProt search also returns; mirrors target_report._rank_targets.
+    results = [
+        {"primaryAccession": "Q96B36", "genes": [{"geneName": {"value": "AKT1S1"}}]},
+        {"primaryAccession": "P31749", "genes": [{"geneName": {"value": "AKT1"}}]},
+    ]
+    assert fs._pick_exact_gene(results, "AKT1")["primaryAccession"] == "P31749"
+    assert fs._pick_exact_gene(results, "akt1")["primaryAccession"] == "P31749"   # case-insensitive
+    assert fs._pick_exact_gene(results, " AKT1 ")["primaryAccession"] == "P31749"  # trimmed
+
+
+def test_pick_exact_gene_falls_back_to_first_when_no_exact_match():
+    results = [
+        {"primaryAccession": "AAA", "genes": [{"geneName": {"value": "FOO1"}}]},
+        {"primaryAccession": "BBB", "genes": [{"geneName": {"value": "FOO2"}}]},
+    ]
+    assert fs._pick_exact_gene(results, "FOO")["primaryAccession"] == "AAA"
+    assert fs._pick_exact_gene([], "FOO") is None
+
+
+def test_pick_structure_without_holo_matches_pick_best_pdb():
+    # prefer_holo=False is a pure, no-network shortcut: same top entry as pick_best_pdb, plus a
+    # holo=None marker. (The holo-preferring path is network-bound and not exercised offline.)
+    pdbs = [
+        {"id": "FRAG", "method": "X-ray", "_res_num": 1.2, "coverage_frac": 0.18},
+        {"id": "FULL", "method": "X-ray", "_res_num": 2.1, "coverage_frac": 0.92},
+    ]
+    chosen = fs.pick_structure(pdbs, prefer_holo=False)
+    assert chosen["id"] == "FULL" == fs.pick_best_pdb(pdbs)["id"]
+    assert chosen["holo"] is None
+    assert fs.pick_structure([], prefer_holo=False) is None
+
+
 def _ca(serial, plddt):
     return (f"{'ATOM':<6}{serial:>5} {'CA':<4}{'':1}{'ALA':>3} {'A':1}{serial:>4}"
             f"{'':4}{0.0:8.3f}{0.0:8.3f}{0.0:8.3f}{1.0:6.2f}{plddt:6.2f}{'':10}{'C':>2}")

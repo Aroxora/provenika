@@ -106,14 +106,40 @@ def _mean_plddt(path: str) -> dict | None:
             "pct_confident": round(100.0 * confident / len(vals), 1)}
 
 
-def resolve_uniprot(name: str) -> dict | None:
-    """Resolve a target/gene name to a reviewed human UniProt entry + PDB xrefs (with coverage)."""
-    q = f"(gene:{name} OR protein_name:{name}) AND organism_id:9606 AND reviewed:true"
-    url = f"{UNIPROT}?{urllib.parse.urlencode({'query': q, 'fields': 'accession,length,xref_pdb', 'size': 1, 'format': 'json'})}"
-    results = _get_json(url).get("results", [])
+def _primary_gene(entry: dict) -> str | None:
+    """The primary gene symbol UniProt records for an entry (genes[].geneName.value), or None."""
+    for g in entry.get("genes") or []:
+        gn = (g.get("geneName") or {}).get("value")
+        if gn:
+            return gn
+    return None
+
+
+def _pick_exact_gene(results: list[dict], name: str) -> dict | None:
+    """From UniProt search hits, prefer the entry whose PRIMARY gene symbol equals the query
+    (case-insensitive) so an ambiguous/substring name does not resolve to the wrong protein —
+    mirrors target_report._rank_targets so every stage resolves the SAME protein. Falls back to
+    the first hit when none match exactly; returns None for no hits."""
     if not results:
         return None
-    e = results[0]
+    q = name.strip().lower()
+    for e in results:
+        gn = _primary_gene(e)
+        if gn and gn.strip().lower() == q:
+            return e
+    return results[0]
+
+
+def resolve_uniprot(name: str) -> dict | None:
+    """Resolve a target/gene name to a reviewed human UniProt entry + PDB xrefs (with coverage).
+    Prefers the hit whose primary gene symbol exactly matches the query (case-insensitive) over an
+    arbitrary substring match, so all stages resolve the same protein (see _pick_exact_gene)."""
+    q = f"(gene:{name} OR protein_name:{name}) AND organism_id:9606 AND reviewed:true"
+    url = f"{UNIPROT}?{urllib.parse.urlencode({'query': q, 'fields': 'accession,gene_primary,length,xref_pdb', 'size': 5, 'format': 'json'})}"
+    results = _get_json(url).get("results", [])
+    e = _pick_exact_gene(results, name)
+    if not e:
+        return None
     seq_len = (e.get("sequence") or {}).get("length")
     return {"accession": e.get("primaryAccession"), "length": seq_len,
             "pdbs": _parse_pdb_xrefs(e, seq_len)}
@@ -141,24 +167,66 @@ def alphafold_url(acc: str) -> str | None:
     return None
 
 
+def _rank_key(p: dict):
+    """Ranking key shared by pick_best_pdb and pick_structure: prefer X-ray/EM; then SUBSTANTIAL
+    coverage (>= COVERAGE_MIN) over isolated-domain fragments; then best resolution; then more
+    coverage. When coverage is unknown it reduces to the prior resolution-only ordering."""
+    method_pref = 0 if p["method"] in ("X-ray", "EM") else 1
+    cov = p.get("coverage_frac") or 0.0
+    substantial = 0 if cov >= COVERAGE_MIN else 1
+    return (method_pref, substantial, p["_res_num"], -cov)
+
+
 def pick_best_pdb(pdbs: list[dict]) -> dict | None:
     """Pick a structure for downstream docking. Prefer X-ray/EM; then structures that cover a
     SUBSTANTIAL fraction of the protein (>= COVERAGE_MIN) over isolated-domain fragments; then
     best resolution; then more coverage. This fixes the old resolution-only pick, which could
     return a tiny high-resolution fragment that omits the binding site. When coverage is unknown
     (no 'Chains' range or no sequence length) it gracefully reduces to the prior resolution-only
-    ordering. NOTE: apo/holo state and mutations are still NOT checked here — verify the chosen
+    ordering. PURE / no-network. NOTE: apo/holo state and mutations are NOT checked here — for the
+    docking path use pick_structure(), which additionally prefers a holo entry. Verify the chosen
     entry covers the intended, ligandable site."""
     if not pdbs:
         return None
+    return sorted(pdbs, key=_rank_key)[0]
 
-    def rank(p):
-        method_pref = 0 if p["method"] in ("X-ray", "EM") else 1
-        cov = p.get("coverage_frac") or 0.0
-        substantial = 0 if cov >= COVERAGE_MIN else 1
-        return (method_pref, substantial, p["_res_num"], -cov)
 
-    return sorted(pdbs, key=rank)[0]
+def pick_structure(pdbs: list[dict], prefer_holo: bool = True, max_check: int = 6) -> dict | None:
+    """Network-aware structure selection for the docking path. Ranks candidates with the SAME key
+    as pick_best_pdb, then — when prefer_holo — returns the highest-ranked of the top `max_check`
+    that is confirmed HOLO (has a non-solvent ligand making protein contacts), so the downstream
+    binding-site / docking-box step isn't handed an apo entry (e.g. EGFR's 4UV7) that fails with
+    "no non-solvent ligand". Falls back to the top-ranked candidate (marked apo) when none of the
+    top-K is confirmed holo, or when prefer_holo is False.
+
+    The returned dict is pick_best_pdb's entry plus `holo` (True / False / None-when-unrequested);
+    on apo fallback it also carries a `holo_note` explaining the fallback.
+
+    Holo is judged by a LAZY import of binding_site, kept at function scope to avoid a circular
+    import (binding_site imports fetch_structure at function scope too). Network/parse errors while
+    probing a candidate are swallowed (treated as 'unknown', skipped) so this never crashes."""
+    if not pdbs:
+        return None
+
+    ranked = sorted(pdbs, key=_rank_key)
+    top = ranked[0]
+    if not prefer_holo:
+        return {**top, "holo": None}
+
+    import binding_site as bsm  # lazy: avoid circular import; binding_site imports us at fn scope too.
+    for cand in ranked[:max_check]:
+        try:
+            lig = bsm.select_ligand(bsm.fetch_pdb_text(cand["id"]))
+            if lig is not None and (lig.get("contacts", 0) or 0) > 0:
+                return {**cand, "holo": True}
+        except Exception:
+            continue  # network/parse error -> unknown; skip, never crash.
+
+    checked = min(max_check, len(ranked))
+    note = (f"no confirmed holo structure among the top {checked} candidate(s) — using the "
+            f"top-ranked entry {top['id']}, which may be apo (no bound ligand). The docking-box "
+            f"step needs a co-crystal ligand; supply a holo PDB explicitly (--pdb) if so.")
+    return {**top, "holo": False, "holo_note": note}
 
 
 def run(args) -> int:
@@ -191,20 +259,29 @@ def run(args) -> int:
             seq_len = (res[0].get("sequence") or {}).get("length")
             pdbs = _parse_pdb_xrefs(res[0], seq_len)
 
-    best = pick_best_pdb(pdbs)
+    # Holo-preferring selection for the target/UniProt path so the downstream docking-box step gets
+    # a structure with a bound ligand rather than an apo entry (the --pdb path above is left as-is).
+    best = pick_structure(pdbs)
     if best:
         dest = os.path.join(args.out, f"{best['id']}.{ext}")
         url = f"{RCSB_FILES}/{best['id']}.{ext}"
         _download(url, dest)
         cov = best.get("coverage_frac")
-        note = ("apo/holo state and mutations are NOT checked — confirm this entry covers the "
-                "intended, ligandable site")
+        holo = best.get("holo")
+        if holo is True:
+            note = ("holo: a non-solvent ligand makes protein contacts (defines a docking box); "
+                    "mutations are NOT checked — confirm it is the intended, ligandable site")
+        elif holo is False:
+            note = best.get("holo_note", "apo/holo state not confirmed — verify the binding site")
+        else:
+            note = ("apo/holo state and mutations are NOT checked — confirm this entry covers the "
+                    "intended, ligandable site")
         if cov is not None and cov < COVERAGE_MIN:
             note = (f"covers only ~{int(cov * 100)}% of the protein — likely a single domain/fragment; "
                     f"confirm it includes the binding site. {note}")
         _report({"source": "RCSB PDB", "uniprot": acc, "pdb_id": best["id"],
                  "method": best["method"], "resolution": best["resolution"],
-                 "coverage_frac": cov, "alternatives": len(pdbs), "path": dest, "url": url,
+                 "coverage_frac": cov, "holo": holo, "alternatives": len(pdbs), "path": dest, "url": url,
                  "note": note}, args)
         return 0
 
@@ -237,7 +314,7 @@ def _report(info: dict, args) -> None:
         return
     print(f"\nFetched structure → {info['path']}")
     for k in ("source", "pdb_id", "uniprot", "method", "resolution", "coverage_frac",
-              "plddt", "alternatives", "note"):
+              "holo", "plddt", "alternatives", "note"):
         if k in info and info[k] is not None:
             print(f"  {k}: {info[k]}")
     print(f"  url: {info['url']}")
