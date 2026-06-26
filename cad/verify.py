@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-verify.py — prove that the numbers in a pipeline run are real, not fabricated.
+verify.py — re-derive and tamper-check the machine-readable figures in a pipeline run.
 
 This is the enforcement half of the repo's anti-hallucination rule. It takes a
 run directory produced by `cad/run_pipeline.py` (or a bare `--target`) and, for
@@ -24,8 +24,12 @@ What this DOES and does NOT prove (read this — honesty is the point):
     re-derived from the co-crystal ligand — and the per-hit liability fields: PAINS/Brenk
     + GSK/Pfizer developability + SA score) are recomputed and must reproduce EXACTLY —
     a mismatch means the file was edited/fabricated.
-  * NOT covered: narrative text (SUMMARY.md prose, target_report read-outs) and
-    the news_update.py `intel/` digests, which are unverified leads, not figures.
+  * NOT covered (so do not over-trust a PASS): narrative text (SUMMARY.md prose,
+    target_report read-outs) and the `intel/` digests (unverified leads); the
+    potency/QED/descriptor columns of hits.csv (read FROM the file, not re-fetched —
+    so a self-consistent fabrication of those plus their score still passes); rows past
+    the top-5 hits / first-25 liabilities (fixed caps); and provenance.json itself
+    (never read back). DRIFT exits 0, so a within-tolerance change is not flagged.
 
 Exit code is non-zero if anything FAILs, so it can gate CI. Every check prints
 the exact URL a human can open to confirm the number a third time, by hand.
@@ -394,7 +398,8 @@ def run(args) -> int:
         return 1 if n_fail else 0
 
     print("\n=== Provenance verification ===")
-    print("Re-pulling every reported figure from its live public source.\n")
+    print("Re-checking reported figures: dossier counts + top-hit SMILES are re-pulled live; "
+          "deterministic artifacts are recomputed. Not every column is re-fetched — see scope below.\n")
     icon = {PASS: "✅", DRIFT: "≈ ", FAIL: "❌", SKIP: "– "}
     for figure, status, note, url in checks:
         print(f"  {icon[status]} {status:<5} {figure}")
@@ -410,11 +415,16 @@ def run(args) -> int:
               "artifact present reproduced exactly, but NOTHING target-derived was verified — "
               "this is not a clean bill of health for a target.")
     elif n_drift:
-        print(f"✅ No fabrications. {n_drift} figure(s) DRIFTed (databases grow) — re-run to refresh.")
+        print(f"✅ No FAILs. {n_drift} figure(s) DRIFTed within tolerance (max(2, 10%), EITHER "
+              f"direction — counts can also shrink) and still exit 0 — re-run to refresh.")
     else:
-        print("✅ Every reported figure reproduced exactly from its live public source.")
-    print("This checks that numbers are REAL and re-derivable — not that a molecule works. "
-          "Triage ≠ validation. Not medical advice.")
+        print("✅ Every CHECKED figure reproduced exactly from its live source.")
+    print("Scope: dossier ChEMBL/UniProt counts + the top-5 hits' SMILES are re-fetched live; "
+          "cost_benefit, the docking box, the triage score, and the first 25 liabilities are "
+          "recomputed. The hits' potency/QED/descriptor columns and provenance.json are NOT "
+          "independently re-verified — a self-consistent fabrication can still pass.")
+    print("This checks numbers are re-derivable/untampered — not that a molecule works, nor that "
+          "the query design is correct. Triage ≠ validation. Not medical advice.")
     return 1 if n_fail else 0
 
 
