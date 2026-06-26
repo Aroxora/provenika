@@ -42,6 +42,7 @@ test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) cad/test_degradation.py
 	$(PY) cad/test_precompute_index.py
 	$(PY) cad/test_resolve_target.py
+	$(PY) cad/test_target_report.py
 	$(PY) cad/test_binding_site.py
 	$(PY) cad/test_fetch_structure.py
 	$(PY) cad/test_dock.py

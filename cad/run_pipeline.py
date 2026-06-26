@@ -172,11 +172,12 @@ def main(argv=None) -> int:
         lines += [
             "## Target dossier",
             f"- UniProt: {u.get('accession')} ({u.get('length')} aa)",
-            f"- PDB structures: {u.get('pdb_count')} (docking feasible: {'yes' if u.get('pdb_count') else 'no'})",
+            f"- PDB structures: {u.get('pdb_count')} (structure-based docking: "
+            f"{'structures exist — confirm one is holo and covers the site (not auto-checked)' if u.get('pdb_count') else 'no experimental structure'})",
         ]
         if "potent_activity_records" in c:
             lines += [
-                f"- Potent ChEMBL activities: {c.get('potent_activity_records')}",
+                f"- ChEMBL bioactivity records (any pChEMBL, not potency-filtered, counts records not molecules): {c.get('potent_activity_records')}",
                 f"- Known mechanism drugs: {len(c.get('known_mechanism_drugs', []))}",
             ]
         else:

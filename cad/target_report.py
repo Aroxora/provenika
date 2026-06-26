@@ -8,9 +8,9 @@ databases and tells you what to do next:
   * UniProt  — what the protein is, its length, function, and how many
                experimental PDB structures exist (does structure-based docking
                look feasible?).
-  * ChEMBL   — how many potent measured ligands exist, the best potency on
-               record, and the known drugs/mechanisms that already hit it
-               (is it chemically tractable / already drugged?).
+  * ChEMBL   — how many measured bioactivity records exist (any pChEMBL value —
+               NOT potency-filtered, and a count of records not distinct molecules),
+               and the known drugs/mechanisms that already hit it (drugged?).
 
 Everything is sourced from free public APIs; no key required. This is research
 orientation, not validation and not medical advice.
@@ -45,15 +45,36 @@ def _chembl(path: str, params: dict) -> dict:
     return _json(f"{CHEMBL}/{path}?{urllib.parse.urlencode(params)}")
 
 
-def resolve_target(name: str) -> dict | None:
-    targets = _chembl("target/search", {"q": name, "limit": 25}).get("targets", [])
+def _rank_targets(targets: list[dict], name: str) -> dict | None:
+    """Rank ChEMBL target hits so the SAME protein is chosen here as in virtual_triage/fetch_structure:
+    prefer an EXACT gene-symbol / pref_name match to the query (so 'AKT1' is not resolved to a
+    substring target like AKT1S1, nor 'AURKA' to AURKAIP1), then a single human protein. Falls back
+    gracefully to the type/organism ordering when no exact match is available."""
     if not targets:
         return None
+    q = name.strip().lower()
+
+    def exact(t) -> bool:
+        if (t.get("pref_name") or "").strip().lower() == q:
+            return True
+        for comp in t.get("target_components") or []:
+            for syn in comp.get("target_component_synonyms") or []:
+                if (syn.get("syn_type") == "GENE_SYMBOL"
+                        and (syn.get("component_synonym") or "").strip().lower() == q):
+                    return True
+        return False
+
     return sorted(
         targets,
-        key=lambda t: (t.get("target_type") == "SINGLE PROTEIN", t.get("organism") == "Homo sapiens"),
+        key=lambda t: (exact(t), t.get("target_type") == "SINGLE PROTEIN",
+                       t.get("organism") == "Homo sapiens"),
         reverse=True,
     )[0]
+
+
+def resolve_target(name: str) -> dict | None:
+    targets = _chembl("target/search", {"q": name, "limit": 25}).get("targets", [])
+    return _rank_targets(targets, name)
 
 
 def chembl_snapshot(tid: str) -> dict:
@@ -171,9 +192,10 @@ def run(args) -> int:
         if uni["function"]:
             fn = uni["function"]
             print(f"  Function: {fn[:300]}{'…' if len(fn) > 300 else ''}")
-        feasible = "yes" if uni["pdb_count"] else "no public structure"
+        feasible = (f"{uni['pdb_count']} exist — confirm one is holo and covers the site"
+                    if uni["pdb_count"] else "none — no experimental structure")
         print(f"  Experimental PDB structures: {uni['pdb_count']} "
-              f"(docking feasible: {feasible})")
+              f"(structure-based docking: {feasible})")
         if uni["pdb_examples"]:
             print(f"  Example PDB IDs: {', '.join(uni['pdb_examples'])}")
     else:
@@ -184,7 +206,8 @@ def run(args) -> int:
     if chembl is None:
         print(f"  Unavailable — ChEMBL {chembl_status}. Ligand/drug tractability could not be fetched; retry.")
     else:
-        print(f"  Potent measured activities on record: {chembl['potent_activity_records']:,}")
+        print(f"  ChEMBL bioactivity records (any pChEMBL; not potency-filtered, counts records "
+              f"not distinct molecules): {chembl['potent_activity_records']:,}")
         drugs = chembl["known_mechanism_drugs"]
         if drugs:
             print(f"  Known drugs/modulators with a defined mechanism: {len(drugs)}")
