@@ -88,7 +88,12 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
     # Drug-likeness rule sets
     ro5_viol = sum([mw > 500, logp > 5, hbd > 5, hba > 10])
     ro5 = ro5_viol <= 1
-    veber = rotb <= 10 and tpsa <= 140
+    # Veber 2002 (oral bioavailability): rotatable bonds <= 10 AND (TPSA <= 140 OR HBD+HBA <= 12).
+    # The H-bond alternative clause was previously omitted, mis-failing high-TPSA / low-H-bond molecules.
+    veber = rotb <= 10 and (tpsa <= 140 or (hbd + hba) <= 12)
+    # Egan/Merz 2000 "egg" is an ellipse in (TPSA, AlogP); this is a permissive RECTANGULAR
+    # approximation (and uses Crippen MolLogP as AlogP98), so points near the corners can be
+    # false-positives relative to the published ellipse.
     egan = tpsa <= 131.6 and logp <= 5.88
     # Developability / tox-risk heuristics (descriptor-only, cited):
     gsk_ok = mw <= 400 and logp <= 4          # GSK 4/400 (Gleeson, Nat Rev Drug Discov 2008) — favorable ADMET
@@ -107,10 +112,12 @@ def analyze(smiles: str, pains, brenk) -> dict | None:
         "fraction_csp3": round(fsp3, 3), "qed": round(qed, 3),
         "ro5_violations": ro5_viol, "lipinski_ok": ro5, "veber_ok": veber, "egan_ok": egan,
         "gsk_ok": gsk_ok, "pfizer_tox_risk": pfizer_tox_risk,
-        "pains_alerts": len(pains_hits), "pains": pains_hits[:5],
-        "brenk_alerts": len(brenk_hits), "brenk": brenk_hits[:5],
+        "pains_alerts": len(pains_hits), "pains": pains_hits,
+        "brenk_alerts": len(brenk_hits), "brenk": brenk_hits,
         "murcko_scaffold": scaffold,
-        "clean": ro5 and veber and len(pains_hits) == 0,
+        # "clean" now also requires zero BRENK alerts — it previously ignored them, so a compound
+        # carrying reactive/unstable Brenk groups could still be labelled clean.
+        "clean": ro5 and veber and len(pains_hits) == 0 and len(brenk_hits) == 0,
     }
 
 
@@ -300,7 +307,7 @@ def run(args) -> int:
             line += f" {(r.get('similarity') or 0):>5.2f}"
         print(line)
     clean = sum(1 for r in results if r["clean"])
-    print(f"\n{clean}/{len(results)} pass Ro5 + Veber with no PAINS alerts.")
+    print(f"\n{clean}/{len(results)} pass Ro5 + Veber with no PAINS or Brenk alerts.")
     if n_clusters:
         print(f"{n_clusters} distinct chemotype cluster(s) (Butina, ECFP4) among {len(results)} compounds.")
     if has_le:

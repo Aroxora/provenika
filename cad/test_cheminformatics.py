@@ -60,6 +60,17 @@ if getattr(ci, "_RDKIT", False):
     d = ci.analyze("CCCCCCCCCCc1ccccc1", pains, brenk)  # decylbenzene: high cLogP, ~0 TPSA
     check("lipophilic low-TPSA molecule: GSK fails, Pfizer 3/75 tox risk flagged",
           d.get("gsk_ok") is False and d.get("pfizer_tox_risk") is True)
+    # 'clean' now also requires no Brenk alerts: octanal passes Ro5/Veber/no-PAINS but carries a
+    # Brenk (reactive aldehyde) alert, so it must NOT be 'clean' (it would have been, before).
+    oc = ci.analyze("O=CCCCCCCC", pains, brenk)  # octanal
+    check("octanal: Ro5+Veber ok, no PAINS, but a Brenk alert is present",
+          oc["lipinski_ok"] and oc["veber_ok"] and oc["pains_alerts"] == 0 and oc["brenk_alerts"] > 0)
+    check("octanal NOT 'clean' (clean now includes Brenk)", oc["clean"] is False)
+    # Veber H-bond clause: a high-TPSA (>140) but low-H-bond (HBD+HBA<=12) molecule now passes Veber
+    # via the alternative clause that the PSA-only implementation previously omitted.
+    tn = ci.analyze("O=[N+]([O-])c1cc([N+](=O)[O-])c([N+](=O)[O-])c([N+](=O)[O-])c1", pains, brenk)
+    check("Veber H-bond clause: TPSA>140 but HBD+HBA<=12 → veber_ok True",
+          tn["tpsa"] > 140 and (tn["hbd"] + tn["hba"]) <= 12 and tn["veber_ok"] is True)
     # SDF export → 3-D structures with property tags (for docking/viz tools).
     import os as _os
     import tempfile as _tf
