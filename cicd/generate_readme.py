@@ -45,7 +45,7 @@ TEMPLATE = r"""# Provenika — auditable oncology evidence engine *(compute or c
 > touch a device — and the deadliest failure mode of "AI for medicine" is a confident,
 > plausible, **fabricated** number. So this project does the one thing such an agent *can*
 > do honestly: turn **public** oncology data into **ranked, fully-cited, independently
-> re-verifiable** hypotheses for human scientists — and make fabrication impossible to hide.
+> re-verifiable** hypotheses for human scientists — and make a fabricated number easy to catch.
 
 **This is the strategy.** Not "an AI that discovers drugs." An **auditable evidence engine**
 that accelerates the cheap, in-silico *front* of drug discovery (target triage → ligand
