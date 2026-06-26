@@ -88,6 +88,31 @@ def _chembl_qed(chembl_id: str) -> float | None:
     except (TypeError, ValueError):
         return None
 
+
+_POTENCY_TYPES = {"IC50", "Ki", "Kd", "EC50"}
+
+
+def _chembl_best_pchembl(mol_id: str, target_id: str) -> float | None:
+    """Re-query a molecule's max pChEMBL on this target straight from ChEMBL (raw HTTP), so the
+    best_pchembl that drives the ranking is re-pulled, not trusted from hits.csv. Returns None if
+    the live source can't be reached or has no potency record."""
+    url = (f"https://www.ebi.ac.uk/chembl/api/data/activity?molecule_chembl_id={mol_id}"
+           f"&target_chembl_id={target_id}&pchembl_value__isnull=false&limit=200&format=json")
+    data = _http_json(url)
+    if not data:
+        return None
+    best = None
+    for a in data.get("activities", []):
+        if a.get("standard_type") not in _POTENCY_TYPES:
+            continue
+        try:
+            pv = float(a.get("pchembl_value"))
+        except (TypeError, ValueError):
+            continue
+        if best is None or pv > best:
+            best = pv
+    return best
+
 PASS, DRIFT, FAIL, SKIP = "PASS", "DRIFT", "FAIL", "SKIP"
 
 
@@ -156,10 +181,13 @@ def _f(v):
         return None
 
 
-def verify_hits(path: Path, checks: list, max_rows: int = 5) -> None:
+def verify_hits(path: Path, checks: list, target_id: str | None = None, max_rows: int = 25) -> None:
     """Content-level checks on the top ranked ligands:
        (1) SMILES byte-equality vs ChEMBL (independent raw HTTP fetch),
-       (2) deterministic recompute of the published triage score."""
+       (2) deterministic recompute of the published triage score,
+       (3) independent QED re-fetch from ChEMBL,
+       (4) independent best_pchembl (potency) re-fetch from ChEMBL (needs target_id).
+    max_rows defaults to 25 (the full shortlist), so the cap no longer leaves later rows unchecked."""
     try:
         rows = list(csv.DictReader(path.open()))[:max_rows]
     except OSError as e:
@@ -218,10 +246,41 @@ def verify_hits(path: Path, checks: list, max_rows: int = 5) -> None:
         checks.append((f"top {qed_checked} ligand QED re-fetched from ChEMBL", s, note,
                        prov.source_url("chembl", "entry", rows[0].get("chembl_id", ""))))
 
+    # (4) Independent POTENCY re-fetch: re-query each top hit's max pChEMBL on this target straight
+    # from ChEMBL (raw HTTP) and compare to best_pchembl — so the potency that drives the ranking is
+    # re-pulled, not trusted from the file. live < saved (file overstates potency ChEMBL lacks) FAILs;
+    # live > saved (the DB gained a more potent measurement) is DRIFT, not a failure.
+    if target_id:
+        pot_bad, pot_drift, pot_checked = 0, 0, 0
+        for r in rows:
+            cid = (r.get("chembl_id") or "").strip()
+            saved_p = _f(r.get("best_pchembl"))
+            if not cid.startswith("CHEMBL") or saved_p is None:
+                continue
+            live_p = _chembl_best_pchembl(cid, target_id)
+            if live_p is None:
+                continue
+            pot_checked += 1
+            if live_p < saved_p - 0.05:
+                pot_bad += 1
+            elif abs(live_p - saved_p) > 0.05:
+                pot_drift += 1
+        if pot_checked:
+            url = prov.source_url("chembl", "target", target_id)
+            if pot_bad:
+                checks.append((f"top {pot_checked} ligand potency re-fetched from ChEMBL", FAIL,
+                               f"{pot_bad} hit(s) best_pchembl exceeds ChEMBL's max for this target "
+                               "(overstated/fabricated potency)", url))
+            else:
+                st = DRIFT if pot_drift else PASS
+                note = (f"best_pchembl reproduces from ChEMBL ({pot_drift} drifted up — DB gained data)"
+                        if pot_drift else "best_pchembl matches ChEMBL's max potency on this target")
+                checks.append((f"top {pot_checked} ligand potency re-fetched from ChEMBL", st, note, url))
+
     # (2) Recompute the headline triage score from its own CSV inputs. Deterministic
     # → any drift means the score column was edited. Imports the producing formula
-    # on purpose (this is a reproducibility check, like cost_benefit). QED is now also
-    # independently re-fetched above, so the score's qed input is no longer taken purely on faith.
+    # on purpose (this is a reproducibility check, like cost_benefit). QED and potency are now
+    # also independently re-fetched above, so the score's inputs are no longer taken purely on faith.
     try:
         import virtual_triage as vt
         worst = 0.0
@@ -460,14 +519,17 @@ def run(args) -> int:
         if not run_dir.exists():
             print(f"Run directory not found: {run_dir}", file=sys.stderr)
             return 2
+        target_id = None
         dossier_p = run_dir / "dossier.json"
         if dossier_p.exists():
-            verify_dossier(json.loads(dossier_p.read_text()), checks)
+            dossier = json.loads(dossier_p.read_text())
+            verify_dossier(dossier, checks)
+            target_id = (dossier.get("chembl_target") or {}).get("id")
             target_evidence = True
         else:
             checks.append(("dossier.json present", SKIP, "no dossier to verify", ""))
         if (run_dir / "hits.csv").exists():
-            verify_hits(run_dir / "hits.csv", checks)
+            verify_hits(run_dir / "hits.csv", checks, target_id=target_id)
             target_evidence = True
         liab_p = run_dir / "liabilities.json"
         if liab_p.exists():

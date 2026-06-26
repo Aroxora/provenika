@@ -61,6 +61,45 @@ def test_unresolvable_qed_is_skipped_not_failed():
         assert _status(checks, "QED re-fetched") is None, checks  # never fabricates a pass/fail
 
 
+def test_potency_match_passes():
+    v._chembl_canonical_smiles = lambda cid: "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    v._chembl_best_pchembl = lambda mol, tid: 8.0    # == saved best_pchembl
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv(Path(d), "0.50"), checks, target_id="CHEMBL203")
+        assert _status(checks, "potency re-fetched") == v.PASS, checks
+
+
+def test_overstated_potency_fails():
+    v._chembl_canonical_smiles = lambda cid: "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    v._chembl_best_pchembl = lambda mol, tid: 6.0    # live < saved 8.0 -> file overstates potency
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv(Path(d), "0.50"), checks, target_id="CHEMBL203")
+        assert _status(checks, "potency re-fetched") == v.FAIL, checks
+
+
+def test_more_potent_db_growth_is_drift_not_fail():
+    v._chembl_canonical_smiles = lambda cid: "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    v._chembl_best_pchembl = lambda mol, tid: 9.5    # live > saved 8.0 -> DB gained a more potent value
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv(Path(d), "0.50"), checks, target_id="CHEMBL203")
+        assert _status(checks, "potency re-fetched") == v.DRIFT, checks
+
+
+def test_potency_skipped_without_target_id():
+    v._chembl_canonical_smiles = lambda cid: "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv(Path(d), "0.50"), checks)   # no target_id -> potency check not emitted
+        assert _status(checks, "potency re-fetched") is None, checks
+
+
 def main():
     tests = [val for k, val in sorted(globals().items()) if k.startswith("test_") and callable(val)]
     for t in tests:
