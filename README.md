@@ -157,8 +157,9 @@ synthetic accessibility (RDKit);
 fetch a 3-D structure; build a docking box; run a transparent feasibility model; emit a cited,
 re-verifiable dossier; map a disease to its association-scored druggable targets (Open Targets);
 and search PubMed / ClinicalTrials.gov / cBioPortal / ChEMBL / KEGG / RCSB PDB / UniProt live
-(63 OSINT tools, see below). **Resilient:** if one data source is down it degrades to a
-partial dossier (clearly marked) rather than failing outright.
+(63 tool definitions in total — but only ~21 are keyless live-API lookups; the rest need a
+Tavily key or are static reference datasets / templates, see below). **Resilient:** if one data source
+is down it degrades to a partial dossier (clearly marked) rather than failing outright.
 
 **Does not (by design):** cure, treat, or diagnose anyone · recommend a therapy or generate a
 treatment plan · estimate a patient's prognosis · design de-novo molecules with "validated"

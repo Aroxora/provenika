@@ -132,7 +132,11 @@ def main(argv=None) -> int:
         }
         fname = f"{slug(target)}.json"
         (OUT_DIR / fname).write_text(json.dumps(payload, indent=2))
-        index.append({"target": target, "slug": slug(target), "file": fname, "count": len(by_chembl)})
+        # Stamp each entry with its OWN refresh date. On a partial/subset merge below, a target
+        # that wasn't refreshed keeps its older date, so a stale per-target file is visible
+        # (entry.generated < index.generated) instead of being masked by the advancing index date.
+        index.append({"target": target, "slug": slug(target), "file": fname,
+                      "count": len(by_chembl), "generated": args.stamp})
         print(f"  {target}: {len(by_chembl)} compounds -> {fname}")
 
     idx_path = OUT_DIR / "index.json"
