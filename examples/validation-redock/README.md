@@ -1,53 +1,65 @@
-# Redocking validation — a real, passing run (with docking-grade prep)
+# Redocking validation — real, measured, at benchmark scale
 
-This is an **actual** run of `cad/validate.py --redock` against AutoDock Vina, so the pipeline's
-docking is *measured*, not asserted. It is the honest answer to "is it validated?": we ran the
-standard redocking test — dock a known co-crystal ligand back into its receptor and measure RMSD to
-the crystallographic pose (≤ 2 Å = correct) — and report exactly what came out.
+This is an **actual** run of the pipeline's docking against AutoDock Vina, so its accuracy is
+*measured*, not asserted. It answers "is it validated?" the only honest way: run the standard
+redocking test — dock a known co-crystal ligand back into its receptor and measure RMSD to the
+crystallographic pose (≤ 2 Å = correct) — on a real set, and report exactly what came out.
 
-## The result (reproducible)
+## The benchmark-scale result
 
-| Complex | Ligand | Redock RMSD | Correct (≤2 Å)? |
-|---|---|---|---|
-| **1M17** | erlotinib | **1.21 Å** | ✅ yes |
-| **3POZ** | TAK-285 | **1.13 Å** | ✅ yes |
-| **1IEP** | imatinib | — | ⚠️ docks, but crystal-vs-docked perception won't RMSD-match |
+A 39-complex oncology co-crystal set (kinase inhibitors + a few others), ligands auto-detected,
+prepped with **Meeko + pdb2pqr**, docked with **AutoDock Vina 1.2.7** (fixed seed, focused box),
+RMSD by symmetry-aware **`obrms`**. Run in parallel locally (~20 min). Machine-readable:
+[`batch_results.json`](batch_results.json); runner: [`batch_redock.py`](batch_redock.py).
 
-**2 of 2 evaluable complexes redocked correctly (mean 1.17 Å).** Machine-readable record:
-[`results.json`](results.json).
+| Metric | Value |
+|---|---|
+| Candidates | 39 |
+| **Evaluable** (fetched + docked + RMSD-matched) | **27** |
+| **Correct pose (≤2 Å)** | **17 / 27 = 63%** |
+| Median RMSD | **1.39 Å** |
+| Mean RMSD | 2.12 Å |
+| Self-filtered | 12 (11 `obrms` couldn't match large flexible ligands; 1 no drug-like ligand) |
 
-## How it was produced (reproducible)
+**63% success at a median 1.39 Å** is squarely in the published range for AutoDock Vina redocking
+on diverse sets (~50–70% ≤2 Å). It is a real, honest figure — not cherry-picked.
+
+Examples both ways (from `batch_results.json`): excellent — 4Z3V (BTK) 0.21 Å, 3G0E (KIT) 0.46 Å,
+1T46 (imatinib/KIT) 0.62 Å, 3OG7 (vemurafenib/BRAF) 0.53 Å, 1M17 (erlotinib/EGFR) 1.39 Å; poor —
+1XKK (lapatinib) 2.9 Å, 2ITY (gefitinib) 3.5 Å, 4HJO 5.8 Å.
+
+## How to reproduce
 
 ```bash
 # Vina + Open Babel via micromamba (standalone, no admin); Meeko + pdb2pqr via pip
-micromamba create -p ./dockenv -c conda-forge vina openbabel
-pip install meeko pdb2pqr
+micromamba create -p ./dockenv -c conda-forge vina openbabel && pip install meeko pdb2pqr
 export PATH=$PWD/dockenv/bin:$PATH
-python3 cad/validate.py --redock cad/validation_benchmark.json --out runs/validation --json
+python3 examples/validation-redock/batch_redock.py      # parallel, ~20 min
+# or a single curated trio:
+python3 cad/validate.py --redock cad/validation_benchmark.json --json
 ```
-
-Tooling: **AutoDock Vina 1.2.7**, **Meeko 0.7.1** (ligand prep), **pdb2pqr** (receptor protonation),
-**Open Babel 3.1.1**, RDKit 2026.03.2. RMSD via `obrms` (symmetry-aware, in-place). A **fixed seed
-(42)** and a **focused 4 Å box** make the run reproducible.
 
 ## The honest story behind these numbers
 
-This passing result was *earned*, and the failures along the way are the point of validation:
+The passing figure was *earned*, and the failures along the way are the point of validation:
+1. **The harness was broken** — it produced poses but errored on *every* RMSD. Fixed (RCSB SMILES
+   template for docking + `obrms`).
+2. **Crude prep failed the science** — Open Babel-only prep redocked erlotinib at 7.9 Å. Upgrading
+   to Meeko + pdb2pqr brought it to ~1.4 Å. `dock.py` now uses them when present (Open Babel fallback).
+3. **At scale it's 63%, not 100%** — the encouraging 2/2 on three complexes was optimistic; the
+   honest at-scale number is lower, as it should be.
 
-1. **First run exposed a harness bug:** the validator produced docked poses but errored on *every*
-   RMSD ("topology mismatch") — it measured nothing. Fixed (RCSB SMILES template for docking + `obrms`).
-2. **Then the crude prep failed the science:** with Open Babel-only prep, erlotinib redocked at
-   **7.9 Å** (wrong pose) and imatinib wouldn't prep at all. So "it has a validation harness" was not
-   the same as "it validates."
-3. **Docking-grade prep fixed it:** Meeko (ligand) + pdb2pqr (receptor protonation) + a focused box
-   brought erlotinib to **1.21 Å** and TAK-285 to **1.13 Å**. `dock.py` now uses these when present
-   and falls back to Open Babel otherwise.
+## Known limits of this validation (so a PASS isn't over-read)
 
-## What it does NOT mean
+- **`obrms` can't RMSD-match ~11 of the candidates** (large/flexible ligands like imatinib in ABL):
+  they dock, but the crystal-vs-docked molecule graphs don't align. That's a comparison-robustness
+  gap (a template-based atom map would help), not a docking failure — but it means the 27 evaluable
+  skew toward smaller, more rigid ligands.
+- A 39-complex set is **not** the full Astex/PDBbind; a rigorous claim needs hundreds of complexes
+  and cross-docking.
+- Redocking measures **pose reproduction** — *necessary, not sufficient*. It is **not** prospective
+  accuracy, **not** affinity/enrichment validation, and **never** clinical validation.
 
-A redocking benchmark — especially a **3-complex starter set** — measures **pose reproduction**, a
-*necessary but not sufficient* check. It is **not** prospective accuracy, **not** enrichment or
-affinity validation, and emphatically **not** clinical validation. One ligand (imatinib) still can't
-be RMSD-scored here. A rigorous claim would need a large public benchmark (Astex/PDBbind) and
-cross-docking. The honest headline stands: research-grade in-silico triage; docking output is a
-hypothesis for the wet lab, and the tool is **never** a clinical instrument.
+Bottom line: the docking **reproduces known binding modes at a credible rate (63%, median 1.39 Å)** —
+*measured*. The tool remains research-grade in-silico triage; its output is a hypothesis for the wet
+lab, and it is never a clinical instrument.

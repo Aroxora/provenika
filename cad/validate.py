@@ -196,9 +196,10 @@ def _redock_rmsd(ref_pdb: str, docked_pdbqt: str, out_dir: str):
     return round(val, 3), None
 
 
-def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
+def redock_one(pdb_id: str, resname: str, out_dir: str, cpu: int | None = None) -> dict:
     """Redock the co-crystal ligand of `resname` in `pdb_id` and measure pose RMSD vs crystal.
-    Returns a dict with rmsd (float) or a 'skip'/'error' reason — never a fabricated number."""
+    Returns a dict with rmsd (float) or a 'skip'/'error' reason — never a fabricated number.
+    `cpu` caps Vina's cores so a batch can run many complexes in parallel."""
     import binding_site as bsm
     import dock as dockm
     rec = {"pdb": pdb_id, "ligand": resname}
@@ -235,7 +236,8 @@ def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
     tmpl = Chem.MolFromSmiles(template_smiles)
     dock_smiles = Chem.MolToSmiles(tmpl) if tmpl is not None else template_smiles
     args = argparse.Namespace(receptor=rec_pdb, ligand=None, smiles=dock_smiles, box_json=None,
-                              center=box["center"], size=box["size"], exhaustiveness=8, seed=42, out=out_dir)
+                              center=box["center"], size=box["size"], exhaustiveness=8, seed=42,
+                              cpu=cpu, out=out_dir)
     try:
         rc = dockm.run(args)
     except SystemExit as e:

@@ -231,6 +231,8 @@ def run(args) -> int:
            "--out", out_pose, "--exhaustiveness", str(args.exhaustiveness)]
     if getattr(args, "seed", None) is not None:
         cmd += ["--seed", str(args.seed)]   # fixed seed → reproducible docking (Vina is stochastic)
+    if getattr(args, "cpu", None) is not None:
+        cmd += ["--cpu", str(args.cpu)]     # cap cores per run so a batch can parallelize across complexes
     if args.center:
         cmd += _box_cmd(args.center, args.size)
     else:
@@ -280,6 +282,7 @@ def main(argv=None) -> int:
                    help="Docking box size (default 20 20 20).")
     p.add_argument("--exhaustiveness", type=int, default=8, help="Vina search effort (default 8).")
     p.add_argument("--seed", type=int, default=None, help="Vina random seed (set for reproducible runs).")
+    p.add_argument("--cpu", type=int, default=None, help="Cores Vina may use (default: all; set low to batch).")
     p.add_argument("--out", default="docking", help="Output directory (default ./docking).")
     args = p.parse_args(argv)
     if args.check:

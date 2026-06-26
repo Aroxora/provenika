@@ -1,0 +1,236 @@
+{
+  "summary": {
+    "candidates": 39,
+    "evaluable": 27,
+    "skipped_or_errored": 12,
+    "success_count": 17,
+    "success_rate": 0.63,
+    "mean_rmsd": 2.117,
+    "median_rmsd": 1.393,
+    "workers": 3,
+    "minutes": 20.1
+  },
+  "results": [
+    {
+      "pdb": "1M17",
+      "ligand": "AQ4",
+      "rmsd": 1.393,
+      "correct_pose": true
+    },
+    {
+      "pdb": "1XKK",
+      "ligand": "FMM",
+      "rmsd": 2.908,
+      "correct_pose": false
+    },
+    {
+      "pdb": "2ITY",
+      "ligand": "IRE",
+      "rmsd": 3.545,
+      "correct_pose": false
+    },
+    {
+      "pdb": "3POZ",
+      "ligand": "03P",
+      "rmsd": 1.132,
+      "correct_pose": true
+    },
+    {
+      "pdb": "4HJO",
+      "ligand": "AQ4",
+      "rmsd": 5.758,
+      "correct_pose": false
+    },
+    {
+      "pdb": "3W2S",
+      "ligand": "W2R",
+      "rmsd": 0.794,
+      "correct_pose": true
+    },
+    {
+      "pdb": "4I22",
+      "ligand": "IRE",
+      "rmsd": 3.348,
+      "correct_pose": false
+    },
+    {
+      "pdb": "2J5F",
+      "ligand": "DJK",
+      "rmsd": 1.496,
+      "correct_pose": true
+    },
+    {
+      "pdb": "4G5J",
+      "ligand": "0WN",
+      "rmsd": 2.831,
+      "correct_pose": false
+    },
+    {
+      "pdb": "1IEP",
+      "ligand": "STI",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "2HYY",
+      "ligand": "STI",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "3CS9",
+      "ligand": "NIL",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "3UE4",
+      "ligand": "DB8",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "2GQG",
+      "ligand": "PTR",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "1T46",
+      "ligand": "STI",
+      "rmsd": 0.618,
+      "correct_pose": true
+    },
+    {
+      "pdb": "3G0E",
+      "ligand": "B49",
+      "rmsd": 0.461,
+      "correct_pose": true
+    },
+    {
+      "pdb": "3OG7",
+      "ligand": "032",
+      "rmsd": 0.532,
+      "correct_pose": true
+    },
+    {
+      "pdb": "1UWH",
+      "ligand": "BAX",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "4RZV",
+      "ligand": "032",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "2A4L",
+      "ligand": "RRC",
+      "rmsd": 1.666,
+      "correct_pose": true
+    },
+    {
+      "pdb": "1H1S",
+      "ligand": "4SP",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "1KE5",
+      "ligand": "LS1",
+      "rmsd": 1.314,
+      "correct_pose": true
+    },
+    {
+      "pdb": "4EK3",
+      "ligand": "ACE",
+      "rmsd": 5.293,
+      "correct_pose": false
+    },
+    {
+      "pdb": "5L2I",
+      "ligand": "LQQ",
+      "rmsd": 1.047,
+      "correct_pose": true
+    },
+    {
+      "pdb": "2SRC",
+      "ligand": "PTR",
+      "rmsd": 2.466,
+      "correct_pose": false
+    },
+    {
+      "pdb": "1Y57",
+      "ligand": "MPZ",
+      "rmsd": 3.918,
+      "correct_pose": false
+    },
+    {
+      "pdb": "1A9U",
+      "ligand": "SB2",
+      "rmsd": 0.517,
+      "correct_pose": true
+    },
+    {
+      "pdb": "1OUK",
+      "ligand": "084",
+      "rmsd": 6.553,
+      "correct_pose": false
+    },
+    {
+      "pdb": "3GCS",
+      "ligand": "BAX",
+      "rmsd": 0.476,
+      "correct_pose": true
+    },
+    {
+      "pdb": "1UYL",
+      "skip": "no drug-like ligand detected"
+    },
+    {
+      "pdb": "2FWZ",
+      "ligand": "H71",
+      "rmsd": 1.07,
+      "correct_pose": true
+    },
+    {
+      "pdb": "1YET",
+      "ligand": "GDM",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "3LQ8",
+      "ligand": "88Z",
+      "rmsd": 1.222,
+      "correct_pose": true
+    },
+    {
+      "pdb": "3KRR",
+      "ligand": "DQX",
+      "rmsd": 1.947,
+      "correct_pose": true
+    },
+    {
+      "pdb": "3H10",
+      "ligand": "97B",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "4Z3V",
+      "ligand": "4L6",
+      "rmsd": 0.206,
+      "correct_pose": true
+    },
+    {
+      "pdb": "2XP2",
+      "ligand": "VGH",
+      "rmsd": 3.292,
+      "correct_pose": false
+    },
+    {
+      "pdb": "4XUF",
+      "ligand": "P30",
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+    },
+    {
+      "pdb": "3ERT",
+      "ligand": "OHT",
+      "rmsd": 1.357,
+      "correct_pose": true
+    }
+  ]
+}
