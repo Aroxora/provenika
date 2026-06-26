@@ -2,7 +2,7 @@
   "target": "CDK9",
   "targetId": "CHEMBL3116",
   "targetName": "Cyclin-dependent kinase 9",
-  "generated": "2026-06-23",
+  "generated": "2026-06-26",
   "count": 25,
   "clusterCount": 16,
   "byChembl": {
@@ -20,7 +20,7 @@
       "saScore": 2.76,
       "le": 0.613,
       "lle": 8.51,
-      "cluster": 6
+      "cluster": 5
     },
     "CHEMBL3694402": {
       "painsAlerts": 0,
@@ -52,7 +52,7 @@
       "saScore": 2.84,
       "le": 0.594,
       "lle": 8.18,
-      "cluster": 6
+      "cluster": 5
     },
     "CHEMBL3694406": {
       "painsAlerts": 0,
@@ -68,7 +68,7 @@
       "saScore": 2.18,
       "le": 0.593,
       "lle": 7.95,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL3694407": {
       "painsAlerts": 0,
@@ -84,7 +84,7 @@
       "saScore": 2.18,
       "le": 0.578,
       "lle": 7.67,
-      "cluster": 5
+      "cluster": 4
     },
     "CHEMBL6170958": {
       "painsAlerts": 1,
@@ -152,7 +152,7 @@
       "saScore": 2.91,
       "le": 0.486,
       "lle": 5.88,
-      "cluster": 4
+      "cluster": 0
     },
     "CHEMBL5197170": {
       "painsAlerts": 0,
@@ -186,7 +186,7 @@
       "lle": 5.61,
       "cluster": 11
     },
-    "CHEMBL4754493": {
+    "CHEMBL5569495": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
@@ -202,7 +202,7 @@
       "lle": 5.24,
       "cluster": 3
     },
-    "CHEMBL5569495": {
+    "CHEMBL4754493": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
@@ -234,6 +234,22 @@
       "lle": 4.99,
       "cluster": 10
     },
+    "CHEMBL5906300": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(Nc1cc(-c2cnn3c2CCCC3)ccn1)C1CCCCC1",
+      "eganOk": true,
+      "fractionCsp3": 0.545,
+      "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.55,
+      "le": 0.397,
+      "lle": 5.18,
+      "cluster": 0
+    },
     "CHEMBL4784117": {
       "painsAlerts": 0,
       "pains": [],
@@ -264,7 +280,7 @@
       "saScore": 3.76,
       "le": 0.384,
       "lle": 5.1,
-      "cluster": 0
+      "cluster": 2
     },
     "CHEMBL5818945": {
       "painsAlerts": 0,
@@ -392,23 +408,7 @@
       "saScore": 2.89,
       "le": 0.46,
       "lle": 4.74,
-      "cluster": 2
-    },
-    "CHEMBL5273925": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(Nc1ncc(SCc2ncco2)s1)C1CCNCC1",
-      "eganOk": true,
-      "fractionCsp3": 0.588,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.02,
-      "le": 0.46,
-      "lle": 4.74,
-      "cluster": 2
+      "cluster": 6
     }
   }
 }

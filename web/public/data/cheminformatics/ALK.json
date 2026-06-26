@@ -2,7 +2,7 @@
   "target": "ALK",
   "targetId": "CHEMBL4247",
   "targetName": "ALK tyrosine kinase receptor",
-  "generated": "2026-06-23",
+  "generated": "2026-06-26",
   "count": 25,
   "clusterCount": 14,
   "byChembl": {
@@ -214,7 +214,7 @@
       "scaffold": "O=C1NCc2[nH+][nH]cc2-c2cncc(c2)OCc2ccccc21",
       "eganOk": true,
       "fractionCsp3": 0.286,
-      "clean": true,
+      "clean": false,
       "gskOk": true,
       "pfizerToxRisk": false,
       "saScore": 4.94,
@@ -248,7 +248,7 @@
       "scaffold": "O=C1c2ccc(N3CCN(C4CCC4)CC3)cc2Cc2[nH]c3ccccc3c21",
       "eganOk": true,
       "fractionCsp3": 0.379,
-      "clean": true,
+      "clean": false,
       "gskOk": false,
       "pfizerToxRisk": true,
       "saScore": 3.07,
@@ -287,6 +287,22 @@
       "le": 0.375,
       "lle": 4.55,
       "cluster": 10
+    },
+    "CHEMBL5314412": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1NCCOc2ccccc2CN2CCOc3cn4ncc1c4nc32",
+      "eganOk": true,
+      "fractionCsp3": 0.381,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 5.02,
+      "le": 0.395,
+      "lle": 6.42,
+      "cluster": 9
     },
     "CHEMBL3929615": {
       "painsAlerts": 0,
@@ -402,24 +418,6 @@
       "saScore": 3.78,
       "le": 0.419,
       "lle": 6.44,
-      "cluster": 9
-    },
-    "CHEMBL3823416": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "phosphor"
-      ],
-      "scaffold": "c1ccc(Nc2ccnc(Nc3ccc(N4CCOCC4)cc3)n2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.304,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 2.74,
-      "le": 0.399,
-      "lle": 4.91,
       "cluster": 8
     }
   }

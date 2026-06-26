@@ -2,7 +2,7 @@
   "target": "PLK1",
   "targetId": "CHEMBL3024",
   "targetName": "Serine/threonine-protein kinase PLK1",
-  "generated": "2026-06-23",
+  "generated": "2026-06-26",
   "count": 25,
   "clusterCount": 8,
   "byChembl": {
@@ -153,22 +153,6 @@
       "lle": 5.41,
       "cluster": 0
     },
-    "CHEMBL5419367": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C1CN(C2CCCC2)c2nc(Nc3ccc4c(c3)CCN4C(=O)CN3CCNCC3)ncc2N1",
-      "eganOk": true,
-      "fractionCsp3": 0.6,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.47,
-      "le": 0.318,
-      "lle": 6.65,
-      "cluster": 0
-    },
     "CHEMBL5422122": {
       "painsAlerts": 0,
       "pains": [],
@@ -183,6 +167,22 @@
       "saScore": 3.47,
       "le": 0.343,
       "lle": 6.15,
+      "cluster": 0
+    },
+    "CHEMBL5419367": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1CN(C2CCCC2)c2nc(Nc3ccc4c(c3)CCN4C(=O)CN3CCNCC3)ncc2N1",
+      "eganOk": true,
+      "fractionCsp3": 0.6,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.47,
+      "le": 0.318,
+      "lle": 6.65,
       "cluster": 0
     },
     "CHEMBL2392552": {
