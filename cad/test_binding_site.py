@@ -99,13 +99,14 @@ def test_surface_additive_only_is_flagged():
     assert lig["note"] and "no protein contacts" in lig["note"]
 
 
-def test_box_geometry_unchanged():
-    """box() still produces center = centroid, size = extent + 2*pad, so a box saved by the
-    pipeline reproduces exactly when verify.py recomputes it from the same ligand."""
+def test_box_center_is_bounding_box_midpoint():
+    """box() centers on the min/max MIDPOINT — consistent with size = extent + 2*pad, so the box
+    is symmetric about the ligand. (The old atom-MEAN center, [0.5,1.0,1.5] here, used a different
+    reference than the size and could clip a skewed ligand.)"""
     pts = [(0.0, 0.0, 0.0), (2.0, 0.0, 0.0), (0.0, 4.0, 0.0), (0.0, 0.0, 6.0)]
     b = bs.box(pts, pad=8.0)
-    assert b["center"] == [0.5, 1.0, 1.5]
-    assert b["size"] == [18.0, 20.0, 22.0]
+    assert b["center"] == [1.0, 2.0, 3.0]   # midpoints (min+max)/2, not means
+    assert b["size"] == [18.0, 20.0, 22.0]  # extent + 2*8
 
 
 def _cif(rows):

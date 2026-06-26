@@ -281,8 +281,12 @@ largest_ligand = select_ligand
 
 
 def box(pts: list[tuple[float, float, float]], pad: float = 8.0) -> dict:
+    # Center on the bounding-box MIDPOINT, not the atom mean: AutoDock Vina treats the box as
+    # center ± size/2, and size is the min/max extent + padding, so the center must use the same
+    # min/max reference or the box is not symmetric about the ligand (the old atom-mean center
+    # could clip a skewed ligand on a long axis even with padding).
     xs, ys, zs = zip(*pts)
-    center = [round(sum(a) / len(a), 2) for a in (xs, ys, zs)]
+    center = [round((min(a) + max(a)) / 2, 2) for a in (xs, ys, zs)]
     size = [round((max(a) - min(a)) + 2 * pad, 1) for a in (xs, ys, zs)]
     return {"center": center, "size": size}
 
