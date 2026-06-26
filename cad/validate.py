@@ -184,10 +184,16 @@ def _redock_rmsd(ref_pdb: str, docked_pdbqt: str, out_dir: str):
     if not (os.path.exists(ref_sdf) and os.path.exists(docked_sdf)):
         return None, "could not convert reference/docked pose to SDF"
     res = subprocess.run(["obrms", ref_sdf, docked_sdf], capture_output=True, text=True)
-    m = re.search(r":=\s*([\d.]+)", res.stdout)
-    if not m:
-        return None, f"obrms produced no RMSD ({(res.stdout or res.stderr).strip()[:120]})"
-    return round(float(m.group(1)), 3), None
+    out = (res.stdout or "").strip()
+    # obrms prints "RMSD <name(s)> <value>"; the RMSD is the last whitespace token (format varies).
+    tok = out.split()[-1] if out.split() else ""
+    try:
+        val = float(tok)
+    except ValueError:
+        return None, f"obrms produced no numeric RMSD ({out[:120] or res.stderr.strip()[:120]})"
+    if val != val or val == float("inf"):  # NaN/inf — molecules could not be matched
+        return None, f"obrms could not match reference and docked molecules (RMSD={tok})"
+    return round(val, 3), None
 
 
 def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
@@ -212,9 +218,10 @@ def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
         rec["skip"] = ref_info
         return rec
 
-    # Box from the (improved) co-crystal-ligand selection; receptor saved for docking.
+    # Box from the (improved) co-crystal-ligand selection; a TIGHTER pad than the pipeline default
+    # (focused redocking, standard practice). Receptor saved for docking.
     lig = bsm.select_ligand(pdb_text)
-    box = bsm.box(lig["atoms"])
+    box = bsm.box(lig["atoms"], pad=4.0)
     rec_pdb = os.path.join(out_dir, f"{pdb_id}.pdb")
     Path(rec_pdb).write_text(pdb_text)
 
@@ -228,7 +235,7 @@ def redock_one(pdb_id: str, resname: str, out_dir: str) -> dict:
     tmpl = Chem.MolFromSmiles(template_smiles)
     dock_smiles = Chem.MolToSmiles(tmpl) if tmpl is not None else template_smiles
     args = argparse.Namespace(receptor=rec_pdb, ligand=None, smiles=dock_smiles, box_json=None,
-                              center=box["center"], size=box["size"], exhaustiveness=8, out=out_dir)
+                              center=box["center"], size=box["size"], exhaustiveness=8, seed=42, out=out_dir)
     try:
         rc = dockm.run(args)
     except SystemExit as e:
