@@ -129,6 +129,39 @@ def parse_vina_scores(out_pdbqt: str, stdout: str) -> list[float]:
     return scores
 
 
+def _box_cmd(center, size) -> list[str]:
+    """Vina box arguments. Vina requires an explicit center+size; there is no auto-box flag."""
+    cx, cy, cz = center
+    sx, sy, sz = size
+    return ["--center_x", str(cx), "--center_y", str(cy), "--center_z", str(cz),
+            "--size_x", str(sx), "--size_y", str(sy), "--size_z", str(sz)]
+
+
+def receptor_bbox(path: str, margin: float = 5.0):
+    """Whole-receptor docking box from the structure's atom coordinates: center =
+    bounding-box midpoint, size = extent + 2*margin (Å). Used for a blind box when no
+    pocket is given — stock AutoDock Vina has no auto-box mode, so we must pass a real box.
+    Returns (center, size) or None if no coordinates parse. Reads .pdb/.pdbqt (same columns)."""
+    xs: list[float] = []
+    ys: list[float] = []
+    zs: list[float] = []
+    try:
+        with open(path) as fh:
+            for line in fh:
+                if line[:6] in ("ATOM  ", "HETATM"):
+                    try:
+                        xs.append(float(line[30:38])); ys.append(float(line[38:46])); zs.append(float(line[46:54]))
+                    except ValueError:
+                        continue
+    except OSError:
+        return None
+    if not xs:
+        return None
+    center = [round((min(a) + max(a)) / 2, 2) for a in (xs, ys, zs)]
+    size = [round((max(a) - min(a)) + 2 * margin, 1) for a in (xs, ys, zs)]
+    return center, size
+
+
 def run(args) -> int:
     # Box may come straight from cad/binding_site.py --json output (validated early).
     if args.box_json and not args.center:
@@ -153,14 +186,18 @@ def run(args) -> int:
     cmd = ["vina", "--receptor", receptor, "--ligand", ligand,
            "--out", out_pose, "--exhaustiveness", str(args.exhaustiveness)]
     if args.center:
-        cx, cy, cz = args.center
-        sx, sy, sz = args.size
-        cmd += ["--center_x", str(cx), "--center_y", str(cy), "--center_z", str(cz),
-                "--size_x", str(sx), "--size_y", str(sy), "--size_z", str(sz)]
+        cmd += _box_cmd(args.center, args.size)
     else:
-        print("No --center given: doing a blind box over the receptor "
-              "(weaker; prefer a pocket from fpocket/P2Rank).", file=sys.stderr)
-        cmd += ["--autobox"]
+        # Vina has no blind/auto-box mode — build an explicit box spanning the whole receptor.
+        bbox = receptor_bbox(receptor)
+        if not bbox:
+            print("No --center given and the receptor has no parseable coordinates for a blind box. "
+                  "Pass --center/--size, or --box-json from cad/binding_site.py.", file=sys.stderr)
+            return 1
+        center, size = bbox
+        print(f"No --center given: blind box over the whole receptor (center {center}, size {size} Å) — "
+              "weaker; prefer a focused pocket from cad/binding_site.py / fpocket / P2Rank.", file=sys.stderr)
+        cmd += _box_cmd(center, size)
 
     print(f"Running: {' '.join(cmd)}")
     res = _run(cmd)
