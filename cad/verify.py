@@ -75,6 +75,19 @@ def _chembl_canonical_smiles(chembl_id: str) -> str | None:
         return None
     return ((data.get("molecule_structures") or {}).get("canonical_smiles"))
 
+
+def _chembl_qed(chembl_id: str) -> float | None:
+    """Re-fetch ChEMBL's qed_weighted for a molecule over the same raw-HTTP path, so the saved QED
+    is independently re-pulled — not trusted from the file, where it feeds the triage score."""
+    data = _http_json(f"https://www.ebi.ac.uk/chembl/api/data/molecule/{chembl_id}?format=json")
+    if not data:
+        return None
+    q = (data.get("molecule_properties") or {}).get("qed_weighted")
+    try:
+        return float(q) if q is not None else None
+    except (TypeError, ValueError):
+        return None
+
 PASS, DRIFT, FAIL, SKIP = "PASS", "DRIFT", "FAIL", "SKIP"
 
 
@@ -183,9 +196,32 @@ def verify_hits(path: Path, checks: list, max_rows: int = 5) -> None:
         checks.append((f"top {len(rows) - unresolved} ligand SMILES match ChEMBL", PASS, note,
                        prov.source_url("chembl", "entry", rows[0].get("chembl_id", ""))))
 
+    # (3) Independent QED re-fetch — the score recompute below reads qed FROM the file; this
+    # re-pulls each top hit's qed_weighted straight from ChEMBL (separate raw-HTTP path) and
+    # compares, so a fabricated QED (which would otherwise feed a self-consistent score) is caught.
+    qed_bad, qed_checked = 0, 0
+    for r in rows:
+        cid = (r.get("chembl_id") or "").strip()
+        saved_qed = _f(r.get("qed"))
+        if not cid.startswith("CHEMBL") or saved_qed is None:
+            continue
+        live_qed = _chembl_qed(cid)
+        if live_qed is None:
+            continue
+        qed_checked += 1
+        if abs(live_qed - saved_qed) > 0.011:   # qed_weighted is 2-dp; a larger gap means edited
+            qed_bad += 1
+    if qed_checked:
+        s = FAIL if qed_bad else PASS
+        note = ("QED matches ChEMBL's qed_weighted (re-fetched)" if s == PASS
+                else f"{qed_bad} hit(s) QED differs from ChEMBL's qed_weighted (edited/fabricated)")
+        checks.append((f"top {qed_checked} ligand QED re-fetched from ChEMBL", s, note,
+                       prov.source_url("chembl", "entry", rows[0].get("chembl_id", ""))))
+
     # (2) Recompute the headline triage score from its own CSV inputs. Deterministic
     # → any drift means the score column was edited. Imports the producing formula
-    # on purpose (this is a reproducibility check, like cost_benefit).
+    # on purpose (this is a reproducibility check, like cost_benefit). QED is now also
+    # independently re-fetched above, so the score's qed input is no longer taken purely on faith.
     try:
         import virtual_triage as vt
         worst = 0.0

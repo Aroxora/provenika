@@ -38,6 +38,7 @@ test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) -m compileall -q cad cicd
 	$(PY) cad/test_provenance.py
 	$(PY) cad/test_verify_manifest.py
+	$(PY) cad/test_verify_hits.py
 	$(PY) cad/test_cheminformatics.py
 	$(PY) cad/test_no_rdkit.py
 	$(PY) cad/test_degradation.py
