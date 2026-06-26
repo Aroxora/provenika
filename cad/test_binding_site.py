@@ -108,6 +108,45 @@ def test_box_geometry_unchanged():
     assert b["size"] == [18.0, 20.0, 22.0]
 
 
+def _cif(rows):
+    """Build a minimal mmCIF with an _atom_site loop. rows: (rec, elem, comp, asym, seq, x,y,z)."""
+    header = [
+        "data_TEST", "#", "loop_",
+        "_atom_site.group_PDB", "_atom_site.id", "_atom_site.type_symbol",
+        "_atom_site.label_comp_id", "_atom_site.label_asym_id", "_atom_site.label_seq_id",
+        "_atom_site.Cartn_x", "_atom_site.Cartn_y", "_atom_site.Cartn_z",
+    ]
+    body = [f"{rec} {i + 1} {el} {comp} {asym} {seq} {x:.3f} {y:.3f} {z:.3f}"
+            for i, (rec, el, comp, asym, seq, x, y, z) in enumerate(rows)]
+    return "\n".join(header + body + ["#", ""])
+
+
+def test_cif_format_is_parsed_and_buried_ligand_selected():
+    """select_ligand must work on mmCIF (the format RCSB serves for cif-only entries) and still
+    pick the buried drug-like ligand over a larger far additive."""
+    rows = []
+    s = 0
+    for i in (-1, 0, 1):
+        for j in (-1, 0, 1):
+            for k in (-1, 0, 1):
+                rows.append(("ATOM", "C", "ALA", "A", s, i * 2.0, j * 2.0, k * 2.0)); s += 1
+    rows += [("HETATM", "C", "LIG", "B", 900, 0.1 * t, 0.0, 0.0) for t in range(12)]   # buried
+    rows += [("HETATM", "C", "BIG", "C", 901, 50 + 0.1 * t, 50.0, 50.0) for t in range(30)]  # far
+    lig = bs.select_ligand(_cif(rows))
+    assert lig is not None and lig["resName"] == "LIG", lig
+    assert lig["contacts"] > 0 and lig["heavyAtoms"] == 12
+    assert any(a["resName"] == "BIG" for a in lig["alternatives"])
+
+
+def test_format_autodetect_routes_cif_vs_pdb():
+    cif = _cif([("HETATM", "C", "LIG", "A", 1, 0.0, 0.0, 0.0)])
+    g_cif, _, _, _ = bs._parse_structure(cif)
+    assert ("LIG", "A", "1") in g_cif  # routed to the mmCIF parser
+    pdb = make_pdb(_hetatms("LIG", "A", 3, (0.0, 0.0, 0.0), serial0=1))
+    g_pdb, _, _, _ = bs._parse_structure(pdb)
+    assert any(k[0] == "LIG" for k in g_pdb)  # routed to the fixed-column PDB parser
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:

@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
@@ -62,9 +63,24 @@ CONTACT_CUTOFF = 4.5  # Å — a ligand atom within this of any protein atom cou
 
 
 def fetch_pdb_text(pid: str) -> str:
-    req = urllib.request.Request(f"{RCSB}/{pid}.pdb", headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=40) as r:
-        return r.read().decode("utf-8", "replace")
+    """Fetch a structure as text, preferring the legacy .pdb file but falling back to mmCIF
+    (.cif) — many modern/large RCSB entries are served only as mmCIF, so a .pdb-only fetch
+    would 404 on them. The parser (select_ligand) auto-detects the format."""
+    last = None
+    for ext in ("pdb", "cif"):
+        url = f"{RCSB}/{pid}.{ext}"
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=40) as r:
+                txt = r.read().decode("utf-8", "replace")
+            if txt.strip():
+                return txt
+        except urllib.error.HTTPError as e:
+            last = e
+            if e.code == 404:
+                continue  # no legacy .pdb for this entry — try mmCIF
+            raise
+    raise urllib.error.URLError(f"no .pdb or .cif structure available for {pid} ({last})")
 
 
 def resolve_pdb_for_target(target: str) -> str | None:
@@ -76,8 +92,88 @@ def resolve_pdb_for_target(target: str) -> str | None:
     return best["id"] if best else None
 
 
-def _parse_structure(pdb_text: str):
-    """Split a PDB into (groups, names, heavy_counts, protein_atoms).
+def _parse_structure(text: str):
+    """Parse a structure into (groups, names, heavy_counts, protein_atoms). Picks the parser
+    by format: mmCIF when an `_atom_site` loop is present (RCSB serves .cif for entries with no
+    legacy .pdb), else fixed-column PDB. Both return the identical shape so select_ligand and
+    box() — and therefore verify.py's recompute — behave the same on either format."""
+    if "_atom_site." in text:
+        return _parse_cif(text)
+    return _parse_pdb(text)
+
+
+def _parse_cif(text: str):
+    """Parse atom coordinates from an mmCIF `_atom_site` loop. Same return shape as _parse_pdb.
+    Prefers auth_* identifiers (what PDB/PyMOL show) and falls back to label_* names."""
+    groups: dict[tuple, list[tuple[float, float, float]]] = {}
+    names: dict[tuple, str] = {}
+    heavy: dict[tuple, int] = {}
+    protein: list[tuple[float, float, float]] = []
+    lines = text.splitlines()
+    i, n = 0, len(lines)
+    while i < n:
+        if lines[i].strip() != "loop_":
+            i += 1
+            continue
+        cols, j = [], i + 1
+        while j < n and lines[j].lstrip().startswith("_"):
+            cols.append(lines[j].strip())
+            j += 1
+        if not any(c.startswith("_atom_site.") for c in cols):
+            i = j
+            continue
+        idx = {c: k for k, c in enumerate(cols)}
+
+        def col(*names_):
+            for nm in names_:
+                if "_atom_site." + nm in idx:
+                    return idx["_atom_site." + nm]
+            return None
+
+        ci_group, ci_el = col("group_PDB"), col("type_symbol")
+        ci_comp = col("auth_comp_id", "label_comp_id")
+        ci_asym = col("auth_asym_id", "label_asym_id")
+        ci_seq = col("auth_seq_id", "label_seq_id")
+        ci_x, ci_y, ci_z = col("Cartn_x"), col("Cartn_y"), col("Cartn_z")
+        ncol = len(cols)
+        if None in (ci_comp, ci_x, ci_y, ci_z):
+            i = j
+            continue
+        k = j
+        while k < n:
+            s = lines[k].strip()
+            if not s or s[0] == "#" or s.startswith(("loop_", "_", "data_")):
+                break
+            parts = lines[k].split()
+            if len(parts) < ncol:
+                k += 1
+                continue
+            try:
+                x, y, z = float(parts[ci_x]), float(parts[ci_y]), float(parts[ci_z])
+            except (ValueError, IndexError):
+                k += 1
+                continue
+            rec = parts[ci_group] if ci_group is not None else "ATOM"
+            elem = parts[ci_el].upper() if ci_el is not None else ""
+            if rec == "ATOM":
+                if elem not in ("H", "D"):
+                    protein.append((x, y, z))
+            elif rec == "HETATM":
+                res = parts[ci_comp]
+                if res not in IGNORE:
+                    key = (res, parts[ci_asym] if ci_asym is not None else "",
+                           parts[ci_seq] if ci_seq is not None else "")
+                    groups.setdefault(key, []).append((x, y, z))
+                    names[key] = res
+                    if elem not in ("H", "D"):
+                        heavy[key] = heavy.get(key, 0) + 1
+            k += 1
+        i = k
+    return groups, names, heavy, protein
+
+
+def _parse_pdb(pdb_text: str):
+    """Split a fixed-column PDB into (groups, names, heavy_counts, protein_atoms).
 
     groups:        {(res,chain,seq): [(x,y,z), ...]}  — ALL atoms (box geometry unchanged)
     heavy_counts:  {(res,chain,seq): int}             — non-H atom count (drug-like window)
