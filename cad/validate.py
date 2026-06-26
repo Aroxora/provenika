@@ -176,10 +176,12 @@ def _redock_rmsd(ref_pdb: str, docked_pdbqt: str, out_dir: str):
     first (consistent Open Babel bond perception, which RDKit's distance-based PDB perception
     bungles). Returns (rmsd, None) or (None, reason). Never fabricates a number."""
     import re
+    # Heavy-atom RMSD is the redocking standard (H positions are noise and their count differs
+    # between a crystal extract and a Meeko-prepped ligand) — `-d` deletes hydrogens from both.
     ref_sdf = os.path.join(out_dir, "ref.sdf")
     docked_sdf = os.path.join(out_dir, "docked_best.sdf")
-    subprocess.run(["obabel", ref_pdb, "-O", ref_sdf], capture_output=True, text=True)
-    subprocess.run(["obabel", docked_pdbqt, "-O", docked_sdf, "-f", "1", "-l", "1"],
+    subprocess.run(["obabel", ref_pdb, "-O", ref_sdf, "-d"], capture_output=True, text=True)
+    subprocess.run(["obabel", docked_pdbqt, "-O", docked_sdf, "-d", "-f", "1", "-l", "1"],
                    capture_output=True, text=True)
     if not (os.path.exists(ref_sdf) and os.path.exists(docked_sdf)):
         return None, "could not convert reference/docked pose to SDF"

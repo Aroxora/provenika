@@ -96,6 +96,16 @@ class Figure:
                 f"Figure {self.name!r}: origin must be {FETCHED!r} or {COMPUTED!r} "
                 f"(a value may never originate from a model), got {self.origin!r}"
             )
+        # Stronger write-time guarantee: a value at write time still can't be PROVEN to come from
+        # its source (only verify.py's live re-fetch can do that), but every figure must at least
+        # carry a re-verification reference — a verify URL (fetched) or a formula/source citation
+        # (computed) — so nothing is recorded that a human or verify.py cannot independently re-check.
+        if not self.verify_url:
+            raise ValueError(
+                f"Figure {self.name!r}: a {self.origin} value must carry a verify_url "
+                "(re-verification URL for fetched, formula/source citation for computed) — "
+                "an un-re-checkable figure is not auditable."
+            )
 
 
 @dataclass

@@ -407,12 +407,14 @@ def verify_manifest(run_dir: "Path", checks: list) -> None:
     for name, f in figs.items():
         try:
             prov.Figure(name=f.get("name"), value=f.get("value"),
-                        origin=f.get("origin", ""), source=f.get("source", ""))
+                        origin=f.get("origin", ""), source=f.get("source", ""),
+                        verify_url=f.get("verify_url", ""))
         except ValueError:
             bad.append(name)
     if bad:
-        checks.append(("manifest figure origins", FAIL,
-                       f"figures with an illegal (non fetched/computed) origin: {bad}", ""))
+        checks.append(("manifest figure provenance", FAIL,
+                       f"figures that fail provenance validation (illegal origin, or no re-verification "
+                       f"reference): {bad}", ""))
         return
 
     def fig(name):
@@ -607,13 +609,15 @@ def run(args) -> int:
     n_fail = sum(1 for _, s, _, _ in checks if s == FAIL)
     n_drift = sum(1 for _, s, _, _ in checks if s == DRIFT)
 
+    strict = getattr(args, "strict", False)
+    bad = bool(n_fail) or (strict and bool(n_drift))   # --strict: DRIFT is also a failure
     if args.json:
         print(json.dumps({
             "checks": [{"figure": f, "status": s, "note": n, "verify_url": u} for f, s, n, u in checks],
-            "fail": n_fail, "drift": n_drift, "ok": n_fail == 0,
+            "fail": n_fail, "drift": n_drift, "strict": strict, "ok": not bad,
             "target_evidence": target_evidence,
         }, indent=2))
-        return 1 if n_fail else 0
+        return 1 if bad else 0
 
     print("\n=== Provenance verification ===")
     print("Re-checking reported figures: dossier counts, and every shortlist hit's SMILES + QED + "
@@ -632,9 +636,13 @@ def run(args) -> int:
         print("⚠️  No target-specific figures in this run (no dossier/hits). Any deterministic "
               "artifact present reproduced exactly, but NOTHING target-derived was verified — "
               "this is not a clean bill of health for a target.")
+    elif n_drift and strict:
+        print(f"❌ --strict: {n_drift} figure(s) DRIFTed and strict mode treats any DRIFT as a "
+              f"failure (non-zero exit). Re-run the pipeline to refresh the saved values.")
     elif n_drift:
         print(f"✅ No FAILs. {n_drift} figure(s) DRIFTed within tolerance (max(2, 10%), EITHER "
-              f"direction — counts can also shrink) and still exit 0 — re-run to refresh.")
+              f"direction — counts can also shrink) and exit 0 — re-run to refresh, or use --strict "
+              f"for zero-tolerance (non-zero exit on any DRIFT).")
     else:
         print("✅ Every CHECKED figure reproduced exactly from its live source.")
     print("Scope: dossier ChEMBL/UniProt counts + EVERY shortlist hit's SMILES, QED, potency "
@@ -644,7 +652,7 @@ def run(args) -> int:
           "change in a living DB) exits 0 — shown, not silent.")
     print("This checks numbers are re-derivable/untampered — not that a molecule works, nor that "
           "the query design is correct. Triage ≠ validation. Not medical advice.")
-    return 1 if n_fail else 0
+    return 1 if bad else 0
 
 
 def main(argv=None) -> int:
@@ -653,6 +661,9 @@ def main(argv=None) -> int:
     g.add_argument("--run", help="A run directory from cad/run_pipeline.py (dossier.json, hits.csv, cost_benefit.json).")
     g.add_argument("--target", help="No saved run — just fetch-and-cite the headline figures live.")
     p.add_argument("--json", action="store_true", help="Emit machine-readable JSON.")
+    p.add_argument("--strict", action="store_true",
+                   help="Zero-tolerance: treat any DRIFT (within-tolerance change) as a failure "
+                        "(non-zero exit). Default lets legitimate live-database growth pass.")
     args = p.parse_args(argv)
     try:
         return run(args)

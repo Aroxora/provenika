@@ -28,11 +28,12 @@ def _build(tmp: Path, pdb_count=354, prob=0.051):
     (tmp / "cost_benefit.json").write_text(json.dumps({
         "probability_of_approval": prob, "benefit_cost_ratio": 1.03,
     }))
+    u = "https://example.org/verify"   # every figure must carry a re-verification reference
     m = prov.Manifest("EGFR", stamp="2026-06-26")
-    m.fetched("uniprot_accession", "P00533", "uniprot")
-    m.fetched("pdb_structure_count", pdb_count, "uniprot")
-    m.fetched("chembl_potent_activity_records", 21342, "chembl")
-    m.fetched("chembl_known_mechanism_drugs", 49, "chembl")
+    m.fetched("uniprot_accession", "P00533", "uniprot", u)
+    m.fetched("pdb_structure_count", pdb_count, "uniprot", u)
+    m.fetched("chembl_potent_activity_records", 21342, "chembl", u)
+    m.fetched("chembl_known_mechanism_drugs", 49, "chembl", u)
     m.computed("probability_of_approval", prob, "ref")
     m.computed("benefit_cost_ratio", 1.03, "ref")
     m.write(tmp)
@@ -78,7 +79,7 @@ def test_illegal_origin_fails():
         (tmp / "provenance.json").write_text(json.dumps(man))
         checks = []
         v.verify_manifest(tmp, checks)
-        assert _status(checks, "figure origins") == FAIL, checks
+        assert _status(checks, "figure provenance") == FAIL, checks
 
 
 def test_missing_manifest_skips():
