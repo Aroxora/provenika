@@ -1,0 +1,10 @@
+{
+  "name": "Provenika redocking starter benchmark (oncology co-crystal complexes)",
+  "note": "EDITABLE STARTER SET for redocking validation. Each entry is a PDB ID and the 3-letter PDB chemical-component ID of its co-crystallised inhibitor. Verify and extend before citing any success rate — this is a seed, not a validated benchmark. Requires AutoDock Vina + Open Babel to run (cad/validate.py --redock). Research only; not medical advice.",
+  "rmsd_success_threshold_A": 2.0,
+  "complexes": [
+    {"pdb": "1M17", "ligand": "AQ4", "target": "EGFR", "drug": "erlotinib"},
+    {"pdb": "1IEP", "ligand": "STI", "target": "ABL1", "drug": "imatinib"},
+    {"pdb": "3POZ", "ligand": "03P", "target": "EGFR", "drug": "TAK-285"}
+  ]
+}

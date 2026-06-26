@@ -89,6 +89,8 @@ jobs:
         run: python3 cad/test_binding_site.py
       - name: Docking blind-box uses a real Vina box, not the unsupported --autobox flag (offline)
         run: python3 cad/test_dock.py
+      - name: Validation harness metric math — ROC AUC / enrichment / pose-RMSD (offline)
+        run: python3 cad/validate.py --self-test
       - name: Outreach agent E2E + edge cases (offline, no network, never sends)
         run: python3 outreach/test_e2e.py
       - name: Verify a deterministic artifact end-to-end (offline)
