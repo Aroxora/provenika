@@ -4,27 +4,27 @@
     {
       "pdb": "1M17",
       "ligand": "AQ4",
-      "rmsd": 7.855,
-      "correct_pose": false
+      "rmsd": 1.206,
+      "correct_pose": true
     },
     {
       "pdb": "1IEP",
       "ligand": "STI",
-      "error": "obrms produced no RMSD (RMSD /tmp/validation_final/1IEP/ref_STI.pdb:= inf)"
+      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
     },
     {
       "pdb": "3POZ",
       "ligand": "03P",
-      "rmsd": 1.154,
+      "rmsd": 1.134,
       "correct_pose": true
     }
   ],
   "summary": {
     "complexes": 2,
-    "mean_rmsd": 4.505,
-    "median_rmsd": 7.855,
-    "success_rate": 0.5,
-    "success_count": 1,
+    "mean_rmsd": 1.17,
+    "median_rmsd": 1.206,
+    "success_rate": 1.0,
+    "success_count": 2,
     "threshold_A": 2.0
   },
   "skipped": 1,
