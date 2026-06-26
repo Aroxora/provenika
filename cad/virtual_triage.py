@@ -103,11 +103,15 @@ def resolve_target(name: str) -> dict | None:
 
 def fetch_actives(target_chembl_id: str, min_pchembl: float, scan: int,
                   budget_s: float = 40.0) -> dict[str, dict]:
-    """Fetch the best (highest pChEMBL) potency activity per molecule for a target.
+    """Fetch the best (highest pChEMBL) potency activity per molecule for a target, scanning
+    ChEMBL activities ORDERED by descending pChEMBL — so a bounded or budget-truncated scan keeps
+    the genuinely most-potent records (the top of the ranking), not an arbitrary API-order slice.
+    Pools IC50/Ki/Kd/EC50 (POTENCY_TYPES) onto one pChEMBL axis and keeps the single most favorable
+    value per molecule (no assay-type/validity/confidence weighting).
 
     Returns {molecule_chembl_id: {pchembl, type}}. Bounded by a wall-clock budget so a slow
     ChEMBL can't make this paginate for minutes — it stops early with partial results (noted)
-    rather than hanging.
+    rather than hanging, and stops at the pChEMBL floor since the rest are necessarily below it.
     """
     best: dict[str, dict] = {}
     offset = 0
@@ -125,6 +129,7 @@ def fetch_actives(target_chembl_id: str, min_pchembl: float, scan: int,
             {
                 "target_chembl_id": target_chembl_id,
                 "pchembl_value__isnull": "false",
+                "order_by": "-pchembl_value",  # most potent first → a partial scan still keeps the best
                 "limit": min(page, scan - fetched),
                 "offset": offset,
             },
@@ -132,24 +137,26 @@ def fetch_actives(target_chembl_id: str, min_pchembl: float, scan: int,
         acts = data.get("activities", [])
         if not acts:
             break
+        stop = False
         for a in acts:
-            mol = a.get("molecule_chembl_id")
             pv = a.get("pchembl_value")
-            stype = a.get("standard_type")
-            if not mol or pv is None or stype not in POTENCY_TYPES:
-                continue
             try:
                 pv = float(pv)
             except (TypeError, ValueError):
                 continue
             if pv < min_pchembl:
+                stop = True  # records are sorted by descending pChEMBL → the rest are below the floor
+                break
+            mol = a.get("molecule_chembl_id")
+            stype = a.get("standard_type")
+            if not mol or stype not in POTENCY_TYPES:
                 continue
             cur = best.get(mol)
             if cur is None or pv > cur["pchembl"]:
                 best[mol] = {"pchembl": pv, "type": stype}
         fetched += len(acts)
         meta = data.get("page_meta", {})
-        if not meta.get("next"):
+        if stop or not meta.get("next"):
             break
         offset += len(acts)
     return best
