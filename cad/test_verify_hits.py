@@ -100,6 +100,37 @@ def test_potency_skipped_without_target_id():
         assert _status(checks, "potency re-fetched") is None, checks
 
 
+def _hits_csv_desc(tmp: Path, mw="360.21", alogp="4.15", tpsa="56.27") -> Path:
+    p = tmp / "hits.csv"
+    with p.open("w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=["chembl_id", "smiles", "qed", "best_pchembl", "ro5_violations",
+                                           "score", "similarity", "mw", "alogp", "tpsa"])
+        w.writeheader()
+        w.writerow({"chembl_id": "CHEMBL29197", "smiles": "CCO", "qed": "0.50", "best_pchembl": "8.0",
+                    "ro5_violations": "0", "score": "0.5", "similarity": "", "mw": mw, "alogp": alogp, "tpsa": tpsa})
+    return p
+
+
+def test_descriptors_match_passes():
+    v._chembl_canonical_smiles = lambda cid: "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    v._chembl_descriptors = lambda cid: {"mw": 360.21, "alogp": 4.15, "tpsa": 56.27}
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv_desc(Path(d)), checks)
+        assert _status(checks, "descriptors re-fetched") == v.PASS, checks
+
+
+def test_fabricated_descriptor_fails():
+    v._chembl_canonical_smiles = lambda cid: "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    v._chembl_descriptors = lambda cid: {"mw": 999.0, "alogp": 4.15, "tpsa": 56.27}   # mw fabricated
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv_desc(Path(d)), checks)
+        assert _status(checks, "descriptors re-fetched") == v.FAIL, checks
+
+
 def main():
     tests = [val for k, val in sorted(globals().items()) if k.startswith("test_") and callable(val)]
     for t in tests:
