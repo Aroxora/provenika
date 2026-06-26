@@ -244,7 +244,7 @@ def main(argv=None) -> int:
             " target; it does not 'know' this target. Treat as a transparent planning heuristic._",
             f"- P(approval) from {cb['phase']}: {cb['probability_of_approval']*100:.1f}%",
             f"- Expected remaining cost: ${cb['expected_remaining_cost_musd']:,.0f}M over {cb['expected_time_to_market_years']} yr",
-            f"- Risk-adjusted revenue: ${cb['risk_adjusted_revenue_musd']:,.0f}M; benefit/cost {cb['benefit_cost_ratio']:.2f}",
+            f"- Risk-adjusted gross profit: ${cb['risk_adjusted_gross_profit_musd']:,.0f}M; benefit/cost {cb['benefit_cost_ratio']:.2f}",
             f"- **{cb['verdict']}**",
             "",
         ]

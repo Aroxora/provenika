@@ -229,7 +229,7 @@ def verify_cost_benefit(cb: dict, checks: list) -> None:
         return
 
     for key in ("probability_of_approval", "expected_remaining_cost_musd",
-                "benefit_cost_ratio", "risk_adjusted_revenue_musd", "verdict"):
+                "benefit_cost_ratio", "risk_adjusted_gross_profit_musd", "verdict"):
         if cb.get(key) != fresh.get(key):
             checks.append((f"cost_benefit.{key}", FAIL,
                            f"saved {cb.get(key)} != recomputed {fresh.get(key)} "

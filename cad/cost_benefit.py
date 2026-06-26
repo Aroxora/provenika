@@ -115,7 +115,7 @@ def analyze(modality: str, phase: str, incidence: int, price: float,
         "expected_remaining_cost_musd": exp_cost,
         "expected_time_to_market_years": exp_time,
         "peak_annual_revenue_musd": round(peak_annual_rev / 1e6, 1),
-        "risk_adjusted_revenue_musd": round(risk_adj_rev / 1e6, 1),
+        "risk_adjusted_gross_profit_musd": round(risk_adj_rev / 1e6, 1),
         "benefit_cost_ratio": round(bcr, 2),
         "verdict": verdict,
         "assumptions": {
@@ -148,9 +148,8 @@ def run(args) -> int:
     print(f"  Expected time to market:   {res['expected_time_to_market_years']} years")
     print(f"  Peak annual revenue:       ${res['peak_annual_revenue_musd']:,.0f}M  "
           f"({args.incidence:,} pts × ${args.price:,.0f} × {args.penetration:.0%})")
-    print(f"  Risk-adj. gross profit:    ${res['risk_adjusted_revenue_musd']:,.0f}M  "
-          f"(LOA × peak × {args.years_at_peak} yr × 80% margin — the 'revenue' JSON key is this "
-          f"GROSS-PROFIT figure, not revenue)")
+    print(f"  Risk-adj. gross profit:    ${res['risk_adjusted_gross_profit_musd']:,.0f}M  "
+          f"(LOA × peak × {args.years_at_peak} yr × 80% margin; JSON key: risk_adjusted_gross_profit_musd)")
     print(f"  Benefit/cost ratio:        {res['benefit_cost_ratio']:.2f}  "
           f"(undiscounted; benefit is LOA-weighted but cost is not — asymmetric, not a true rNPV)")
     print(f"\n  ➤ {res['verdict']}  (verdict bands BCR 5/1.5/0.8 are unsourced heuristics)\n")
