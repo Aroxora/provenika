@@ -241,6 +241,74 @@ def verify_cost_benefit(cb: dict, checks: list) -> None:
                    prov.source_url("benchmarks", "entry", None)))
 
 
+def verify_manifest(run_dir: "Path", checks: list) -> None:
+    """Cross-check provenance.json against the artifacts it describes — it was previously never
+    read back, so a manifest edited in isolation went uncaught. Two checks: (1) every figure must
+    re-validate as a legal origin (fetched/computed, never model) via Figure.__post_init__; and
+    (2) figures that mirror a value in dossier.json / cost_benefit.json / binding_site.json must
+    equal it. FAIL on any disagreement."""
+    p = run_dir / "provenance.json"
+    if not p.exists():
+        checks.append(("provenance.json present", SKIP, "no manifest to cross-check", ""))
+        return
+    try:
+        man = json.loads(p.read_text())
+        figs = {f["name"]: f for f in man.get("figures", [])}
+    except (json.JSONDecodeError, OSError, KeyError, TypeError) as e:
+        checks.append(("provenance.json well-formed", FAIL, f"could not parse manifest: {e}", ""))
+        return
+
+    bad = []
+    for name, f in figs.items():
+        try:
+            prov.Figure(name=f.get("name"), value=f.get("value"),
+                        origin=f.get("origin", ""), source=f.get("source", ""))
+        except ValueError:
+            bad.append(name)
+    if bad:
+        checks.append(("manifest figure origins", FAIL,
+                       f"figures with an illegal (non fetched/computed) origin: {bad}", ""))
+        return
+
+    def fig(name):
+        f = figs.get(name)
+        return f.get("value") if f else None
+
+    mism = []
+    dossier_p = run_dir / "dossier.json"
+    if dossier_p.exists():
+        d = json.loads(dossier_p.read_text())
+        u, c = d.get("uniprot") or {}, d.get("chembl") or {}
+        drugs = c.get("known_mechanism_drugs")
+        for fname, actual in (
+            ("uniprot_accession", u.get("accession")),
+            ("pdb_structure_count", u.get("pdb_count")),
+            ("chembl_potent_activity_records", c.get("potent_activity_records")),
+            ("chembl_known_mechanism_drugs", len(drugs) if isinstance(drugs, list) else None),
+        ):
+            if fname in figs and actual is not None and fig(fname) != actual:
+                mism.append(f"{fname}: manifest {fig(fname)} != artifact {actual}")
+    cb_p = run_dir / "cost_benefit.json"
+    if cb_p.exists():
+        cb = json.loads(cb_p.read_text())
+        for fname in ("probability_of_approval", "benefit_cost_ratio"):
+            if fname in figs and fig(fname) != cb.get(fname):
+                mism.append(f"{fname}: manifest {fig(fname)} != artifact {cb.get(fname)}")
+    bs_p = run_dir / "binding_site.json"
+    if bs_p.exists() and "docking_box" in figs:
+        bs = json.loads(bs_p.read_text())
+        box = fig("docking_box") or {}
+        if box.get("center") != bs.get("center") or box.get("size") != bs.get("size"):
+            mism.append("docking_box: manifest center/size != binding_site.json")
+
+    if mism:
+        checks.append(("provenance.json matches artifacts", FAIL,
+                       "manifest disagrees with the artifacts (edited in isolation?): " + "; ".join(mism), ""))
+    else:
+        checks.append((f"provenance.json cross-check ({len(figs)} figures)", PASS,
+                       "every manifest figure has a legal origin and mirrors its artifact value", ""))
+
+
 def verify_binding_site(bs: dict, checks: list) -> None:
     """Recompute the docking box from the same PDB's co-crystal ligand envelope; a
     deterministic 'computed' figure, so it must reproduce EXACTLY (like cost_benefit).
@@ -376,6 +444,8 @@ def run(args) -> int:
         cb_p = run_dir / "cost_benefit.json"
         if cb_p.exists():
             verify_cost_benefit(json.loads(cb_p.read_text()), checks)
+        # Cross-check the provenance manifest against the artifacts it claims to describe.
+        verify_manifest(run_dir, checks)
 
         # A run with NO target-specific evidence (no dossier, no hits) must never earn a
         # green "every figure verified" banner — that would bless an unresolved/fictional
