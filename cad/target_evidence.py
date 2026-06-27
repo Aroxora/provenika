@@ -71,29 +71,55 @@ def associations(ensembl_id: str, size: int = 6) -> list[dict]:
     return out
 
 
+CANCER_TERMS = ("cancer", "carcinoma", "tumor", "tumour", "neoplasm", "lymphoma", "leukemia",
+                "leukaemia", "melanoma", "sarcoma", "glioma", "glioblastoma", "myeloma", "blastoma",
+                "adenocarcinoma", "malignant", "oncocytoma", "mesothelioma")
+
+
+def is_cancer(name: str | None) -> bool:
+    n = (name or "").lower()
+    return any(t in n for t in CANCER_TERMS)
+
+
 def genetic_support_label(rows: list[dict]) -> str:
-    """A conservative read of the strongest genetic-association score across the target's top diseases."""
+    """Conservative read of the strongest genetic-association score across the given diseases."""
     g = [r["genetic_score"] for r in rows if r.get("genetic_score") is not None]
     best = max(g) if g else None
     if best is None:
         return "no genetic-association evidence in the top associations (not evidence against the target)"
-    if best >= 0.5:
-        return f"strong human genetic support (best genetic-evidence score {best:.2f}) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)"
-    if best >= 0.2:
-        return f"moderate human genetic support (best genetic-evidence score {best:.2f})"
-    return f"weak human genetic support (best genetic-evidence score {best:.2f})"
+    band = "strong" if best >= 0.5 else "moderate" if best >= 0.2 else "weak"
+    tail = " — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)" if best >= 0.5 else ""
+    return f"{band} human genetic support (best genetic-evidence score {best:.2f}){tail}"
 
 
-def evidence(symbol: str, size: int = 6) -> dict:
+def oncology_genetic_readout(rows: list[dict]) -> str:
+    """Genetic support scoped to the CANCER associations (this is an oncology tool — a high genetic
+    score for a non-cancer Mendelian disease is not the relevant signal). Names the cancer it refers
+    to; falls back honestly when no cancer association carries genetic evidence."""
+    onco = [(r["genetic_score"], r["disease"]) for r in rows
+            if is_cancer(r.get("disease")) and r.get("genetic_score") is not None]
+    if not onco:
+        if any(is_cancer(r.get("disease")) for r in rows):
+            return ("the target's top cancer associations carry no GENETIC-association evidence here "
+                    "(often somatic-driven) — not evidence against the target")
+        return "no cancer association in the top results (verify the target–disease link directly)"
+    best, disease = max(onco, key=lambda x: x[0])
+    band = "strong" if best >= 0.5 else "moderate" if best >= 0.2 else "weak"
+    tail = " — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)" if best >= 0.5 else ""
+    return f"{band} human genetic support for {disease} (genetic-evidence score {best:.2f}){tail}"
+
+
+def evidence(symbol: str, size: int = 15) -> dict:
     res = resolve_ensembl(symbol)
     if not res:
         return {"target": symbol, "error": "not found in Open Targets"}
     ens, name = res
     rows = associations(ens, size)
+    onco = [r for r in rows if is_cancer(r.get("disease"))]
     return {
         "target": symbol, "ensembl_id": ens, "approved_symbol": name,
-        "top_associations": rows,
-        "genetic_support": genetic_support_label(rows),
+        "top_associations": (onco or rows)[:6],     # show the cancer associations (an oncology tool)
+        "genetic_support": oncology_genetic_readout(rows),
         "source": "Open Targets Platform (platform.opentargets.org)",
         "url": f"https://platform.opentargets.org/target/{ens}",
         "disclaimer": "Open Targets aggregates evidence; scores are heuristic, not outcome predictions. "

@@ -5,6 +5,8 @@ interface Entry {
   target: string;
   context: string;
   note: string;
+  genetic: string;
+  geneticStrong: boolean;
 }
 
 const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio';
@@ -30,6 +32,9 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio'
         <div class="entry">
           <h3>{{ e.target }}</h3>
           <div class="ctx muted">{{ e.context }}</div>
+          <div class="genetic" [class.strong]="e.geneticStrong">
+            <span class="gtag" [class.strong]="e.geneticStrong">Target validation</span>{{ e.genetic }}
+          </div>
           <p class="note">{{ e.note }}</p>
           <div class="links">
             <a [href]="repo + '/' + slug(e.target) + '/VALIDATION-REQUEST.md'" target="_blank" rel="noopener" class="link primary">Validation request →</a>
@@ -63,6 +68,10 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio'
     .entry { background:var(--bg-elev); border:1px solid #1c2738; border-radius:12px; padding:.9rem 1rem; }
     .entry h3 { margin:0 0 .15rem; font-size:1.2rem; }
     .ctx { font-size:.82rem; margin-bottom:.45rem; }
+    .genetic { font-size:.82rem; line-height:1.4; margin:0 0 .5rem; color:var(--text-dim); display:flex; gap:.4rem; flex-wrap:wrap; align-items:baseline; }
+    .gtag { font-size:.6rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:.1rem .35rem;
+      border-radius:4px; background:#281a10; color:#f0a868; border:1px solid #5e431f; }
+    .gtag.strong { background:#11231c; color:var(--accent); border:1px solid #1f5e44; }
     .note { font-size:.9rem; line-height:1.45; margin:0 0 .6rem; color:var(--text); }
     .links { display:flex; gap:.5rem; flex-wrap:wrap; }
     .link { font-size:.85rem; padding:.3rem .6rem; border-radius:7px; border:1px solid #24344a;
@@ -81,11 +90,15 @@ export class Portfolio {
       target: 'BTK',
       context: 'CLL / lymphoma — the ibrutinib / acalabrutinib target',
       note: 'A prioritized shortlist of potent BTK ligands from public ChEMBL bioactivity, with developability flags and a full experimental-validation request.',
+      genetic: 'Cancer link is somatic-driven — no germline genetic signal (Open Targets)',
+      geneticStrong: false,
     },
     {
       target: 'BRAF',
       context: 'Melanoma / colorectal — the V600E driver (vemurafenib / dabrafenib class)',
       note: 'A prioritized shortlist of potent BRAF ligands from public ChEMBL bioactivity, with developability flags and a full experimental-validation request.',
+      genetic: 'Strong human genetic support for melanoma (0.70, Open Targets)',
+      geneticStrong: true,
     },
   ];
 

@@ -16,7 +16,7 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 ## Independent target validation (Open Targets) — EGFR
 
-**Read-out:** strong human genetic support (best genetic-evidence score 0.82) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015).
+**Read-out:** strong human genetic support for head and neck squamous cell carcinoma (genetic-evidence score 0.82) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015).
 
 | Disease | Overall | Genetic | Somatic | Known-drug | evidence |
 |---|---|---|---|---|---|

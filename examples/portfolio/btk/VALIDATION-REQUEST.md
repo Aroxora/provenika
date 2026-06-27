@@ -16,16 +16,16 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 ## Independent target validation (Open Targets) — BTK
 
-**Read-out:** strong human genetic support (best genetic-evidence score 0.95) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015).
+**Read-out:** weak human genetic support for neoplasm (genetic-evidence score 0.20).
 
 | Disease | Overall | Genetic | Somatic | Known-drug | evidence |
 |---|---|---|---|---|---|
-| X-linked agammaglobulinemia | 0.846 | 0.949 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/Orphanet_47) |
-| isolated growth hormone deficiency type III | 0.733 | 0.94 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0010615) |
-| Non-acquired isolated growth hormone deficiency | 0.73 | 0.94 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/Orphanet_631) |
 | B-cell chronic lymphocytic leukemia | 0.719 | — | 0.608 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0004948) |
-| Bruton-type agammaglobulinemia | 0.698 | 0.608 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0010421) |
 | mantle cell lymphoma | 0.693 | — | 0.456 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018876) |
+| neoplasm | 0.593 | 0.195 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0005070) |
+| non-Hodgkin lymphoma | 0.544 | — | 0.397 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018908) |
+| diffuse large B-cell lymphoma | 0.526 | — | 0.529 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018905) |
+| lymphoplasmacytic lymphoma | 0.473 | — | 0.456 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0000432) |
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000010671). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
