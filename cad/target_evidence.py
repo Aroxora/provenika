@@ -65,7 +65,10 @@ def associations(ensembl_id: str, size: int = 6) -> list[dict]:
             "overall_score": round(r.get("score", 0), 3),
             "genetic_score": dts.get("genetic_association"),
             "somatic_score": dts.get("somatic_mutation"),
-            "known_drug_score": dts.get("known_drug"),
+            # Clinical/known-drug precedent. Open Targets v4 reports this datatype as `clinical`
+            # (it folded the older `known_drug`); fall back so this column is actually populated.
+            "known_drug_score": dts.get("known_drug") if dts.get("known_drug") is not None
+            else dts.get("clinical"),
             "url": f"https://platform.opentargets.org/evidence/{ensembl_id}/{(r.get('disease') or {}).get('id')}",
         })
     return out

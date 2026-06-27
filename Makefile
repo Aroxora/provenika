@@ -9,7 +9,7 @@ OUT    ?= runs/$(shell printf '%s' "$(TARGET)" | tr '[:upper:]' '[:lower:]')
 PY     ?= python3
 
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-docking build verify pipeline example dock-check redock redock-starter test smoke readme clean
+.PHONY: help setup setup-docking build verify pipeline example panel dock-check redock redock-starter test smoke readme clean
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -36,6 +36,9 @@ pipeline:  ## Run the full pipeline for TARGET into OUT, then re-prove every fig
 
 example: pipeline  ## Alias for `pipeline`
 
+panel:  ## Rank an oncogene panel by Open Targets cancer genetic support (live → examples/target-panel/)
+	$(PY) cad/target_panel.py --out examples/target-panel
+
 dock-check:  ## Report the full docking stack (Vina + Open Babel + Meeko + pdb2pqr)
 	$(PY) cad/dock.py --check
 
@@ -59,6 +62,7 @@ test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) cad/test_news_update.py
 	$(PY) cad/test_validation_package.py
 	$(PY) cad/test_target_evidence.py
+	$(PY) cad/test_target_panel.py
 	$(PY) cad/test_cheminformatics.py
 	$(PY) cad/test_no_rdkit.py
 	$(PY) cad/test_degradation.py
