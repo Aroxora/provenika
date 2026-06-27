@@ -1,88 +1,86 @@
 #!/usr/bin/env python3
 """
-README generator — ENVIRONMENT-LIMITATIONS-only.
+README generator — "what the cloud cannot fix."
 
-By request, README.md lists ONLY the limitations imposed by the execution environment (this
-machine, or a cloud host such as AWS / Google Cloud / CI) and exactly what is needed to solve each.
-The scientific caveats live in docs/ and in each tool's --help; they are not repeated here.
+By request, README.md states which limitations remain even with full cloud (AWS) access, WHY compute
+cannot fix them, and WHAT is actually required to fix each. The infrastructure limitations (docking
+binaries, benchmark compute) were resolved on AWS and are noted at the end for the record.
 
 Edit the LIMITATIONS string below, then run `python3 cicd/generate_readme.py`, and commit both.
-Nothing parses the README programmatically (cicd/check_readme.sh keeps its own command list).
 """
 
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 
-LIMITATIONS = r"""# Provenika — Environment limitations & how to solve them
+LIMITATIONS = r"""# Provenika — what the cloud cannot fix (and what actually can)
 
 > ## ⚠️ Not for patient care
 > Provenika does not diagnose, treat, or advise on any patient, and neither does this review.
 > Nothing here is medical advice. A computational hit is a hypothesis for the wet lab, never
 > evidence a therapy works.
 
-Everything in this repo is implemented and unit-tested. The only things that cannot *run to
-completion* are gated on tools or compute absent from the current machine. Each limitation below is
-paired with exactly what is needed to solve it — on **this machine**, on **AWS**, on **Google
-Cloud**, or in **CI**.
+The **infrastructure** limitations are gone: given AWS, docking runs and the redocking benchmark
+regenerates (AutoDock Vina + Open Babel + Meeko + pdb2pqr on an EC2 instance — the committed result
+in [`examples/validation-redock/`](examples/validation-redock/) was produced there). But cloud
+compute buys *tooling and parallelism, not experimental truth.* The limitations below **cannot be
+fixed by AWS — or by any amount of compute.** Each says exactly what *is* required.
 
-> Scientific caveats live in `docs/` and each tool's `--help`.
+## 1. A docking score is not efficacy
 
-## 1. Docking cannot execute here — no AutoDock Vina / Open Babel / `obrms`
+**Why AWS can't fix it.** AutoDock Vina's ΔG is an approximate ranking aid, only weakly correlated
+with true binding affinity; redocking validates that a *known* pose reproduces, not that a *new*
+prediction is right. Running more docking on more cores just produces more approximate numbers.
+**What's required.** Wet-lab assays — biochemical and cellular potency — and even those don't settle
+it: in-vitro ≠ in-vivo ≠ clinical. Physics-based free-energy methods (FEP/MD) *can* run on AWS GPUs,
+but they are force-field-limited and need per-target experimental anchoring to be trusted.
 
-**What's blocked.** `cad/dock.py`, the batch-dock stage (`cad/batch_dock.py`, `run_pipeline
---dock-top-n`), and the redocking validation (`cad/validate.py --redock`). The wrappers are gated on
-the real binaries and **never fabricate a score**, so they currently SKIP. RDKit + Meeko + pdb2pqr
-(the pip half of the prep) ARE installed; only the Vina + Open Babel + `obrms` binaries are missing.
+## 2. Rediscovery, not discovery
 
-**Solve it — this machine (macOS):** Vina + Open Babel are not reliably pip/brew-installable, so use
-conda/micromamba:
-```bash
-micromamba create -p ./dockenv -c conda-forge vina openbabel
-export PATH=$PWD/dockenv/bin:$PATH
-pip install -r cad/requirements-docking.txt        # meeko + pdb2pqr
-python3 cad/dock.py --check                          # expect: Ready to dock (docking-grade prep)
-```
+**Why AWS can't fix it.** Triage ranks compounds ChEMBL has *already measured*; no amount of compute
+invents new chemical matter or measures a molecule no one has made.
+**What's required.** De-novo / generative design **with a validated evaluation harness**, then actual
+**synthesis and assay** of the proposed molecules. The bottleneck is the chemistry and the assay, not
+the GPU.
 
-**Solve it — AWS:** a CPU instance (docking is CPU-bound and parallelizes across cores, e.g.
-`c7i.4xlarge`) with Miniconda → the same conda + pip install, then `make redock`. Or wrap it as an
-**AWS Batch** job for fan-out.
+## 3. "Inactive" decoys are an assumption, not a fact
 
-**Solve it — Google Cloud:** a Compute Engine `c3-highcpu` VM (or **Cloud Batch**) with the identical
-setup; `make redock`.
+**Why AWS can't fix it.** The enrichment AUC labels property-matched decoys as inactive; compute
+cannot confirm that a molecule *doesn't* bind — absence of data is not evidence of inactivity.
+**What's required.** Experimentally-confirmed inactives, or curated assay sets (DUD-E / DEKOIS with
+their documented caveats). That is measured data, not cycles.
 
-**Solve it — CI:** add a `mamba-org/setup-micromamba` step installing `vina openbabel`, then run
-`python3 cad/validate.py --redock cad/validation_benchmark.json` (3-complex smoke). Gate the full
-benchmark behind `workflow_dispatch` (~20 min).
+## 4. Missing data — and third-party API latency
 
-## 2. The benchmark-scale redocking number can't be regenerated here
+**Why AWS can't fix it.** A sparsely-measured target stays sparse no matter how many instances you
+launch, and ChEMBL/UniProt/RCSB are EBI/RCSB public services with their own rate and latency limits —
+compute does not speed up someone else's API, it only hammers it.
+**What's required.** Someone to **measure** the missing bioactivity. Caching/mirroring mitigates the
+latency; it does not add a single data point that the public databases don't already hold.
 
-**What's blocked.** Reproducing the committed redocking result
-(`examples/validation-redock/batch_results.json`, 39 complexes) needs §1's stack.
+## 5. Allele-specific structures that don't exist yet
 
-**Solve it.** On any host from §1: `python3 examples/validation-redock/batch_redock.py` (runs in
-parallel, ~20 min), then commit the regenerated `batch_results.json`. `python3 cad/validate.py
---recheck <file>` re-derives the summary **offline**, so the committed number stays auditable
-anywhere.
+**Why AWS can't fix it.** No cloud conjures a co-crystal of a specific mutant (e.g. a resistance
+allele) that has never been solved; Provenika can only *flag* when the auto-picked structure is
+wild-type, not produce the mutant.
+**What's required.** An experimentally-determined holo structure of the mutant (X-ray / cryo-EM), or
+carefully-validated modeling that is then treated as a hypothesis, not an answer.
 
-## 3. Throughput is bounded by public-API latency + local core count
+## 6. The hard gap: a hit is a hypothesis, not a drug
 
-**What's slow.** The cheminformatics precompute (38 targets), the per-hit selectivity probe, and
-large enrichment/benchmark sweeps are bounded by ChEMBL round-trips and this machine's cores — fine
-for a few targets, slow at scale.
-
-**Solve it.** Run on a higher-core AWS/GCP instance (more parallel docks/requests), or an **AWS
-Batch / GCP Cloud Batch / Cloud Run** job for fan-out, and cache ChEMBL responses. No code change
-needed — `--no-selectivity` and `--scan` already bound the work.
-
-## 4. Outbound network access to the public databases is required
-
-**What's needed.** Outbound HTTPS to **ChEMBL** (`ebi.ac.uk`), **UniProt** (`rest.uniprot.org`),
-**RCSB PDB** (`rcsb.org`), and **AlphaFold** (`alphafold.ebi.ac.uk`). Present on this machine; a
-locked-down cloud host or CI runner must allow egress to those domains (or proxy them) — otherwise
-the pipeline degrades to a clearly-marked partial dossier rather than failing silently.
+**Why AWS can't fix it.** ADMET, toxicity, PK, efficacy, safety, and the clinic are wet-lab and human
+work. Scaling the cheap in-silico *front* of discovery never substitutes for experiment, and nothing
+here may direct care.
+**What's required.** In-vitro → in-vivo → clinical trials, run by qualified scientists and clinicians.
+Provenika's job ends at a ranked, cited, re-verifiable **hypothesis** handed to that process.
 
 ---
+
+**Resolved on AWS (for the record).** The two *infrastructure* limitations — the absent docking
+binaries and regenerating the 39-complex redocking benchmark — were solved by running on an EC2
+instance with the conda-forge Vina stack; executing it there also surfaced and fixed two real bugs
+(a missing `gemmi` dependency, and an all-chains reference-ligand extraction that inflated multi-copy
+RMSDs). Reproduce with `make setup-docking && make redock` on any Vina-equipped host.
 
 Developed by **[ErosolarAI](https://erosolarai.com)**. MIT — research and decision-support only; not
 a substitute for professional medical advice.
@@ -91,7 +89,7 @@ a substitute for professional medical advice.
 
 def main():
     (ROOT / "README.md").write_text(LIMITATIONS)
-    print("  README.md updated (environment-limitations-only)")
+    print("  README.md updated (what-the-cloud-cannot-fix)")
 
 
 if __name__ == "__main__":
