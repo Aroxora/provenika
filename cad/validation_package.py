@@ -111,10 +111,30 @@ def build(run: Path, top_n: int = 5) -> dict:
             "smiles": r.get("smiles"),
             "vina_dG": r.get("vina_best_dG_kcal_per_mol"),
             "pchembl": r.get("pchembl_median") or r.get("best_pchembl"),
+            # Clinical status (ChEMBL max_phase, carried as dev_phase) — tells a reader whether a top
+            # candidate is novel chemical matter or an already-advanced/approved drug (repurposing).
+            "status": (r.get("dev_phase") or "—"),
             "chembl_url": f"https://www.ebi.ac.uk/chembl/compound_report_card/{r.get('chembl_id')}/",
         })
     return {"target": target, "has_docking": "docked" in data, "candidates": candidates,
             "n_candidates": len(candidates), "ot": ot}
+
+
+def _status_summary(candidates: list[dict]) -> str | None:
+    """One honest, data-derived line: are these novel chemical matter, or already-advanced drugs?
+    Derived from each candidate's ChEMBL clinical status — adapts if a run surfaces clinical/approved
+    compounds (then it's a repurposing/fast-follow read, not novel IP)."""
+    if not candidates:
+        return None
+    adv = [c for c in candidates
+           if any(k in (c.get("status") or "").lower() for k in ("phase", "approved", "launched", "marketed"))]
+    n = len(candidates)
+    if not adv:
+        return (f"**All {n} prioritized candidates are research/preclinical compounds** — novel "
+                f"chemical-matter starting points, not approved drugs (a fresh-scaffold programme, "
+                f"not repurposing).")
+    return (f"**{len(adv)} of {n} prioritized candidates are already in clinical development or approved** "
+            f"— treat those as repurposing / fast-follow context, not novel IP (per-candidate status above).")
 
 
 def to_markdown(pkg: dict, run_name: str, region: str = "global") -> str:
@@ -132,13 +152,16 @@ def to_markdown(pkg: dict, run_name: str, region: str = "global") -> str:
               f"> **就地运行 (run locally).** {CN.REACHABILITY_NOTE_CN}", ""]
     L += [f"## Candidates to test ({pkg['n_candidates']})", ""]
     if pkg["candidates"]:
-        L.append("| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | record |")
-        L.append("|---|---|---|---|---|")
+        L.append("| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | clinical status | record |")
+        L.append("|---|---|---|---|---|---|")
         for i, c in enumerate(pkg["candidates"], 1):
             L.append(f"| {i} | {c['chembl_id']} | {c['vina_dG'] or '—'} | {c['pchembl'] or '—'} | "
-                     f"[ChEMBL]({c['chembl_url']}) |")
+                     f"{c.get('status') or '—'} | [ChEMBL]({c['chembl_url']}) |")
         L += ["", "_*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's "
               "`hits.csv` / `docked_hits.csv`._", ""]
+        summary = _status_summary(pkg["candidates"])
+        if summary:
+            L += [summary, ""]
     else:
         L += ["_Run the pipeline first (`cad/run_pipeline.py --target ... --dock-top-n 10`) to populate "
               "candidates._", ""]

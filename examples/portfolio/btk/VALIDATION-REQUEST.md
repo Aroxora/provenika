@@ -4,15 +4,17 @@
 
 ## Candidates to test (5)
 
-| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | record |
-|---|---|---|---|---|
-| 1 | CHEMBL5824452 | — | 10.0 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5824452/) |
-| 2 | CHEMBL6029889 | — | 10.0 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL6029889/) |
-| 3 | CHEMBL5886785 | — | 10.03 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5886785/) |
-| 4 | CHEMBL5741138 | — | 10.3 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5741138/) |
-| 5 | CHEMBL5993286 | — | 10.22 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5993286/) |
+| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | clinical status | record |
+|---|---|---|---|---|---|
+| 1 | CHEMBL5824452 | — | 10.0 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5824452/) |
+| 2 | CHEMBL6029889 | — | 10.0 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL6029889/) |
+| 3 | CHEMBL5886785 | — | 10.03 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5886785/) |
+| 4 | CHEMBL5741138 | — | 10.3 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5741138/) |
+| 5 | CHEMBL5993286 | — | 10.22 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5993286/) |
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
+
+**All 5 prioritized candidates are research/preclinical compounds** — novel chemical-matter starting points, not approved drugs (a fresh-scaffold programme, not repurposing).
 
 ## Independent target validation (Open Targets) — BTK
 
@@ -20,12 +22,12 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 | Disease | Overall | Genetic | Somatic | Known-drug | evidence |
 |---|---|---|---|---|---|
-| B-cell chronic lymphocytic leukemia | 0.719 | — | 0.608 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0004948) |
-| mantle cell lymphoma | 0.693 | — | 0.456 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018876) |
-| neoplasm | 0.593 | 0.195 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0005070) |
-| non-Hodgkin lymphoma | 0.544 | — | 0.397 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018908) |
-| diffuse large B-cell lymphoma | 0.526 | — | 0.529 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018905) |
-| lymphoplasmacytic lymphoma | 0.473 | — | 0.456 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0000432) |
+| B-cell chronic lymphocytic leukemia | 0.719 | — | 0.608 | 0.985 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0004948) |
+| mantle cell lymphoma | 0.693 | — | 0.456 | 0.98 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018876) |
+| neoplasm | 0.593 | 0.195 | — | 0.907 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0005070) |
+| non-Hodgkin lymphoma | 0.544 | — | 0.397 | 0.792 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018908) |
+| diffuse large B-cell lymphoma | 0.526 | — | 0.529 | 0.668 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018905) |
+| lymphoplasmacytic lymphoma | 0.473 | — | 0.456 | 0.661 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0000432) |
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000010671). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 

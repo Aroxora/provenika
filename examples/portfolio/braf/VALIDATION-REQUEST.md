@@ -4,15 +4,17 @@
 
 ## Candidates to test (5)
 
-| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | record |
-|---|---|---|---|---|
-| 1 | CHEMBL500659 | — | 10.7 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL500659/) |
-| 2 | CHEMBL5885861 | — | 10.7 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5885861/) |
-| 3 | CHEMBL527029 | — | 10.3 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL527029/) |
-| 4 | CHEMBL4776565 | — | 9.92 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4776565/) |
-| 5 | CHEMBL498344 | — | 10.4 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL498344/) |
+| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | clinical status | record |
+|---|---|---|---|---|---|
+| 1 | CHEMBL500659 | — | 10.7 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL500659/) |
+| 2 | CHEMBL5885861 | — | 10.7 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5885861/) |
+| 3 | CHEMBL527029 | — | 10.3 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL527029/) |
+| 4 | CHEMBL4776565 | — | 9.92 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4776565/) |
+| 5 | CHEMBL498344 | — | 10.4 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL498344/) |
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
+
+**All 5 prioritized candidates are research/preclinical compounds** — novel chemical-matter starting points, not approved drugs (a fresh-scaffold programme, not repurposing).
 
 ## Independent target validation (Open Targets) — BRAF
 
@@ -20,12 +22,12 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 | Disease | Overall | Genetic | Somatic | Known-drug | evidence |
 |---|---|---|---|---|---|
-| melanoma | 0.82 | 0.699 | 0.796 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005105) |
-| colorectal cancer | 0.749 | 0.771 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005575) |
-| cancer | 0.71 | 0.426 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0004992) |
-| lung cancer | 0.705 | 0.834 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0008903) |
-| non-small cell lung carcinoma | 0.7 | — | 0.797 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005233) |
-| lung adenocarcinoma | 0.688 | — | 0.803 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005061) |
+| melanoma | 0.82 | 0.699 | 0.796 | 0.978 | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005105) |
+| colorectal cancer | 0.749 | 0.771 | — | 0.941 | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005575) |
+| cancer | 0.71 | 0.426 | — | 0.423 | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0004992) |
+| lung cancer | 0.705 | 0.834 | — | 0.179 | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0008903) |
+| non-small cell lung carcinoma | 0.7 | — | 0.797 | 0.607 | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005233) |
+| lung adenocarcinoma | 0.688 | — | 0.803 | 0.137 | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005061) |
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000157764). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 

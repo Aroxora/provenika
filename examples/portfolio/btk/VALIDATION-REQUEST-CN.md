@@ -1,4 +1,4 @@
-# Experimental-validation request — GTPase KRas
+# Experimental-validation request — Tyrosine-protein kinase BTK
 
 > **What this is:** a computational *prioritization* from Provenika (public ChEMBL bioactivity re-ranked by structure-aware AutoDock Vina docking). These are **hypotheses for the bench, not validated hits** — no binding, cell activity, selectivity, or safety has been measured. Every figure is fetched-from-source or deterministically computed and re-checkable with `cad/verify.py`. Research only; not medical advice.
 
@@ -10,30 +10,30 @@
 
 | # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | clinical status | record |
 |---|---|---|---|---|---|
-| 1 | CHEMBL5573020 | — | 9.85 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5573020/) |
-| 2 | CHEMBL5562993 | — | 9.8 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5562993/) |
-| 3 | CHEMBL5572821 | — | 9.77 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5572821/) |
-| 4 | CHEMBL5570195 | — | 9.74 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5570195/) |
-| 5 | CHEMBL5569602 | — | 9.72 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5569602/) |
+| 1 | CHEMBL5824452 | — | 10.0 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5824452/) |
+| 2 | CHEMBL6029889 | — | 10.0 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL6029889/) |
+| 3 | CHEMBL5886785 | — | 10.03 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5886785/) |
+| 4 | CHEMBL5741138 | — | 10.3 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5741138/) |
+| 5 | CHEMBL5993286 | — | 10.22 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5993286/) |
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
 
 **All 5 prioritized candidates are research/preclinical compounds** — novel chemical-matter starting points, not approved drugs (a fresh-scaffold programme, not repurposing).
 
-## Independent target validation (Open Targets) — KRAS
+## Independent target validation (Open Targets) — BTK
 
-**Read-out:** strong human genetic support for gastric cancer (genetic-evidence score 0.90) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015).
+**Read-out:** weak human genetic support for neoplasm (genetic-evidence score 0.20).
 
 | Disease | Overall | Genetic | Somatic | Known-drug | evidence |
 |---|---|---|---|---|---|
-| non-small cell lung carcinoma | 0.804 | — | 0.84 | 0.946 | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0005233) |
-| gastric cancer | 0.768 | 0.896 | 0.684 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0001056) |
-| acute myeloid leukemia | 0.749 | 0.803 | 0.789 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0018874) |
-| lung adenocarcinoma | 0.703 | — | 0.822 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0005061) |
-| urinary bladder cancer | 0.702 | 0.828 | 0.789 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0001187) |
-| juvenile myelomonocytic leukemia | 0.693 | 0.747 | 0.724 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0011908) |
+| B-cell chronic lymphocytic leukemia | 0.719 | — | 0.608 | 0.985 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0004948) |
+| mantle cell lymphoma | 0.693 | — | 0.456 | 0.98 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018876) |
+| neoplasm | 0.593 | 0.195 | — | 0.907 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0005070) |
+| non-Hodgkin lymphoma | 0.544 | — | 0.397 | 0.792 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018908) |
+| diffuse large B-cell lymphoma | 0.526 | — | 0.529 | 0.668 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0018905) |
+| lymphoplasmacytic lymphoma | 0.473 | — | 0.456 | 0.661 | [OT](https://platform.opentargets.org/evidence/ENSG00000010671/MONDO_0000432) |
 
-_Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000133703). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
+_Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000010671). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
 ## Where to obtain the compounds (domestic suppliers)
 
@@ -91,11 +91,11 @@ _Generated by `cad/validation_package.py` from a re-verifiable run. Provenika ha
 ## 可直接发送的中文邮件（草稿 — 不会自动发送）
 
 ```
-主题：合作咨询 — GTPase KRas 候选化合物的实验验证
+主题：合作咨询 — Tyrosine-protein kinase BTK 候选化合物的实验验证
 
 您好，
 
-我们基于公开的 ChEMBL 生物活性数据，并结合基于蛋白结构的 AutoDock Vina 分子对接进行重新打分排序，得到了一小批针对 GTPase KRas 的候选化合物（其中 CHEMBL5573020 位列前茅）。
+我们基于公开的 ChEMBL 生物活性数据，并结合基于蛋白结构的 AutoDock Vina 分子对接进行重新打分排序，得到了一小批针对 Tyrosine-protein kinase BTK 的候选化合物（其中 CHEMBL5824452 位列前茅）。
 
 需要特别说明：这些是计算预测的候选化合物，尚未经过任何实验验证 —— 结合活性、细胞活性、选择性与安全性均未测定。
 

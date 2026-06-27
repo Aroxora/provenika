@@ -8,15 +8,17 @@
 
 ## Candidates to test (5)
 
-| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | record |
-|---|---|---|---|---|
-| 1 | CHEMBL5198796 | — | 10.37 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5198796/) |
-| 2 | CHEMBL5199631 | — | 10.38 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5199631/) |
-| 3 | CHEMBL5916599 | — | 10.4 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5916599/) |
-| 4 | CHEMBL3770993 | — | 10.66 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3770993/) |
-| 5 | CHEMBL5209168 | — | 10.28 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5209168/) |
+| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | clinical status | record |
+|---|---|---|---|---|---|
+| 1 | CHEMBL5198796 | — | 10.37 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5198796/) |
+| 2 | CHEMBL5199631 | — | 10.38 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5199631/) |
+| 3 | CHEMBL5916599 | — | 10.4 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5916599/) |
+| 4 | CHEMBL3770993 | — | 10.66 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3770993/) |
+| 5 | CHEMBL5209168 | — | 10.28 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5209168/) |
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
+
+**All 5 prioritized candidates are research/preclinical compounds** — novel chemical-matter starting points, not approved drugs (a fresh-scaffold programme, not repurposing).
 
 ## Independent target validation (Open Targets) — PIK3CA
 

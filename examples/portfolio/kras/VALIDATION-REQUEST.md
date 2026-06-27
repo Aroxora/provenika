@@ -4,15 +4,17 @@
 
 ## Candidates to test (5)
 
-| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | record |
-|---|---|---|---|---|
-| 1 | CHEMBL5573020 | — | 9.85 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5573020/) |
-| 2 | CHEMBL5562993 | — | 9.8 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5562993/) |
-| 3 | CHEMBL5572821 | — | 9.77 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5572821/) |
-| 4 | CHEMBL5570195 | — | 9.74 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5570195/) |
-| 5 | CHEMBL5569602 | — | 9.72 | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5569602/) |
+| # | ChEMBL ID | predicted ΔG (kcal/mol)* | consensus pChEMBL | clinical status | record |
+|---|---|---|---|---|---|
+| 1 | CHEMBL5573020 | — | 9.85 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5573020/) |
+| 2 | CHEMBL5562993 | — | 9.8 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5562993/) |
+| 3 | CHEMBL5572821 | — | 9.77 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5572821/) |
+| 4 | CHEMBL5570195 | — | 9.74 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5570195/) |
+| 5 | CHEMBL5569602 | — | 9.72 | research/preclinical | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5569602/) |
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
+
+**All 5 prioritized candidates are research/preclinical compounds** — novel chemical-matter starting points, not approved drugs (a fresh-scaffold programme, not repurposing).
 
 ## Independent target validation (Open Targets) — KRAS
 
@@ -20,7 +22,7 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 | Disease | Overall | Genetic | Somatic | Known-drug | evidence |
 |---|---|---|---|---|---|
-| non-small cell lung carcinoma | 0.804 | — | 0.84 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0005233) |
+| non-small cell lung carcinoma | 0.804 | — | 0.84 | 0.946 | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0005233) |
 | gastric cancer | 0.768 | 0.896 | 0.684 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0001056) |
 | acute myeloid leukemia | 0.749 | 0.803 | 0.789 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0018874) |
 | lung adenocarcinoma | 0.703 | — | 0.822 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000133703/MONDO_0005061) |
