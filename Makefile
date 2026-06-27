@@ -55,6 +55,8 @@ test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) cad/test_validate.py
 	$(PY) cad/test_batch_dock.py
 	$(PY) cad/test_dock_meeko.py
+	$(PY) cad/test_explain.py
+	$(PY) cad/test_news_update.py
 	$(PY) cad/test_cheminformatics.py
 	$(PY) cad/test_no_rdkit.py
 	$(PY) cad/test_degradation.py

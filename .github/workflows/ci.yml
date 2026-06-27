@@ -89,6 +89,10 @@ jobs:
         run: python3 cad/test_validate.py
       - name: Batch-dock stage — gating + rank fusion (offline, Vina stubbed)
         run: python3 cad/test_batch_dock.py
+      - name: Explanation layer — LLM number-guard forbids new figures (offline)
+        run: python3 cad/test_explain.py
+      - name: News fact-check gate — independent-source corroboration (offline, Tavily stubbed)
+        run: python3 cad/test_news_update.py
       - name: Stdlib-only guarantee (cad/ imports + degrades without RDKit)
         run: python3 cad/test_no_rdkit.py
       - name: Graceful degradation (single data-source outage → partial dossier, not a crash)

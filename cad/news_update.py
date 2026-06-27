@@ -25,6 +25,7 @@ import sys
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).parent.parent
 INTEL_DIR = ROOT / "cad" / "intel"
@@ -70,6 +71,24 @@ def tavily_search(api_key: str, query: str, days: int, max_results: int) -> dict
         return json.load(resp)
 
 
+def _domain(url: str) -> str:
+    """Bare registrable-ish hostname for counting independent sources."""
+    try:
+        h = (urlparse(url).hostname or "").lower()
+        return h[4:] if h.startswith("www.") else h
+    except Exception:
+        return ""
+
+
+def corroboration(results: list[dict], min_sources: int = 2) -> dict:
+    """How many INDEPENDENT domains back a query's results — the fact-check gate. A lead reported by
+    one site is weaker than one reported by several. Returns the distinct-domain count + a label."""
+    domains = sorted({_domain(r.get("url", "")) for r in results if r.get("url")})
+    n = len(domains)
+    label = ("corroborated" if n >= min_sources else "single-source" if n == 1 else "no source")
+    return {"n_sources": n, "domains": domains, "label": label, "corroborated": n >= min_sources}
+
+
 def run(args) -> int:
     api_key = os.environ.get("TAVILY_API_KEY", "").strip()
     if not api_key:
@@ -81,8 +100,10 @@ def run(args) -> int:
     INTEL_DIR.mkdir(parents=True, exist_ok=True)
 
     out = [f"# Research intelligence digest — {now:%Y-%m-%d}",
-           f"\n_Auto-generated from Tavily news search (last {args.days} days). "
-           "Headlines are leads to verify at the primary source — not validated facts._\n"]
+           f"\n_Auto-generated from Tavily news search (last {args.days} days). Headlines are **leads "
+           "to verify at the primary source — not validated facts.** Each query is fact-check-gated by "
+           f"independent-source corroboration (≥{args.min_sources} distinct domains = corroborated). "
+           "Tavily's AI-synthesized summary is shown only when corroborated and is itself a lead._\n"]
 
     total = 0
     for q in queries:
@@ -91,18 +112,31 @@ def run(args) -> int:
         except Exception as e:  # network/api hiccup on one query shouldn't kill the run
             out.append(f"## {q}\n\n_Search failed: {type(e).__name__}_\n")
             continue
-        out.append(f"## {q}\n")
-        if data.get("answer"):
-            out.append(f"> {data['answer'].strip()}\n")
         results = data.get("results", [])
+        corr = corroboration(results, args.min_sources)
+        out.append(f"## {q}\n")
+        out.append(f"_Corroboration: **{corr['label']}** — {corr['n_sources']} independent "
+                   f"source(s){(': ' + ', '.join(corr['domains'])) if corr['domains'] else ''}._\n")
+        # Tavily's `answer` is an LLM SYNTHESIS, not a primary source — the riskiest "fact" here. Gate
+        # it on corroboration: include only when ≥min_sources independent domains exist, always labeled.
+        if data.get("answer"):
+            if corr["corroborated"]:
+                out.append(f"> 🤖 _AI-synthesized lead (Tavily; verify at sources below):_ "
+                           f"{data['answer'].strip()}\n")
+            else:
+                out.append("> 🤖 _AI-synthesized summary withheld — not corroborated by "
+                           f"≥{args.min_sources} independent sources. Read the source(s) directly._\n")
         if not results:
             out.append("_No recent results._\n")
         for r in results:
             title = (r.get("title") or "untitled").strip()
             url = r.get("url", "")
+            dom = _domain(url)
             date = r.get("published_date", "") or ""
             snippet = (r.get("content") or "").strip().replace("\n", " ")
-            out.append(f"- [{title}]({url}) {('— ' + date[:10]) if date else ''}")
+            tag = " ⚠️ single-source" if corr["n_sources"] == 1 else ""
+            out.append(f"- [{title}]({url}) {('— ' + date[:10]) if date else ''}"
+                       f"{(' · ' + dom) if dom else ''}{tag}")
             if snippet:
                 out.append(f"  - {snippet[:240]}{'…' if len(snippet) > 240 else ''}")
             total += 1
@@ -115,7 +149,11 @@ def run(args) -> int:
     dated = INTEL_DIR / f"{now:%Y-%m-%d}.md"
     dated.write_text(digest)
     (INTEL_DIR / "LATEST.md").write_text(digest)
-    print(f"Wrote {dated.relative_to(ROOT)} ({total} items).")
+    try:
+        rel = dated.relative_to(ROOT)
+    except ValueError:
+        rel = dated
+    print(f"Wrote {rel} ({total} items).")
     return 0
 
 
@@ -124,6 +162,8 @@ def main(argv=None) -> int:
     p.add_argument("--queries", nargs="*", help="Override the watchlist with explicit queries.")
     p.add_argument("--days", type=int, default=7, help="Look-back window in days (default 7).")
     p.add_argument("--max-results", type=int, default=5, help="Results per query (default 5).")
+    p.add_argument("--min-sources", type=int, default=2,
+                   help="Independent domains required to mark a lead 'corroborated' (default 2).")
     args = p.parse_args(argv)
     try:
         return run(args)
