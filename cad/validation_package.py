@@ -85,6 +85,17 @@ def build(run: Path, top_n: int = 5) -> dict:
     data = _load(run)
     dossier = data.get("dossier") or {}
     target = (dossier.get("chembl_target") or {}).get("name") or dossier.get("query") or run.name
+    symbol = dossier.get("query") or run.name
+    # Independent target validation (Open Targets genetic evidence) — best-effort, fetched data; the
+    # single most useful signal of whether the target is worth taking to the bench. Skips on any error.
+    ot = None
+    try:
+        import target_evidence as TE
+        ev = TE.evidence(symbol)
+        if "error" not in ev:
+            ot = ev
+    except Exception:
+        ot = None
     candidates = []
     rows = data.get("docked") or data.get("hits") or []
     for r in rows[:top_n]:
@@ -96,7 +107,7 @@ def build(run: Path, top_n: int = 5) -> dict:
             "chembl_url": f"https://www.ebi.ac.uk/chembl/compound_report_card/{r.get('chembl_id')}/",
         })
     return {"target": target, "has_docking": "docked" in data, "candidates": candidates,
-            "n_candidates": len(candidates)}
+            "n_candidates": len(candidates), "ot": ot}
 
 
 def to_markdown(pkg: dict, run_name: str) -> str:
@@ -119,6 +130,12 @@ def to_markdown(pkg: dict, run_name: str) -> str:
     else:
         L += ["_Run the pipeline first (`cad/run_pipeline.py --target ... --dock-top-n 10`) to populate "
               "candidates._", ""]
+    if pkg.get("ot"):
+        try:
+            import target_evidence as TE
+            L += [TE.to_markdown(pkg["ot"]), ""]
+        except Exception:
+            pass
     L += ["## The experiments that would validate it (in order)", ""]
     for title, assay, question, key, motiv in CHAIN:
         L.append(f"### {title}")

@@ -14,6 +14,21 @@
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
 
+## Independent target validation (Open Targets) — EGFR
+
+**Read-out:** strong human genetic support (best genetic-evidence score 0.82) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015).
+
+| Disease | Overall | Genetic | Somatic | Known-drug | evidence |
+|---|---|---|---|---|---|
+| non-small cell lung carcinoma | 0.853 | 0.746 | 0.832 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000146648/MONDO_0005233) |
+| lung adenocarcinoma | 0.774 | 0.719 | 0.867 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000146648/MONDO_0005061) |
+| cancer | 0.737 | — | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000146648/MONDO_0004992) |
+| head and neck squamous cell carcinoma | 0.725 | 0.816 | 0.456 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000146648/MONDO_0010150) |
+| lung cancer | 0.717 | 0.794 | 0.699 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000146648/MONDO_0008903) |
+| breast cancer | 0.68 | 0.541 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000146648/MONDO_0007254) |
+
+_Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000146648). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds

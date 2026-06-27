@@ -14,6 +14,21 @@
 
 _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the run's `hits.csv` / `docked_hits.csv`._
 
+## Independent target validation (Open Targets) — BRAF
+
+**Read-out:** strong human genetic support (best genetic-evidence score 0.94) — genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015).
+
+| Disease | Overall | Genetic | Somatic | Known-drug | evidence |
+|---|---|---|---|---|---|
+| cardiofaciocutaneous syndrome | 0.877 | 0.944 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0015280) |
+| Noonan syndrome | 0.838 | 0.877 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0018997) |
+| melanoma | 0.82 | 0.699 | 0.796 | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0005105) |
+| cardiofaciocutaneous syndrome 1 | 0.764 | 0.939 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0007265) |
+| Noonan syndrome 7 | 0.759 | 0.93 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0013379) |
+| LEOPARD syndrome 3 | 0.756 | 0.891 | — | — | [OT](https://platform.opentargets.org/evidence/ENSG00000157764/MONDO_0013380) |
+
+_Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000157764). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds

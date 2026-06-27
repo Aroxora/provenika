@@ -11,6 +11,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import validation_package as V  # noqa: E402
+import target_evidence as _TE  # noqa: E402
+
+# Keep these tests OFFLINE: validation_package now best-effort-fetches Open Targets; stub it out.
+_TE.resolve_ensembl = lambda s: None
 
 _passed = 0
 
