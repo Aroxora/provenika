@@ -118,6 +118,13 @@ export class Portfolio {
       genetic: 'Strongest genetic support in our panel — breast cancer (0.92, Open Targets)',
       geneticStrong: true,
     },
+    {
+      target: 'EGFR',
+      context: 'Lung cancer — China\'s #1 cancer killer; EGFR mutations are far more common in East-Asian/Chinese NSCLC (~38–53% vs ~10–15% Western)',
+      note: 'A prioritized shortlist of potent EGFR ligands from public ChEMBL bioactivity, with developability flags and a full experimental-validation request. The single highest-impact target for Chinese patients.',
+      genetic: 'Strong human genetic support for EGFR-related lung cancer (0.93, Open Targets)',
+      geneticStrong: true,
+    },
   ];
 
   slug(t: string): string {

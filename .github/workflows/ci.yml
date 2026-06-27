@@ -102,6 +102,8 @@ jobs:
         run: python3 cad/test_target_evidence.py
       - name: Target panel — oncogene ranking by cancer genetic support (offline, API mocked)
         run: python3 cad/test_target_panel.py
+      - name: China cancer-burden lens — target selection for China's highest-burden cancers (offline)
+        run: python3 cad/test_china_burden.py
       - name: Stdlib-only guarantee (cad/ imports + degrades without RDKit)
         run: python3 cad/test_no_rdkit.py
       - name: Graceful degradation (single data-source outage → partial dossier, not a crash)

@@ -6,6 +6,29 @@ limitation. Research only; not medical advice. 仅供研究，非医疗建议。
 
 ---
 
+## 0. Which cancers — and targets — matter most in China
+
+Curing cancer in China starts with the cancers that take the most lives **there**, and China's burden
+differs sharply from the West. Per the National Cancer Center of China (Han B, et al., *J Natl Cancer
+Center* 2024; [PMID 39036382](https://pubmed.ncbi.nlm.nih.gov/39036382/)), the five leading causes of
+cancer **death** in China (2022) are **lung 肺癌, liver 肝癌 (HCC), stomach 胃癌, colorectal 结直肠癌,
+oesophagus 食管癌** — 67.5% of all cancer deaths.
+
+`python3 cad/target_panel.py --china` (or `--out <dir>` → `china-priority.md`) crosses the genetics-
+ranked target panel with this burden and lists genetically-validated targets **for China's top cancers.**
+The standout is **EGFR**: lung cancer is China's #1 killer, and EGFR-activating mutations are far more
+common in East-Asian/Chinese NSCLC (~38–53%) than Western (~10–15%) — so EGFR-targeted therapy reaches a
+disproportionately large share of Chinese patients. (Liver/HCC and gastric, by contrast, are best
+attacked by **prevention** — HBV vaccination, *H. pylori* eradication — more than by small molecules.)
+
+```bash
+python3 cad/target_panel.py --china          # targets for China's highest-burden cancers (live)
+```
+
+See [`examples/target-panel/china-priority.md`](../examples/target-panel/china-priority.md) for a snapshot.
+
+---
+
 ## 1. Run it locally — the hosted site may be blocked
 
 The website ([provenika.com](https://provenika.com)) is on **Firebase Hosting (Google)**, which is

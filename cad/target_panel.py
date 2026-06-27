@@ -38,6 +38,7 @@ HERE = Path(__file__).parent
 sys.path.insert(0, str(HERE))
 
 import target_evidence as TE  # noqa: E402
+import china_burden as CB  # noqa: E402
 
 # A curated panel of established oncology drivers / drug targets. NOT a claim about which are "best" —
 # it's a comparison starting set (override with --symbols). Kept to well-known, genuinely-pursued genes.
@@ -80,6 +81,11 @@ def evaluate(symbol: str, size: int = 20) -> dict:
     assoc = TE.associations(ens, size)
     best = _best_cancer_genetic(assoc)
     ctx = _top_cancer_overall(assoc) or {}
+    # China-burden relevance: scan only the GENETICALLY-supported cancer associations (consistent with
+    # the panel's genetic-evidence thesis). Scanning all 20 associations over-claims — almost every
+    # oncogene touches some lung-cancer row; requiring genetic evidence makes "China-relevant" mean
+    # "genetically validated FOR a China top-burden cancer".
+    china = CB.scan_diseases([a.get("disease") for a in assoc if a.get("genetic_score") is not None])
     return {
         "symbol": symbol,
         "approved_symbol": name,
@@ -91,6 +97,9 @@ def evaluate(symbol: str, size: int = 20) -> dict:
         # somatic / known-drug as the MAX across this target's cancer associations (any-cancer signal).
         "somatic_score": _max_cancer(assoc, "somatic_score"),
         "known_drug_score": _max_cancer(assoc, "known_drug_score"),
+        "china_cancer": (china["name"] if china else None),
+        "china_cancer_cn": (china["cn"] if china else None),
+        "china_death_rank": (china["mortality_rank"] if china else None),
         "readout": TE.oncology_genetic_readout(assoc),
         "url": f"https://platform.opentargets.org/target/{ens}",
     }
@@ -143,12 +152,47 @@ def to_markdown(rows: list[dict]) -> str:
     return "\n".join(L)
 
 
+def to_china_markdown(rows: list[dict]) -> str:
+    """A China-cure view: ground in China's cancer burden, then list the genetically-supported targets
+    that map onto a high-burden Chinese cancer, ordered by that burden then by genetic support."""
+    prioritised = [r for r in rows if "error" not in r and r.get("china_death_rank") is not None]
+    others = [r for r in rows if "error" not in r and r.get("china_death_rank") is None
+              and r.get("genetic_score") is not None]
+    prioritised.sort(key=lambda r: (r["china_death_rank"], -(r.get("genetic_score") or 0)))
+    L = ["# Targets for China's highest-burden cancers", "",
+         "Curing cancer in China starts with the cancers that take the most lives there. This crosses the "
+         "genetics-ranked target panel with China's national cancer burden — surfacing genetically-"
+         "validated targets that map onto a top Chinese cancer.", "",
+         CB.burden_brief_markdown(), "",
+         "## Genetically-validated targets, by China cancer burden", "",
+         "Targets with **genetic** support for a China top-burden cancer (their genetically-evidenced "
+         "cancer associations are scanned — not every weak association), ordered by that cancer's "
+         "national death rank, then by genetic-evidence score.", "",
+         "| China cancer (death rank) | Target | Genetic score | Genetic cancer | Clinical/drug (max) |",
+         "|---|---|---|---|---|"]
+    for r in prioritised:
+        rank = f"{r['china_cancer']} {r.get('china_cancer_cn') or ''} (#{r['china_death_rank']})"
+        gs = f"**{r['genetic_score']:.2f}**" if r.get("genetic_score") is not None else "—"
+        kd = r.get("known_drug_score")
+        L.append(f"| {rank} | [{r['symbol']}]({r['url']}) | {gs} | {r.get('genetic_cancer') or '—'} | "
+                 f"{kd if kd is not None else '—'} |")
+    if others:
+        names = ", ".join(r["symbol"] for r in others)
+        L += ["", f"_Genetically-supported panel targets not mapped to a China top-burden cancer "
+              f"(via their associations): {names}. Absence here reflects the disease mapping, not target "
+              f"quality._"]
+    L += ["", f"_{DISCLAIMER}_"]
+    return "\n".join(L)
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Rank an oncology target panel by Open Targets cancer genetic support.")
     p.add_argument("--symbols", help="Comma-separated gene symbols (default: a curated oncogene panel).")
     p.add_argument("--size", type=int, default=20, help="How many disease associations to scan per target.")
     p.add_argument("--json", action="store_true", help="Emit JSON instead of the markdown table.")
-    p.add_argument("--out", help="Directory to write ranking.json + ranking.md (created if needed).")
+    p.add_argument("--china", action="store_true",
+                   help="Emit the China-burden view (targets for China's highest-mortality cancers).")
+    p.add_argument("--out", help="Directory to write ranking.json + ranking.md (+ china-priority.md).")
     args = p.parse_args(argv)
 
     symbols = ([s.strip() for s in args.symbols.split(",") if s.strip()]
@@ -166,7 +210,11 @@ def main(argv=None) -> int:
         out.mkdir(parents=True, exist_ok=True)
         (out / "ranking.json").write_text(json.dumps(payload, indent=2))
         (out / "ranking.md").write_text(to_markdown(rows))
-        print(f"Wrote {out/'ranking.json'} and {out/'ranking.md'} ({len(symbols)} targets).")
+        (out / "china-priority.md").write_text(to_china_markdown(rows))
+        print(f"Wrote {out/'ranking.json'}, {out/'ranking.md'} and {out/'china-priority.md'} "
+              f"({len(symbols)} targets).")
+    elif args.china:
+        print(to_china_markdown(rows))
     elif args.json:
         print(json.dumps(payload, indent=2))
     else:
