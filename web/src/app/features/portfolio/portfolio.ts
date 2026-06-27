@@ -125,6 +125,13 @@ export class Portfolio {
       genetic: 'Strong human genetic support for EGFR-related lung cancer (0.93, Open Targets)',
       geneticStrong: true,
     },
+    {
+      target: 'ERBB2',
+      context: 'HER2+ gastric & breast cancer — the trastuzumab / T-DXd target; gastric is China\'s #3 cancer killer',
+      note: 'A prioritized shortlist of potent HER2 (ERBB2) ligands from public ChEMBL bioactivity, with developability flags and a full experimental-validation request. The shortlist surfaces an already-approved drug — flagged as repurposing context, not novel matter.',
+      genetic: 'Human genetic support for colorectal cancer (0.74, Open Targets); HER2 is the validated gastric/breast target',
+      geneticStrong: true,
+    },
   ];
 
   slug(t: string): string {

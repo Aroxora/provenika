@@ -1,0 +1,23 @@
+{
+  "modality": "small_molecule",
+  "phase": "phase1",
+  "oncology_adjusted": true,
+  "probability_of_approval": 0.0513,
+  "expected_remaining_cost_musd": 360.0,
+  "expected_time_to_market_years": 8.0,
+  "peak_annual_revenue_musd": 1500.0,
+  "risk_adjusted_gross_profit_musd": 308.1,
+  "benefit_cost_ratio": 0.86,
+  "verdict": "Marginal \u2014 sensitive to price/penetration/PoS; de-risk first",
+  "assumptions": {
+    "modality_cost_multiplier": 1.0,
+    "loa_from_phase": 0.079,
+    "oncology_loa_factor": 0.65,
+    "addressable_incidence_per_yr": 50000,
+    "annual_price_usd": 150000.0,
+    "peak_penetration": 0.2,
+    "years_at_peak": 5,
+    "gross_margin": 0.8,
+    "sources": "BIO/Informa CDSR 2011-2020; Wong et al. 2019; DiMasi et al. 2016"
+  }
+}

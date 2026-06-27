@@ -98,8 +98,8 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main';
 })
 export class Impact {
   readonly stats: Stat[] = [
-    { figure: '5', label: 'Bench-ready hypotheses',
-      sub: 'BTK · BRAF · KRAS · PIK3CA · EGFR — each a cited shortlist + an experimental-validation request',
+    { figure: '6', label: 'Bench-ready hypotheses',
+      sub: 'BTK · BRAF · KRAS · PIK3CA · EGFR · ERBB2 — each a cited shortlist + an experimental-validation request',
       href: '/portfolio', internal: true },
     { figure: '33', label: 'Targets ranked by human genetics',
       sub: 'the oncogenome scored by cancer genetic support (Open Targets) — the prior that ~2×-es approval odds',

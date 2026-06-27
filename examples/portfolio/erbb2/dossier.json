@@ -1,0 +1,235 @@
+{
+  "query": "ERBB2",
+  "chembl_target": {
+    "id": "CHEMBL1824",
+    "name": "Receptor tyrosine-protein kinase erbB-2",
+    "type": "SINGLE PROTEIN",
+    "organism": "Homo sapiens"
+  },
+  "chembl": {
+    "potent_activity_records": 3565,
+    "known_mechanism_drugs": [
+      {
+        "molecule_chembl_id": "CHEMBL1201585",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2007641",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1743082",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1201179",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2105712",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1645462",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1947204",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL483321",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL598797",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3109738",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL6067986",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3989868",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545200",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1614707",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1614725",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545111",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3647420",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL587723",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2103842",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2408045",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545396",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL313972",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3544983",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL545315",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL180022",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2105719",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2364649",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3833344",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2108029",
+        "action_type": "CROSS-LINKING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 cross-linking agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2109271",
+        "action_type": "CROSS-LINKING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 cross-linking agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2110732",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3989921",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4297844",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4650279",
+        "action_type": "NEGATIVE ALLOSTERIC MODULATOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 negative allosteric modulator"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4298178",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4594568",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4650256",
+        "action_type": "INHIBITOR",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4297892",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor protein-tyrosine kinase erbB-2 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL5314782",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor tyrosine-protein kinase erbB-2 binding agent"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL5095273",
+        "action_type": "BINDING AGENT",
+        "mechanism": "Receptor tyrosine-protein kinase erbB-2 binding agent"
+      }
+    ]
+  },
+  "uniprot": {
+    "accession": "P04626",
+    "name": "Receptor tyrosine-protein kinase erbB-2",
+    "length": 1255,
+    "function": "Protein tyrosine kinase that is part of several cell surface receptor complexes, but that apparently needs a coreceptor for ligand binding. Essential component of a neuregulin-receptor complex, although neuregulins do not interact with it alone. GP30 is a potential ligand for this receptor. Regulates outgrowth and stabilization of peripheral microtubules (MTs). Upon ERBB2 activation, the MEMO1-RHOA-DIAPH1 signaling pathway elicits the phosphorylation and thus the inhibition of GSK3B at cell membrane. This prevents the phosphorylation of APC and CLASP2, allowing its association with the cell membrane. In turn, membrane-bound APC allows the localization of MACF1 to the cell membrane, which is required for microtubule capture and stabilization",
+    "pdb_count": 59,
+    "pdb_examples": [
+      "1MFG",
+      "1MFL",
+      "1MW4",
+      "1N8Z",
+      "1QR1",
+      "1S78",
+      "2A91",
+      "2JWA"
+    ]
+  },
+  "variant_filter": null,
+  "variant_records": null,
+  "next": "python3 cad/virtual_triage.py --target \"ERBB2\" --out hits.csv",
+  "disclaimer": "Public-data orientation only. Not validation, not medical advice."
+}
