@@ -111,6 +111,13 @@ export class Portfolio {
       genetic: 'Strong human genetic support for gastric cancer (0.90, Open Targets)',
       geneticStrong: true,
     },
+    {
+      target: 'PIK3CA',
+      context: 'Breast & many solid tumours — the most frequently mutated oncogene; PI3Kα (alpelisib class)',
+      note: 'A prioritized shortlist of potent PI3Kα ligands from public ChEMBL bioactivity, with developability flags and a full experimental-validation request.',
+      genetic: 'Strongest genetic support in our panel — breast cancer (0.92, Open Targets)',
+      geneticStrong: true,
+    },
   ];
 
   slug(t: string): string {

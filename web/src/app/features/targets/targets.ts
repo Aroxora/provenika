@@ -153,7 +153,7 @@ export class Targets {
   readonly failed = signal(false);
 
   // Targets already worked into a bench-ready hypothesis (kept in sync with /portfolio).
-  private readonly inPortfolio = new Set(['BTK', 'BRAF', 'KRAS']);
+  private readonly inPortfolio = new Set(['BTK', 'BRAF', 'KRAS', 'PIK3CA']);
 
   readonly ranked = computed(() => (this.panel()?.ranked ?? []).filter(r => !r.error));
 

@@ -1,0 +1,28 @@
+{
+  "pdb": "8EXL",
+  "ligand": {
+    "resName": "799",
+    "chain": "A",
+    "resSeq": "1101"
+  },
+  "ligandAtoms": 34,
+  "center": [
+    -18.37,
+    13.53,
+    29.6
+  ],
+  "size": [
+    25.9,
+    27.6,
+    27.1
+  ],
+  "pad": 8.0,
+  "volume_A3": 19372.2,
+  "heavyAtoms": 34,
+  "ligandContacts": 34,
+  "ligandBuried": 1.0,
+  "ligandWarning": null,
+  "alternatives": [],
+  "dockCommand": "python3 cad/dock.py --receptor structures/8EXL.pdb --smiles \"<ligand SMILES>\" --center -18.37 13.53 29.6 --size 25.9 27.6 27.1",
+  "disclaimer": "Box from the buried, drug-like co-crystal ligand envelope. Research only."
+}

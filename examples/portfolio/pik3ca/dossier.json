@@ -1,0 +1,80 @@
+{
+  "query": "PIK3CA",
+  "chembl_target": {
+    "id": "CHEMBL4005",
+    "name": "Phosphatidylinositol 4,5-bisphosphate 3-kinase catalytic subunit alpha isoform",
+    "type": "SINGLE PROTEIN",
+    "organism": "Homo sapiens"
+  },
+  "chembl": {
+    "potent_activity_records": 9605,
+    "known_mechanism_drugs": [
+      {
+        "molecule_chembl_id": "CHEMBL3644672",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3622533",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3935857",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1258517",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545323",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2396661",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545068",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3218576",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4650215",
+        "action_type": "INHIBITOR",
+        "mechanism": "PI3-kinase p110-alpha subunit inhibitor"
+      }
+    ]
+  },
+  "uniprot": {
+    "accession": "P42336",
+    "name": "Phosphatidylinositol 4,5-bisphosphate 3-kinase catalytic subunit alpha isoform",
+    "length": 1068,
+    "function": "Phosphoinositide-3-kinase (PI3K) phosphorylates phosphatidylinositol (PI) and its phosphorylated derivatives at position 3 of the inositol ring to produce 3-phosphoinositides (PubMed:15135396, PubMed:23936502, PubMed:28676499). Uses ATP and PtdIns(4,5)P2 (phosphatidylinositol 4,5-bisphosphate) to generate phosphatidylinositol 3,4,5-trisphosphate (PIP3) (PubMed:15135396, PubMed:28676499). PIP3 plays a key role by recruiting PH domain-containing proteins to the membrane, including AKT1 and PDPK1, activating signaling cascades involved in cell growth, survival, proliferation, motility and morphology. Participates in cellular signaling in response to various growth factors. Involved in the activation of AKT1 upon stimulation by receptor tyrosine kinases ligands such as EGF, insulin, IGF1, VEGFA and PDGF. Involved in signaling via insulin-receptor substrate (IRS) proteins. Essential in endothelial cell migration during vascular development through VEGFA signaling, possibly by regulating RhoA activity. Required for lymphatic vasculature development, possibly by binding to RAS and by activation by EGF and FGF2, but not by PDGF. Regulates invadopodia formation through the PDPK1-AKT1 pathway. Participates in cardiomyogenesis in embryonic stem cells through a AKT1 pathway. Participates in vasculogenesis in embryonic stem cells through PDK1 and protein kinase C pathway. In addition to its lipid kinase activity, it displays a serine-protein kinase activity that results in the autophosphorylation of the p85alpha regulatory subunit as well as phosphorylation of other proteins such as 4EBP1, H-Ras, the IL-3 beta c receptor and possibly others (PubMed:23936502, PubMed:28676499). Plays a role in the positive regulation of phagocytosis and pinocytosis (By similarity)",
+    "pdb_count": 120,
+    "pdb_examples": [
+      "2ENQ",
+      "2RD0",
+      "3HHM",
+      "3HIZ",
+      "3ZIM",
+      "4JPS",
+      "4L1B",
+      "4L23"
+    ]
+  },
+  "variant_filter": null,
+  "variant_records": null,
+  "next": "python3 cad/virtual_triage.py --target \"PIK3CA\" --out hits.csv",
+  "disclaimer": "Public-data orientation only. Not validation, not medical advice."
+}
