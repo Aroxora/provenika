@@ -47,6 +47,13 @@ const ROUTE_META: Record<string, RouteMeta> = {
       'translation — how cancer is actually cured, and exactly where AI (AlphaFold-style) saves ' +
       'experimentation vs the irreducible wet-lab and clinical work. Literature-verified; not medical advice.',
   },
+  portfolio: {
+    title: 'Bench-ready hypotheses — cited oncology candidates to test | Provenika',
+    description:
+      'A growing portfolio of cited, re-verifiable oncology hypotheses, each shipped with an ' +
+      'experimental-validation request: the exact experiments and real labs (incl. free NCI-60) that ' +
+      'would test it. Hypotheses for the bench, not validated hits. Research only; not medical advice.',
+  },
   bench: {
     title: 'To the bench — test a hypothesis with real labs | Provenika',
     description:

@@ -1,0 +1,33 @@
+# CADD pipeline summary — BRAF
+
+## Target dossier
+- UniProt: P15056 (766 aa)
+- PDB structures: 131 (structure-based docking: structures exist — confirm one is holo and covers the site (not auto-checked))
+- ChEMBL bioactivity records (any pChEMBL, not potency-filtered, counts records not molecules): 9836
+- Known mechanism drugs: 14
+
+## Ligand triage
+- 20 ranked candidates → `hits.csv` (SMILES + ChEMBL links)
+- 3-D structures → `hits.sdf` (load directly into docking/visualization tools)
+
+## Structural liabilities (RDKit — PAINS / Brenk / developability)
+- 0/20 hits carry a PAINS (assay-interference) alert; 11/20 carry a Brenk (reactive/unstable-group) alert → `liabilities.json`.
+- 4/20 fall in the Pfizer 3/75 zone (cLogP>3 & TPSA<75 — elevated in-vivo tox risk; Hughes 2008).
+- Scrutinize before pursuing: CHEMBL500659, CHEMBL527029, CHEMBL4776565, CHEMBL498344, CHEMBL5566280, CHEMBL521562 …
+- Synthetic accessibility (Ertl 2009): median SA 2.8/10; all readily synthesizable.
+_Structural alerts are heuristic medicinal-chemistry filters, not disqualifiers — review each in context._
+
+## Cost-benefit / feasibility
+_Modality/phase-level benchmark (small_molecule @ phase1) from public priors — **not** a target-specific prediction. Identical inputs give identical figures for any target; it does not 'know' this target. Treat as a transparent planning heuristic._
+- P(approval) from phase1: 5.1%
+- Expected remaining cost: $360M over 8.0 yr
+- Risk-adjusted gross profit: $308M; benefit/cost 0.86
+- **Marginal — sensitive to price/penetration/PoS; de-risk first**
+
+## Next step: dock (stage 6)
+- No experimental box available; pick a pocket (fpocket/P2Rank) or an AlphaFold model first.
+## Provenance
+- Every figure above is fetched-and-cited or deterministically computed — see `provenance.json`.
+- Re-prove it: `python3 cad/verify.py --run examples/portfolio/braf`  (re-pulls each number from its live source).
+
+_Research only. Every figure points to a public source — verify before relying on it._

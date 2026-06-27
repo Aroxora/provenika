@@ -1,0 +1,105 @@
+{
+  "query": "BRAF",
+  "chembl_target": {
+    "id": "CHEMBL5145",
+    "name": "Serine/threonine-protein kinase B-raf",
+    "type": "SINGLE PROTEIN",
+    "organism": "Homo sapiens"
+  },
+  "chembl": {
+    "potent_activity_records": 9836,
+    "known_mechanism_drugs": [
+      {
+        "molecule_chembl_id": "CHEMBL2105729",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1946170",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1200485",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL1229517",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL5314407",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4209157",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL2029988",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545263",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3577124",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4303729",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545080",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL558752",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3545027",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL3301612",
+        "action_type": "INHIBITOR",
+        "mechanism": "Serine/threonine-protein kinase B-raf inhibitor"
+      }
+    ]
+  },
+  "uniprot": {
+    "accession": "P15056",
+    "name": "Serine/threonine-protein kinase B-raf",
+    "length": 766,
+    "function": "Protein kinase involved in the transduction of mitogenic signals from the cell membrane to the nucleus (Probable). Phosphorylates MAP2K1, and thereby activates the MAP kinase signal transduction pathway (PubMed:21441910, PubMed:29433126). Phosphorylates PFKFB2 (PubMed:36402789). May play a role in the postsynaptic responses of hippocampal neurons (PubMed:1508179)",
+    "pdb_count": 131,
+    "pdb_examples": [
+      "1UWH",
+      "1UWJ",
+      "2FB8",
+      "2L05",
+      "3C4C",
+      "3D4Q",
+      "3IDP",
+      "3II5"
+    ]
+  },
+  "variant_filter": null,
+  "variant_records": null,
+  "next": "python3 cad/virtual_triage.py --target \"BRAF\" --out hits.csv",
+  "disclaimer": "Public-data orientation only. Not validation, not medical advice."
+}
