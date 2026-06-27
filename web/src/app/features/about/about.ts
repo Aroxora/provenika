@@ -1,14 +1,16 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-about',
-  imports: [],
+  imports: [RouterLink],
   template: `
     <h1>About Provenika</h1>
-    <p class="lead">An auditable evidence engine for oncology research. <strong>Compute or cite, never assert.</strong></p>
+    <p class="lead">An honest map of <strong>how cancer is actually being cured — and where AI saves the experiment.</strong> Compute or cite, never assert.</p>
 
     <div class="card">
-      <p>The project exists because confident but unverifiable output from AI systems is dangerous in drug discovery. We turn free public data (ChEMBL, UniProt, RCSB PDB, Europe PMC, ClinicalTrials.gov) into ranked, fully-cited, independently re-verifiable hypotheses. The same rule applies to how we operate: the agentic outreach log is public.</p>
+      <p>The mission is to be exact about the boundary between what AI/compute can do and what only the wet lab and clinic can. Cancer is cured by the sum of five levers — prevention, early detection, precision therapy, immunotherapy, and managing resistance — and AI (most clearly AlphaFold-style structure prediction) compresses the cheap, in-silico front of each, so fewer experiments are run and fewer dead-end molecules get made. It never runs the experiment that proves a person is protected, a tumour shrinks, or a therapy is safe. See <a routerLink="/cure">the full cited map</a>.</p>
+      <p>Provenika exists because confident-but-unverifiable AI output is dangerous in drug discovery. We turn free public data (ChEMBL, UniProt, RCSB PDB) into ranked, fully-cited, independently re-verifiable hypotheses — every figure fetched-and-cited or deterministically recomputed, never model-generated.</p>
     </div>
 
     <h3>Verifiability</h3>

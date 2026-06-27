@@ -40,6 +40,13 @@ const ROUTE_META: Record<string, RouteMeta> = {
       'immunotherapy, resistance — and exactly where AI (AlphaFold-style) saves experimentation vs ' +
       'what only the wet lab and clinic can do. Literature-verified. Research only; not medical advice.',
   },
+  cure: {
+    title: 'How cancer is actually being cured — and where AI saves the experiment | Provenika',
+    description:
+      'Lever by lever — prevention, early detection, precision therapy, immunotherapy, resistance, ' +
+      'translation — how cancer is actually cured, and exactly where AI (AlphaFold-style) saves ' +
+      'experimentation vs the irreducible wet-lab and clinical work. Literature-verified; not medical advice.',
+  },
   explore: {
     title: 'Explore a target — Provenika',
     description:

@@ -26,8 +26,8 @@ interface Pillar {
         tumour shrinks, or a therapy is safe.
       </p>
       <div class="cta-row">
-        <a routerLink="/explore" class="btn primary large">Explore a target →</a>
-        <a href="https://github.com/Aroxora/provenika/blob/main/docs/CURING-CANCER.md" target="_blank" rel="noopener" class="btn ghost large">The full cited map ↗</a>
+        <a routerLink="/cure" class="btn primary large">How cancer is cured →</a>
+        <a routerLink="/explore" class="btn ghost large">Explore a target</a>
       </div>
     </section>
 
