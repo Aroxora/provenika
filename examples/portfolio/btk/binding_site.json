@@ -1,0 +1,28 @@
+{
+  "pdb": "5P9J",
+  "ligand": {
+    "resName": "8E8",
+    "chain": "A",
+    "resSeq": "701"
+  },
+  "ligandAtoms": 33,
+  "center": [
+    19.74,
+    8.39,
+    4.54
+  ],
+  "size": [
+    26.4,
+    23.1,
+    28.5
+  ],
+  "pad": 8.0,
+  "volume_A3": 17380.4,
+  "heavyAtoms": 33,
+  "ligandContacts": 31,
+  "ligandBuried": 0.939,
+  "ligandWarning": null,
+  "alternatives": [],
+  "dockCommand": "python3 cad/dock.py --receptor structures/5P9J.pdb --smiles \"<ligand SMILES>\" --center 19.74 8.39 4.54 --size 26.4 23.1 28.5",
+  "disclaimer": "Box from the buried, drug-like co-crystal ligand envelope. Research only."
+}
