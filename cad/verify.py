@@ -94,25 +94,48 @@ def _chembl_qed(chembl_id: str) -> float | None:
 _POTENCY_TYPES = {"IC50", "Ki", "Kd", "EC50"}
 
 
+def _activity_quality_params() -> dict:
+    """The SAME ChEMBL activity-quality gate triage uses, imported from virtual_triage so the two
+    can never drift (a saved shortlist must re-pull to the same potency). Hard-coded fallback keeps
+    verify working even if the import fails."""
+    try:
+        import virtual_triage as vt
+        return dict(vt.ACTIVITY_QUALITY_PARAMS)
+    except Exception:
+        return {"pchembl_value__isnull": "false", "standard_relation": "=",
+                "data_validity_comment__isnull": "true", "order_by": "-pchembl_value"}
+
+
 def _chembl_best_pchembl(mol_id: str, target_id: str) -> float | None:
-    """Re-query a molecule's max pChEMBL on this target straight from ChEMBL (raw HTTP), so the
-    best_pchembl that drives the ranking is re-pulled, not trusted from hits.csv. Returns None if
-    the live source can't be reached or has no potency record."""
-    url = (f"https://www.ebi.ac.uk/chembl/api/data/activity?molecule_chembl_id={mol_id}"
-           f"&target_chembl_id={target_id}&pchembl_value__isnull=false&limit=200&format=json")
-    data = _http_json(url)
-    if not data:
-        return None
-    best = None
-    for a in data.get("activities", []):
-        if a.get("standard_type") not in _POTENCY_TYPES:
-            continue
-        try:
-            pv = float(a.get("pchembl_value"))
-        except (TypeError, ValueError):
-            continue
-        if best is None or pv > best:
-            best = pv
+    """Re-query a molecule's MAX pChEMBL on this target straight from ChEMBL (raw HTTP) under the
+    SAME quality gate as triage, so best_pchembl is re-pulled — not trusted from hits.csv — and never
+    spuriously drifts because verify queried differently. Paginates in pChEMBL-descending order so
+    the true max is found even past the first 1000 records (the old single 200-row page, with no
+    order_by, could miss it and FAIL a legitimate run under --strict). None if unreachable/no data."""
+    import urllib.parse
+    params = {**_activity_quality_params(), "molecule_chembl_id": mol_id,
+              "target_chembl_id": target_id, "format": "json"}
+    best, offset = None, 0
+    while True:
+        page = {**params, "limit": 1000, "offset": offset}
+        data = _http_json("https://www.ebi.ac.uk/chembl/api/data/activity?" + urllib.parse.urlencode(page))
+        if not data:
+            return best
+        acts = data.get("activities", [])
+        for a in acts:
+            if a.get("standard_type") not in _POTENCY_TYPES:
+                continue
+            if a.get("potential_duplicate") in (1, "1", True):
+                continue
+            try:
+                pv = float(a.get("pchembl_value"))
+            except (TypeError, ValueError):
+                continue
+            if best is None or pv > best:
+                best = pv
+        if not data.get("page_meta", {}).get("next") or offset > 5000:
+            break
+        offset += len(acts)
     return best
 
 
@@ -169,7 +192,7 @@ def verify_dossier(dossier: dict, checks: list) -> None:
             live = tr.chembl_snapshot(tid)
             s, note = _count_status(saved_chembl.get("potent_activity_records", 0),
                                     live.get("potent_activity_records"))
-            checks.append(("ChEMBL potent activity records", s, note,
+            checks.append(("ChEMBL bioactivity records (any pChEMBL, not potency-filtered)", s, note,
                            prov.source_url("chembl", "activity_count", tid)))
 
             saved_drugs = len(saved_chembl.get("known_mechanism_drugs", []))
@@ -327,16 +350,39 @@ def verify_hits(path: Path, checks: list, target_id: str | None = None, max_rows
         checks.append((f"top {desc_checked} ligand descriptors re-fetched from ChEMBL", s, note,
                        prov.source_url("chembl", "entry", rows[0].get("chembl_id", ""))))
 
+    # (5b) Structural self-consistency of the aggregation columns (cheap, no network): the consensus
+    # median can never exceed the best single measurement, and must rest on >= 1 record. Catches a
+    # median/n edited in isolation (a fabricated consensus) without any extra fetch.
+    if any("pchembl_median" in r and (r.get("pchembl_median") or "") != "" for r in rows):
+        struct_bad = []
+        for r in rows:
+            med, mx, n = _f(r.get("pchembl_median")), _f(r.get("best_pchembl")), _f(r.get("n_measurements"))
+            if med is None or mx is None:
+                continue
+            if med > mx + 0.005:
+                struct_bad.append(f"{r.get('chembl_id')}: median {med} > best {mx}")
+            elif n is not None and n < 1:
+                struct_bad.append(f"{r.get('chembl_id')}: n_measurements {n:g} < 1")
+        if struct_bad:
+            checks.append(("shortlist aggregation self-consistent", FAIL,
+                           "median exceeds best single measurement, or n<1 (edited/fabricated): "
+                           + "; ".join(struct_bad[:4]), ""))
+        else:
+            checks.append(("shortlist aggregation self-consistent", PASS,
+                           "every pchembl_median ≤ best_pchembl and rests on ≥1 measurement", ""))
+
     # (2) Recompute the headline triage score from its own CSV inputs. Deterministic
     # → any drift means the score column was edited. Imports the producing formula
     # on purpose (this is a reproducibility check, like cost_benefit). QED and potency are now
     # also independently re-fetched above, so the score's inputs are no longer taken purely on faith.
+    # The score is computed from the consensus median (pchembl_median); fall back to best_pchembl for
+    # pre-aggregation files so an older hits.csv still re-checks.
     try:
         import virtual_triage as vt
         worst = 0.0
         checked = 0
         for r in rows:
-            pchembl = _f(r.get("best_pchembl"))
+            pchembl = _f(r.get("pchembl_median") or r.get("best_pchembl"))
             saved_score = _f(r.get("score"))
             sim = _f(r.get("similarity"))
             if pchembl is None or saved_score is None:
@@ -549,7 +595,7 @@ def verify_target_live(target: str, checks: list) -> None:
         return
     tid = t["target_chembl_id"]
     live = tr.chembl_snapshot(tid)
-    checks.append((f"{target}: ChEMBL potent activities = {live['potent_activity_records']}",
+    checks.append((f"{target}: ChEMBL bioactivity records (any pChEMBL) = {live['potent_activity_records']}",
                    PASS, "fetched live", prov.source_url("chembl", "activity_count", tid)))
     checks.append((f"{target}: known-mechanism drugs = {len(live['known_mechanism_drugs'])}",
                    PASS, "fetched live", prov.source_url("chembl", "mechanisms", tid)))

@@ -50,7 +50,10 @@ def slug(name: str) -> str:
 def triage(target: str, limit: int, min_pchembl: float) -> dict | None:
     res = subprocess.run(
         [sys.executable, str(HERE / "virtual_triage.py"), "--target", target,
-         "--limit", str(limit), "--min-pchembl", str(min_pchembl), "--json"],
+         "--limit", str(limit), "--min-pchembl", str(min_pchembl),
+         # The web precompute only needs SMILES + potency; skip the per-hit selectivity probe so the
+         # 38-target weekly batch doesn't fan out to thousands of extra ChEMBL calls.
+         "--no-selectivity", "--json"],
         capture_output=True, text=True,
     )
     if res.returncode != 0:
