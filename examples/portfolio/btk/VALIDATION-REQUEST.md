@@ -52,6 +52,19 @@ Drugs that already act on this target, from ChEMBL's known-mechanism data — th
 
 **Already approved against this target:** Ibrutinib, Tirabrutinib, Acalabrutinib, Zanubrutinib. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
 
+## Resistance landscape — where a next-gen molecule earns its place
+
+Known on-target clinical resistance for **BTK** (CLL / lymphoma, on covalent BTK inhibitors). A new candidate's highest value is covering what the approved drugs do **not**.
+
+| Mutation | Confers | Covered by | source |
+|---|---|---|---|
+| C481S | resistance to covalent BTKis (ibrutinib, acalabrutinib, zanubrutinib) by removing the covalent-binding cysteine | pirtobrutinib (non-covalent) — active regardless of C481S status | [Mato, NEJM 2023 (pirtobrutinib after covalent BTKi)](https://www.nejm.org/doi/full/10.1056/NEJMoa2300696) |
+| T474 / kinase-dead second-site | emerging resistance to non-covalent pirtobrutinib | no approved agent — an open frontier | [Naeem et al., Blood Adv 2023](https://ashpublications.org/bloodadvances/article/7/9/1929/486896) |
+
+**Unmet need:** agents covering post-pirtobrutinib (T474 / kinase-dead) BTK resistance are an open frontier.
+
+_Curated, literature-cited; scoped to textbook on-target resistance, not exhaustive. Resistance is often polyclonal/pathway-level too. Research only; not medical advice._
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds

@@ -32,6 +32,10 @@ try:
     import cn_labs as CN  # China-region bench routes + Simplified-Chinese pitch
 except Exception:           # pragma: no cover - module always present, defensive only
     CN = None
+try:
+    import resistance as RES  # curated, cited clinical resistance landscape
+except Exception:           # pragma: no cover
+    RES = None
 
 # Real, public validation partners (verified). Free academic/government routes listed first where they
 # exist. URLs are root domains; a researcher confirms current service scope/eligibility directly.
@@ -159,7 +163,7 @@ def build(run: Path, top_n: int = 5) -> dict:
             "chembl_url": f"https://www.ebi.ac.uk/chembl/compound_report_card/{r.get('chembl_id')}/",
         })
     soc = standard_of_care(dossier)  # best-effort; [] if none or offline
-    return {"target": target, "has_docking": "docked" in data, "candidates": candidates,
+    return {"target": target, "symbol": symbol, "has_docking": "docked" in data, "candidates": candidates,
             "n_candidates": len(candidates), "ot": ot, "standard_of_care": soc}
 
 
@@ -231,6 +235,10 @@ def to_markdown(pkg: dict, run_name: str, region: str = "global") -> str:
             L += ["", f"**Already approved against this target:** {names}. The honest goal for a new "
                   f"molecule is a differentiated advantage over these, not merely activity."]
         L.append("")
+    if RES is not None:
+        landscape = RES.landscape_markdown(pkg.get("symbol") or "")
+        if landscape:
+            L += [landscape, ""]
     if cn:
         L += ["## Where to obtain the compounds (domestic suppliers)", "",
               f"{CN.SUPPLIERS_NOTE_CN}", ""]

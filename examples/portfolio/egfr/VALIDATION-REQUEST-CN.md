@@ -56,6 +56,19 @@ Drugs that already act on this target, from ChEMBL's known-mechanism data — th
 
 **Already approved against this target:** Panitumumab, Cetuximab, Erlotinib Hydrochloride, Gefitinib, Lapatinib Ditosylate, Afatinib Dimaleate. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
 
+## Resistance landscape — where a next-gen molecule earns its place
+
+Known on-target clinical resistance for **EGFR** (EGFR-mutant NSCLC, on EGFR TKIs). A new candidate's highest value is covering what the approved drugs do **not**.
+
+| Mutation | Confers | Covered by | source |
+|---|---|---|---|
+| T790M | resistance to 1st/2nd-gen TKIs (gefitinib, erlotinib, afatinib) | osimertinib (3rd-gen) — this is why osimertinib mattered | Thress, Nat Med 2015; Jänne, NEJM 2015 |
+| C797S | resistance to osimertinib (3rd-gen), especially in cis with T790M | no approved TKI fully covers it — 4th-gen inhibitors are still investigational | [Wang et al., J Hematol Oncol 2016](https://jhoonline.biomedcentral.com/articles/10.1186/s13045-016-0290-1) |
+
+**Unmet need:** a molecule covering C797S (the post-osimertinib gap) is a live, named unmet need.
+
+_Curated, literature-cited; scoped to textbook on-target resistance, not exhaustive. Resistance is often polyclonal/pathway-level too. Research only; not medical advice._
+
 ## Where to obtain the compounds (domestic suppliers)
 
 Many known ChEMBL actives are catalog items — search each candidate by structure or ChEMBL ID on a domestic supplier to see if it can be PURCHASED (no synthesis, no import) before commissioning a CRO. Availability and price are per-compound; confirm directly — do not assume stock.

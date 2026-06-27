@@ -62,6 +62,7 @@ test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) cad/test_news_update.py
 	$(PY) cad/test_validation_package.py
 	$(PY) cad/test_cn_labs.py
+	$(PY) cad/test_resistance.py
 	$(PY) cad/test_target_evidence.py
 	$(PY) cad/test_target_panel.py
 	$(PY) cad/test_china_burden.py
