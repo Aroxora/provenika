@@ -33,6 +33,8 @@ CHINA_TOP_CANCERS = [
     {"key": "lung", "name": "Lung cancer", "cn": "肺癌", "mortality_rank": 1,
      "new_cases_2022": 1060600, "asmr_2022": 26.7,
      "driver": "tobacco + ambient/household air pollution",
+     "prevention": "tobacco control / smoking cessation (the dominant modifiable risk)",
+     "druggable": True,
      "china_note": "China's #1 cancer for both new cases and deaths. EGFR-activating mutations are far "
                    "more common in East-Asian/Chinese NSCLC (~38–53%) than Western (~10–15%), so "
                    "EGFR-targeted therapy reaches a disproportionately large share of Chinese patients.",
@@ -40,30 +42,45 @@ CHINA_TOP_CANCERS = [
     {"key": "liver", "name": "Liver cancer (HCC)", "cn": "肝癌", "mortality_rank": 2,
      "new_cases_2022": 367700, "asmr_2022": 12.6,
      "driver": "chronic hepatitis B (HBV); aflatoxin, alcohol, NAFLD",
-     "china_note": "Disproportionately a Chinese disease via endemic HBV; prevention (HBV vaccination) "
-                   "is the proven lever, and HCC is hard to target with small molecules.",
+     "prevention": "HBV vaccination — prevents the chronic infection behind most Chinese HCC (the first "
+                   "'anti-cancer vaccine'; WHO/IARC); plus antiviral treatment of chronic HBV",
+     "druggable": False,
+     "china_note": "Disproportionately a Chinese disease via endemic HBV. Prevention (HBV vaccination) is "
+                   "the proven, highest-impact lever; HCC is hard to target with small molecules — FGFR4 "
+                   "(FGF19–FGFR4 axis) is the most selective emerging target.",
      "match": ("liver", "hepatocellular", "hcc", "hepatic", "hepatoma")},
     {"key": "stomach", "name": "Stomach (gastric) cancer", "cn": "胃癌", "mortality_rank": 3,
      "new_cases_2022": 358700, "asmr_2022": 9.4,
      "driver": "Helicobacter pylori; diet (salt, preserved foods)",
+     "prevention": "H. pylori test-and-treat — eradicating an IARC class-1 carcinogen lowers gastric-"
+                   "cancer risk (Choi, NEJM 2020; Cochrane)",
+     "druggable": True,
      "china_note": "Among the highest national burdens worldwide; H. pylori eradication is the proven "
-                   "prevention lever.",
+                   "prevention lever. Targetable subsets: HER2/ERBB2, FGFR2.",
      "match": ("gastric", "stomach")},
     {"key": "colorectal", "name": "Colorectal cancer", "cn": "结直肠癌", "mortality_rank": 4,
      "new_cases_2022": 517100, "asmr_2022": 8.6,
      "driver": "diet/lifestyle, obesity; incidence rising in China",
-     "china_note": "2nd most common new cancer in China (2022) and rising — a growing target population.",
+     "prevention": "screening (colonoscopy / FIT) with adenoma removal — interrupts the adenoma→carcinoma "
+                   "sequence",
+     "druggable": True,
+     "china_note": "2nd most common new cancer in China (2022) and rising — a growing target population "
+                   "(KRAS/NRAS/BRAF/EGFR biology).",
      "match": ("colorectal", "colon", "rectal", "rectum", "bowel", "colorectum")},
     {"key": "esophagus", "name": "Oesophageal cancer", "cn": "食管癌", "mortality_rank": 5,
      "new_cases_2022": None, "asmr_2022": None,
      "driver": "hot beverages, alcohol/tobacco, diet; regional 'cancer belts'",
+     "prevention": "avoid very-hot beverages, tobacco and heavy alcohol; address the regional risk factors",
+     "druggable": False,
      "china_note": "China carries a very large share of the world's oesophageal cancer; mostly squamous "
-                   "histology, with limited targeted-therapy options today.",
+                   "histology, with limited targeted-therapy options today — prevention dominates.",
      "match": ("esophag", "oesophag")},
     # High INCIDENCE / important in women, below the mortality top-5 — included for relevance mapping.
     {"key": "breast", "name": "Breast cancer", "cn": "乳腺癌", "mortality_rank": None,
      "new_cases_2022": None, "asmr_2022": None,
      "driver": "the leading cancer in Chinese women by incidence",
+     "prevention": "screening (mammography) for early detection",
+     "druggable": True,
      "china_note": "Top cancer in women; large target population (HER2/PIK3CA/ER biology).",
      "match": ("breast",)},
 ]
@@ -97,18 +114,27 @@ def scan_diseases(disease_names) -> dict | None:
 
 
 def burden_brief_markdown() -> str:
-    """A short, fully-cited brief of China's cancer burden — the 'why these cancers' grounding."""
+    """A short, fully-cited brief of China's cancer burden — the 'why these cancers' grounding, with the
+    honest read-out that for several of China's top cancers PREVENTION outweighs any small molecule."""
     L = ["## China's cancer burden — which cancers to work on", "",
          "China, 2022: **~4.82 million** new cancer cases and **~2.57 million** cancer deaths. The five "
          "leading causes of cancer **death** — lung, liver, stomach, colorectum, oesophagus — are "
          "**67.5%** of all cancer deaths. Pursuing genetically-validated targets *for these cancers* is "
-         "where work matters most for Chinese patients.", "",
-         "| Cancer | 中文 | China death rank | 2022 new cases | Dominant driver in China |",
-         "|---|---|---|---|---|"]
+         "where targeted-therapy work matters most for Chinese patients.", "",
+         "| Cancer | 中文 | China death rank | 2022 new cases | Dominant driver | Highest-impact prevention lever |",
+         "|---|---|---|---|---|---|"]
     for c in sorted(CHINA_TOP_CANCERS, key=_rank_value):
         rank = f"#{c['mortality_rank']}" if c.get("mortality_rank") else "— (high incidence)"
         cases = f"{c['new_cases_2022']:,}" if c.get("new_cases_2022") else "—"
-        L.append(f"| {c['name']} | {c['cn']} | {rank} | {cases} | {c['driver']} |")
-    L += ["", f"_Source: {SOURCE} <{SOURCE_URL}>. National 2022 estimates, not per-program forecasts; "
+        L.append(f"| {c['name']} | {c['cn']} | {rank} | {cases} | {c['driver']} | {c.get('prevention','—')} |")
+    # Honest framing: name the cancers where prevention, not a new molecule, is the proven lever.
+    prevention_first = [c["name"] for c in CHINA_TOP_CANCERS if not c.get("druggable")]
+    L += ["",
+          "> **Honest read-out:** for **" + ", ".join(prevention_first) + "** the proven, highest-impact "
+          "lever in China is **prevention** (HBV vaccination; reducing exposures), not a new small "
+          "molecule — these cancers are hard to drug. A targeted-therapy hypothesis here is the "
+          "complement, not the headline. Lung, colorectal, gastric and breast carry genuine "
+          "small-molecule target biology, which is where this pipeline contributes most.", "",
+          f"_Source: {SOURCE} <{SOURCE_URL}>. National 2022 estimates, not per-program forecasts; "
           "target↔cancer mapping is a relevance heuristic. Research only; not medical advice._"]
     return "\n".join(L)

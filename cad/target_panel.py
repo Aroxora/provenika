@@ -45,7 +45,7 @@ import china_burden as CB  # noqa: E402
 DEFAULT_PANEL = [
     "KRAS", "NRAS", "HRAS", "BRAF", "EGFR", "ERBB2", "PIK3CA", "AKT1", "MTOR", "PTEN",
     "MET", "ALK", "ROS1", "RET", "KIT", "FLT3", "ABL1", "BTK", "JAK2",
-    "FGFR1", "FGFR2", "FGFR3", "MAP2K1", "CDK4", "CDK6", "BCL2", "MDM2",
+    "FGFR1", "FGFR2", "FGFR3", "FGFR4", "MAP2K1", "CDK4", "CDK6", "BCL2", "MDM2",
     "IDH1", "IDH2", "PARP1", "AR", "ESR1",
 ]
 

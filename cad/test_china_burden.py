@@ -56,6 +56,17 @@ def test_brief_is_cited_and_honest():
     check("brief says not medical advice", "not medical advice" in md)
 
 
+def test_prevention_levers_are_surfaced():
+    md = CB.burden_brief_markdown()
+    check("brief surfaces HBV vaccination for liver", "HBV vaccination" in md)
+    check("brief surfaces H. pylori for gastric", "H. pylori" in md)
+    check("brief is honest that prevention beats a molecule for the hard-to-drug cancers",
+          "prevention" in md.lower() and "not a new small" in md.lower())
+    # every burden record carries a prevention lever
+    check("every cancer record has a prevention lever",
+          all(c.get("prevention") for c in CB.CHINA_TOP_CANCERS))
+
+
 def test_china_view_orders_by_burden():
     rows = [
         {"symbol": "EGFR", "url": "u", "genetic_score": 0.93, "genetic_cancer": "lung cancer",

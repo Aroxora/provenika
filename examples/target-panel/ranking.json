@@ -1,5 +1,5 @@
 {
-  "panel_size": 32,
+  "panel_size": 33,
   "ranked": [
     {
       "symbol": "PTEN",
@@ -480,6 +480,22 @@
       "china_death_rank": null,
       "readout": "moderate human genetic support for breast carcinoma (genetic-evidence score 0.40)",
       "url": "https://platform.opentargets.org/target/ENSG00000135679"
+    },
+    {
+      "symbol": "FGFR4",
+      "approved_symbol": "FGFR4",
+      "ensembl_id": "ENSG00000160867",
+      "genetic_score": 0.243,
+      "genetic_cancer": "neoplasm",
+      "top_cancer": "cancer",
+      "top_cancer_overall": 0.732,
+      "somatic_score": 0.608,
+      "known_drug_score": 0.923,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
+      "readout": "moderate human genetic support for neoplasm (genetic-evidence score 0.24)",
+      "url": "https://platform.opentargets.org/target/ENSG00000160867"
     },
     {
       "symbol": "BTK",

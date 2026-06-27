@@ -1,7 +1,7 @@
 {
   "generated": "2026-06-27",
   "source": "Open Targets Platform (platform.opentargets.org)",
-  "panel_size": 32,
+  "panel_size": 33,
   "ranked": [
     {
       "symbol": "PTEN",
@@ -13,6 +13,9 @@
       "top_cancer_overall": 0.808,
       "somatic_score": 0.865,
       "known_drug_score": null,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for PTEN hamartoma tumor syndrome (genetic-evidence score 0.97) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000171862"
     },
@@ -26,6 +29,9 @@
       "top_cancer_overall": 0.837,
       "somatic_score": 0.882,
       "known_drug_score": 0.989,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "strong human genetic support for neuroblastoma (genetic-evidence score 0.96) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000171094"
     },
@@ -39,6 +45,9 @@
       "top_cancer_overall": 0.831,
       "somatic_score": 0.608,
       "known_drug_score": 0.986,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
       "readout": "strong human genetic support for papillary renal cell carcinoma (genetic-evidence score 0.95) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000105976"
     },
@@ -52,6 +61,9 @@
       "top_cancer_overall": 0.862,
       "somatic_score": 0.608,
       "known_drug_score": 0.978,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
       "readout": "strong human genetic support for Inherited cancer-predisposing syndrome (genetic-evidence score 0.94) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000165731"
     },
@@ -65,6 +77,9 @@
       "top_cancer_overall": 0.853,
       "somatic_score": 0.867,
       "known_drug_score": 0.996,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "strong human genetic support for EGFR-related lung cancer (genetic-evidence score 0.93) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000146648"
     },
@@ -78,6 +93,9 @@
       "top_cancer_overall": 0.754,
       "somatic_score": 0.916,
       "known_drug_score": 0.931,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
       "readout": "strong human genetic support for breast cancer (genetic-evidence score 0.92) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000121879"
     },
@@ -91,6 +109,9 @@
       "top_cancer_overall": 0.893,
       "somatic_score": 0.781,
       "known_drug_score": 0.987,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
       "readout": "strong human genetic support for gastrointestinal stromal tumor (genetic-evidence score 0.91) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000157404"
     },
@@ -104,6 +125,9 @@
       "top_cancer_overall": 0.805,
       "somatic_score": 0.899,
       "known_drug_score": 0.929,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for cervical cancer (genetic-evidence score 0.91) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000068078"
     },
@@ -117,6 +141,9 @@
       "top_cancer_overall": 0.804,
       "somatic_score": 0.855,
       "known_drug_score": 0.946,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "strong human genetic support for gastric cancer (genetic-evidence score 0.90) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000133703"
     },
@@ -130,6 +157,9 @@
       "top_cancer_overall": 0.799,
       "somatic_score": 0.547,
       "known_drug_score": 0.947,
+      "china_cancer": "Stomach (gastric) cancer",
+      "china_cancer_cn": "\u80c3\u764c",
+      "china_death_rank": 3,
       "readout": "strong human genetic support for breast carcinoma (genetic-evidence score 0.90) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000066468"
     },
@@ -143,6 +173,9 @@
       "top_cancer_overall": 0.725,
       "somatic_score": 0.783,
       "known_drug_score": 0.809,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for glioma (genetic-evidence score 0.89) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000182054"
     },
@@ -156,6 +189,9 @@
       "top_cancer_overall": 0.803,
       "somatic_score": 0.784,
       "known_drug_score": 0.992,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for Familial prostate cancer (genetic-evidence score 0.89) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000169083"
     },
@@ -169,6 +205,9 @@
       "top_cancer_overall": 0.722,
       "somatic_score": 0.816,
       "known_drug_score": null,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for urinary bladder cancer (genetic-evidence score 0.87) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000174775"
     },
@@ -182,6 +221,9 @@
       "top_cancer_overall": 0.82,
       "somatic_score": 0.865,
       "known_drug_score": 0.978,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "strong human genetic support for lymphoma (genetic-evidence score 0.86) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000157764"
     },
@@ -195,6 +237,9 @@
       "top_cancer_overall": 0.826,
       "somatic_score": 0.608,
       "known_drug_score": 0.995,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for chronic myelogenous leukemia, BCR-ABL1 positive (genetic-evidence score 0.86) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000097007"
     },
@@ -208,6 +253,9 @@
       "top_cancer_overall": 0.699,
       "somatic_score": 0.838,
       "known_drug_score": null,
+      "china_cancer": "Colorectal cancer",
+      "china_cancer_cn": "\u7ed3\u76f4\u80a0\u764c",
+      "china_death_rank": 4,
       "readout": "strong human genetic support for colorectal cancer (genetic-evidence score 0.85) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000213281"
     },
@@ -221,6 +269,9 @@
       "top_cancer_overall": 0.7,
       "somatic_score": 0.608,
       "known_drug_score": 0.988,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for melanoma, cutaneous malignant, susceptibility to, 3 (genetic-evidence score 0.80) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000135446"
     },
@@ -234,6 +285,9 @@
       "top_cancer_overall": 0.736,
       "somatic_score": 0.728,
       "known_drug_score": 0.994,
+      "china_cancer": "Breast cancer",
+      "china_cancer_cn": "\u4e73\u817a\u764c",
+      "china_death_rank": null,
       "readout": "strong human genetic support for breast cancer (genetic-evidence score 0.78) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000091831"
     },
@@ -247,6 +301,9 @@
       "top_cancer_overall": 0.742,
       "somatic_score": 0.702,
       "known_drug_score": 0.966,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for B-cell chronic lymphocytic leukemia (genetic-evidence score 0.76) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000171791"
     },
@@ -260,6 +317,9 @@
       "top_cancer_overall": 0.779,
       "somatic_score": 0.832,
       "known_drug_score": 0.994,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "strong human genetic support for colorectal cancer (genetic-evidence score 0.74) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000141736"
     },
@@ -273,6 +333,9 @@
       "top_cancer_overall": 0.685,
       "somatic_score": 0.66,
       "known_drug_score": 0.867,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for acute myeloid leukemia (genetic-evidence score 0.74) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000096968"
     },
@@ -286,6 +349,9 @@
       "top_cancer_overall": 0.621,
       "somatic_score": null,
       "known_drug_score": 0.975,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for cutaneous melanoma (genetic-evidence score 0.66) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000143799"
     },
@@ -299,6 +365,9 @@
       "top_cancer_overall": 0.779,
       "somatic_score": 0.827,
       "known_drug_score": 0.932,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
       "readout": "strong human genetic support for glioma susceptibility 1 (genetic-evidence score 0.64) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000138413"
     },
@@ -312,6 +381,9 @@
       "top_cancer_overall": 0.525,
       "somatic_score": 0.685,
       "known_drug_score": 0.636,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for papillary renal cell carcinoma (genetic-evidence score 0.56) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000198793"
     },
@@ -325,6 +397,9 @@
       "top_cancer_overall": 0.731,
       "somatic_score": 0.608,
       "known_drug_score": 0.971,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "strong human genetic support for non-small cell lung carcinoma (genetic-evidence score 0.56) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000169032"
     },
@@ -338,6 +413,9 @@
       "top_cancer_overall": 0.835,
       "somatic_score": 0.849,
       "known_drug_score": 0.979,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for acute myeloid leukemia (genetic-evidence score 0.55) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000122025"
     },
@@ -351,6 +429,9 @@
       "top_cancer_overall": 0.622,
       "somatic_score": 0.608,
       "known_drug_score": 0.988,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for clear cell renal carcinoma (genetic-evidence score 0.54) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000105810"
     },
@@ -364,6 +445,9 @@
       "top_cancer_overall": 0.671,
       "somatic_score": 0.843,
       "known_drug_score": 0.899,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "strong human genetic support for clear cell renal carcinoma (genetic-evidence score 0.51) \u2014 genetically-supported mechanisms are ~2x more likely to be approved (Nelson 2015)",
       "url": "https://platform.opentargets.org/target/ENSG00000142208"
     },
@@ -377,6 +461,9 @@
       "top_cancer_overall": 0.712,
       "somatic_score": 0.712,
       "known_drug_score": 0.974,
+      "china_cancer": "Lung cancer",
+      "china_cancer_cn": "\u80ba\u764c",
+      "china_death_rank": 1,
       "readout": "moderate human genetic support for lung carcinoma (genetic-evidence score 0.44)",
       "url": "https://platform.opentargets.org/target/ENSG00000047936"
     },
@@ -390,8 +477,27 @@
       "top_cancer_overall": 0.399,
       "somatic_score": 0.608,
       "known_drug_score": 0.265,
+      "china_cancer": "Breast cancer",
+      "china_cancer_cn": "\u4e73\u817a\u764c",
+      "china_death_rank": null,
       "readout": "moderate human genetic support for breast carcinoma (genetic-evidence score 0.40)",
       "url": "https://platform.opentargets.org/target/ENSG00000135679"
+    },
+    {
+      "symbol": "FGFR4",
+      "approved_symbol": "FGFR4",
+      "ensembl_id": "ENSG00000160867",
+      "genetic_score": 0.243,
+      "genetic_cancer": "neoplasm",
+      "top_cancer": "cancer",
+      "top_cancer_overall": 0.732,
+      "somatic_score": 0.608,
+      "known_drug_score": 0.923,
+      "china_cancer": "Liver cancer (HCC)",
+      "china_cancer_cn": "\u809d\u764c",
+      "china_death_rank": 2,
+      "readout": "moderate human genetic support for neoplasm (genetic-evidence score 0.24)",
+      "url": "https://platform.opentargets.org/target/ENSG00000160867"
     },
     {
       "symbol": "BTK",
@@ -403,6 +509,9 @@
       "top_cancer_overall": 0.719,
       "somatic_score": 0.608,
       "known_drug_score": 0.985,
+      "china_cancer": null,
+      "china_cancer_cn": null,
+      "china_death_rank": null,
       "readout": "weak human genetic support for neoplasm (genetic-evidence score 0.20)",
       "url": "https://platform.opentargets.org/target/ENSG00000010671"
     },
@@ -416,6 +525,9 @@
       "top_cancer_overall": 0.746,
       "somatic_score": 0.456,
       "known_drug_score": 0.95,
+      "china_cancer": "Colorectal cancer",
+      "china_cancer_cn": "\u7ed3\u76f4\u80a0\u764c",
+      "china_death_rank": 4,
       "readout": "weak human genetic support for colorectal cancer (genetic-evidence score 0.00)",
       "url": "https://platform.opentargets.org/target/ENSG00000077782"
     }
