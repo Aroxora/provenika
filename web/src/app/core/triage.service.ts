@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ChemblService } from './chembl.service';
 import { TriageHit } from './models';
+import { parseVariants, stripVariants } from './mutations';
 
 /** Ligand-based virtual triage — port of cad/virtual_triage.py to the browser. */
 @Injectable({ providedIn: 'root' })
@@ -13,14 +14,29 @@ export class TriageService {
     limit?: number;
     scan?: number;
     excludeApproved?: boolean;
-  }): Promise<{ targetId: string; targetName: string; hits: TriageHit[] }> {
+  }): Promise<{ targetId: string; targetName: string; hits: TriageHit[]; variantWarning?: string }> {
     const minPchembl = opts.minPchembl ?? 7;
     const limit = opts.limit ?? 25;
 
-    const target = await this.chembl.resolveTarget(opts.target);
-    if (!target) throw new Error(`No ChEMBL target found for "${opts.target}".`);
+    // Allele-specific query ("KRAS G12C"): resolve the bare gene, keep only matching-variant records.
+    const variants = parseVariants(opts.target);
+    const resolveName = variants.size ? stripVariants(opts.target) : opts.target;
 
-    const actives = await this.chembl.fetchActives(target.target_chembl_id, minPchembl, opts.scan ?? 2500);
+    const target = await this.chembl.resolveTarget(resolveName);
+    if (!target) throw new Error(`No ChEMBL target found for "${resolveName}".`);
+
+    const actives = await this.chembl.fetchActives(
+      target.target_chembl_id, minPchembl, opts.scan ?? 2500, variants.size ? variants : null,
+    );
+
+    // Honest about allele specificity: a mutation with no matching ChEMBL records isn't silently
+    // backfilled with wild-type data.
+    let variantWarning: string | undefined;
+    if (variants.size && (!actives.size || ![...actives.values()].some((a) => a.variantDataSeen))) {
+      const allele = [...variants].sort().join(', ');
+      variantWarning = `No ${allele}-specific assay data in ChEMBL for ${target.pref_name} — results are NOT for the requested allele.`;
+      if (!actives.size) throw new Error(variantWarning);
+    }
     if (!actives.size) throw new Error('No potent ligands met the threshold (try lowering min pChEMBL).');
 
     const topIds = [...actives.keys()]
@@ -36,20 +52,29 @@ export class TriageService {
       const dl = drugLikeness(p.qed, p.ro5_violations);
       hits.push({
         ...p,
-        best_pchembl: a.pchembl,
-        assay_type: a.type,
+        pchembl_median: a.pchembl,
+        best_pchembl: a.maxPchembl,
+        n_measurements: a.n,
+        potency_suspect: a.maxPchembl >= 10 && a.n < 2,
+        measurement_type: a.type,
+        assay_format: a.assayFormat,
+        variant: a.variant,
         drug_likeness: dl,
-        score: composite(a.pchembl, dl),
+        score: composite(a.pchembl, dl),   // rank on the robust median, not the single best value
         chembl_url: `https://www.ebi.ac.uk/chembl/compound_report_card/${id}/`,
       });
     }
     if (opts.excludeApproved) hits = hits.filter((h) => (h.max_phase ?? 0) < 4);
     hits.sort((a, b) => b.score - a.score);
-    return { targetId: target.target_chembl_id, targetName: target.pref_name, hits: hits.slice(0, limit) };
+    return {
+      targetId: target.target_chembl_id, targetName: target.pref_name,
+      hits: hits.slice(0, limit), variantWarning,
+    };
   }
 
   toCsv(hits: TriageHit[]): string {
-    const cols = ['chembl_id', 'name', 'dev_phase', 'best_pchembl', 'assay_type', 'score',
+    const cols = ['chembl_id', 'name', 'dev_phase', 'pchembl_median', 'best_pchembl', 'n_measurements',
+      'potency_suspect', 'measurement_type', 'assay_format', 'variant', 'score',
       'drug_likeness', 'qed', 'ro5_violations', 'mw', 'alogp', 'hbd', 'hba', 'psa', 'smiles', 'chembl_url'];
     const esc = (v: any) => {
       const s = v == null ? '' : String(v);

@@ -4,6 +4,7 @@ import { filter } from 'rxjs';
 import { TargetStore } from './core/target-store';
 import { FaviconService } from './core/favicon.service';
 import { BusyService } from './core/busy.service';
+import { SeoService } from './core/seo.service';
 import { track } from './core/firebase';
 
 @Component({
@@ -18,6 +19,7 @@ export class App {
   private route = inject(ActivatedRoute);
   private favicon = inject(FaviconService);
   private busy = inject(BusyService);
+  private seo = inject(SeoService);
 
   readonly target = this.store.target;
   readonly draft = signal(this.store.target());
@@ -33,6 +35,9 @@ export class App {
   private currentUrl = signal('');
 
   constructor() {
+    // Per-route SEO (unique title/description/canonical) + GA4-correct page_view on every navigation.
+    this.seo.init();
+
     // Seed from ?t= (works on any route, but explorer consumes it best)
     const fromUrl = this.route.snapshot.queryParamMap.get('t');
     if (fromUrl) {
@@ -57,13 +62,13 @@ export class App {
 
     effect(() => this.favicon.setBusy(this.busy.busy()));
 
-    // Track route for nav + favicon
+    // Track route for nav + favicon. The GA4 page_view (enriched with title/location) and per-route
+    // metadata are handled by SeoService.init() above, so it is not duplicated here.
     this.router.events.pipe(filter((e): e is NavigationEnd => e instanceof NavigationEnd)).subscribe((e) => {
       const path = e.urlAfterRedirects.split('?')[0];
       this.currentUrl.set(path);
       const seg = path.split('/').filter(Boolean)[0] || '';
       this.favicon.setRoute(seg);
-      track('page_view', { page_path: path });
     });
 
     // Keep draft in sync with store when navigating

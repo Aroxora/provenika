@@ -28,6 +28,45 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <meta name="author" content="ErosolarAI">
+  <!-- Structured data (schema.org JSON-LD) for richer search results -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://erosolarai.com/#org",
+        "name": "ErosolarAI",
+        "url": "https://erosolarai.com",
+        "sameAs": ["https://erosolarai.com", "https://github.com/Aroxora/provenika"]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://provenika.com/#website",
+        "url": "https://provenika.com/",
+        "name": "Provenika",
+        "inLanguage": "en",
+        "publisher": { "@id": "https://erosolarai.com/#org" },
+        "description": "Auditable oncology evidence engine: ranked, fully-cited, re-verifiable drug-discovery hypotheses from public data. Research only, not medical advice."
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Provenika",
+        "applicationCategory": "ScienceApplication",
+        "applicationSubCategory": "Computer-aided drug discovery (oncology research)",
+        "operatingSystem": "Web",
+        "url": "https://provenika.com/",
+        "isAccessibleForFree": true,
+        "author": { "@id": "https://erosolarai.com/#org" },
+        "publisher": { "@id": "https://erosolarai.com/#org" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "description": "Turns free public oncology data (ChEMBL, UniProt, RCSB PDB, AlphaFold) into ranked, fully-cited, independently re-verifiable drug-discovery hypotheses. Compute or cite, never assert. Research only; not medical advice. Developed by ErosolarAI."
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <app-root></app-root>

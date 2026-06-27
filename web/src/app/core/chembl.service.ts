@@ -2,9 +2,36 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { ChemblTarget, MoleculeProps } from './models';
+import { variantMatches, parseVariants } from './mutations';
 
 const BASE = 'https://www.ebi.ac.uk/chembl/api/data';
 const POTENCY_TYPES = new Set(['IC50', 'Ki', 'Kd', 'EC50']);
+
+// ChEMBL activity-quality gate — mirrors virtual_triage.ACTIVITY_QUALITY_PARAMS so the browser ranks
+// on the same clean, '='-relation, validity-checked, potency-ordered records as the CLI.
+const QUALITY_PARAMS: Record<string, string> = {
+  pchembl_value__isnull: 'false',
+  standard_relation: '=',
+  data_validity_comment__isnull: 'true',
+  order_by: '-pchembl_value',
+};
+
+export interface ActiveAgg {
+  pchembl: number;        // MEDIAN of qualifying measurements — the ranking value
+  maxPchembl: number;     // best single measurement
+  n: number;              // how many measurements backed the median
+  type: string;           // measurement type (IC50/Ki/Kd/EC50)
+  assayFormat: string | null;  // ChEMBL assay_type B/F/A
+  variant: string | null;
+  variantDataSeen: boolean;
+}
+
+function median(xs: number[]): number {
+  const s = [...xs].sort((a, b) => a - b);
+  const m = Math.floor(s.length / 2);
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+}
+const r2 = (x: number) => Math.round(x * 100) / 100;
 
 /** Client for the public ChEMBL REST API (CORS-enabled, no key). */
 @Injectable({ providedIn: 'root' })
@@ -27,13 +54,20 @@ export class ChemblService {
     };
   }
 
-  /** Best (highest) pChEMBL potency activity per molecule for a target. */
+  /**
+   * Quality-gated potency per molecule for a target, aggregated to a ROBUST MEDIAN (not the single
+   * luckiest measurement), with measurement support and optional allele filtering — mirrors the CLI
+   * (cad/virtual_triage.fetch_actives). Drops potential_duplicate rows; records assay format/variant.
+   */
   async fetchActives(
     targetId: string,
     minPchembl: number,
     scan = 2000,
-  ): Promise<Map<string, { pchembl: number; type: string }>> {
-    const best = new Map<string, { pchembl: number; type: string }>();
+    variantFilter: Set<string> | null = null,
+  ): Promise<Map<string, ActiveAgg>> {
+    const vals = new Map<string, number[]>();
+    const rep = new Map<string, { max: number; type: string; assayFormat: string | null; variant: string | null }>();
+    let variantDataSeen = false;
     let offset = 0;
     const page = 1000;
     let fetched = 0;
@@ -41,8 +75,8 @@ export class ChemblService {
       const data: any = await firstValueFrom(
         this.http.get(`${BASE}/activity`, {
           params: {
+            ...QUALITY_PARAMS,
             target_chembl_id: targetId,
-            pchembl_value__isnull: 'false',
             format: 'json',
             limit: Math.min(page, scan - fetched),
             offset,
@@ -51,19 +85,40 @@ export class ChemblService {
       );
       const acts: any[] = data?.activities ?? [];
       if (!acts.length) break;
+      let stop = false;
       for (const a of acts) {
-        const mol = a.molecule_chembl_id;
         const pv = parseFloat(a.pchembl_value);
+        if (isNaN(pv)) continue;
+        if (pv < minPchembl) { stop = true; break; }   // records are descending → rest are below floor
+        const mol = a.molecule_chembl_id;
         const stype = a.standard_type;
-        if (!mol || isNaN(pv) || !POTENCY_TYPES.has(stype) || pv < minPchembl) continue;
-        const cur = best.get(mol);
-        if (!cur || pv > cur.pchembl) best.set(mol, { pchembl: pv, type: stype });
+        if (!mol || !POTENCY_TYPES.has(stype)) continue;
+        if (a.potential_duplicate === 1 || a.potential_duplicate === '1') continue;
+        if (variantFilter) {
+          const recVars = parseVariants(a.assay_variant_mutation || '');
+          for (const v of variantFilter) if (recVars.has(v)) { variantDataSeen = true; break; }
+          if (!variantMatches(variantFilter, a.assay_variant_mutation)) continue;
+        }
+        if (!vals.has(mol)) vals.set(mol, []);
+        vals.get(mol)!.push(pv);
+        const cur = rep.get(mol);
+        if (!cur || pv > cur.max) {
+          rep.set(mol, { max: pv, type: stype, assayFormat: a.assay_type ?? null, variant: a.assay_variant_mutation || null });
+        }
       }
       fetched += acts.length;
-      if (!data?.page_meta?.next) break;
+      if (stop || !data?.page_meta?.next) break;
       offset += acts.length;
     }
-    return best;
+    const out = new Map<string, ActiveAgg>();
+    for (const [mol, list] of vals) {
+      const r = rep.get(mol)!;
+      out.set(mol, {
+        pchembl: r2(median(list)), maxPchembl: r2(r.max), n: list.length,
+        type: r.type, assayFormat: r.assayFormat, variant: r.variant, variantDataSeen,
+      });
+    }
+    return out;
   }
 
   async fetchMoleculeProps(ids: string[]): Promise<Map<string, MoleculeProps>> {

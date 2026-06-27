@@ -24,8 +24,13 @@ export interface MoleculeProps {
 }
 
 export interface TriageHit extends MoleculeProps {
-  best_pchembl: number;
-  assay_type: string;
+  pchembl_median: number;        // robust consensus — the ranking value
+  best_pchembl: number;          // best single measurement
+  n_measurements: number;
+  potency_suspect: boolean;      // near-ceiling potency from < 2 measurements
+  measurement_type: string;      // IC50/Ki/Kd/EC50 (was mislabeled "assay_type")
+  assay_format: string | null;   // ChEMBL assay_type B/F/A
+  variant: string | null;
   drug_likeness: number;
   score: number;
   chembl_url: string;

@@ -104,7 +104,7 @@ interface CostResult {
                 <span class="score">{{ h.score | number:'1.2-2' }}</span>
                 <span class="mono">{{ h.chembl_id }}</span>
                 <span>{{ h.name || '—' }}</span>
-                <span class="muted">pChEMBL {{ h.best_pchembl | number:'1.1-1' }}</span>
+                <span class="muted">pChEMBL {{ h.pchembl_median | number:'1.1-1' }}@if (h.n_measurements) {<span> (n={{ h.n_measurements }})</span>}@if (h.potency_suspect) {<span title="near-ceiling potency from <2 measurements — verify">&nbsp;⚠️</span>}</span>
               </div>
             }
           </div>
@@ -408,7 +408,7 @@ export class Explorer {
   selectHit(h: TriageHit) {
     this.selectedHit.set(h);
     // optionally set focus ligand for future math use
-    this.store.setFocusLigand({ id: h.chembl_id, pchembl: h.best_pchembl, name: h.name || h.chembl_id });
+    this.store.setFocusLigand({ id: h.chembl_id, pchembl: h.pchembl_median, name: h.name || h.chembl_id });
   }
 
   downloadTriageCsv() {

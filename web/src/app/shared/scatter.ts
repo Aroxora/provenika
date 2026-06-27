@@ -89,10 +89,10 @@ export class Scatter {
       const shape: Shape = phase === 'approved' ? 'filled' : phase === 'clinical' ? 'ring' : 'square';
       return {
         hit: h,
-        cx: this.sx(Math.max(PX_MIN, Math.min(PX_MAX, h.best_pchembl))),
+        cx: this.sx(Math.max(PX_MIN, Math.min(PX_MAX, h.pchembl_median))),
         cy: this.sy(Math.max(0, Math.min(1, h.drug_likeness))),
         color, shape,
-        label: `${h.name === h.chembl_id ? h.chembl_id : h.name}: pChEMBL ${h.best_pchembl.toFixed(1)}, drug-likeness ${h.drug_likeness.toFixed(2)}, ${phase}`,
+        label: `${h.name === h.chembl_id ? h.chembl_id : h.name}: pChEMBL ${h.pchembl_median.toFixed(1)}, drug-likeness ${h.drug_likeness.toFixed(2)}, ${phase}`,
       };
     }),
   );
