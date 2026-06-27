@@ -61,6 +61,27 @@ PARTNERS_CN = {
 CLINICAL_REGISTRY_CN = ("ChiCTR 中国临床试验注册中心", "https://www.chictr.org.cn",
                         "China's primary clinical-trial registry (WHO ICTRP primary registry)")
 
+# Where to OBTAIN the compounds, domestically — before a CRO can test a molecule, someone supplies it.
+# China hosts the dominant bioactive-compound catalog suppliers; many known ChEMBL actives are catalog
+# items, so the handoff is often "buy it" not "synthesise it". Each entry verified against its own site
+# (brand names are what researchers in China actually use; no fabricated Chinese entity name). Real
+# capability stated; NO specific stock/price claimed — confirm per compound by structure/ChEMBL ID.
+SUPPLIERS_CN = [
+    ("MedChemExpress (MCE)", "https://www.medchemexpress.com",
+     "large bioactive small-molecule & inhibitor catalog + screening libraries — Shanghai"),
+    ("TargetMol", "https://www.targetmol.com",
+     "80,000+ inhibitors/agonists and 800+ compound libraries — Shanghai"),
+    ("Selleck Chemicals (Selleckchem)", "https://www.selleckchem.com",
+     "pathway-specific inhibitors & screening libraries (incl. PI3K/Akt/mTOR) — China site selleck.cn"),
+    ("Bide Pharmatech (Bidepharm)", "https://www.bidepharm.com",
+     "building blocks & screening compounds for sourcing/synthesis — Shanghai"),
+]
+
+SUPPLIERS_NOTE_CN = ("Many known ChEMBL actives are catalog items — search each candidate by structure or "
+                     "ChEMBL ID on a domestic supplier to see if it can be PURCHASED (no synthesis, no "
+                     "import) before commissioning a CRO. Availability and price are per-compound; confirm "
+                     "directly — do not assume stock.")
+
 # One-line note shown above the China lab lists.
 REGION_NOTE_CN = ("Bench routes below are mainland-China CROs (no cross-border compound shipping, domestic "
                   "invoicing, Chinese-language contact). Capabilities were verified against each company's "

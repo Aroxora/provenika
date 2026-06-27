@@ -74,6 +74,17 @@ def test_chinese_pitch_is_honest_and_unsent():
     check("pitch makes no efficacy/cure claim", not any(w in email for w in ("治愈", "疗效", "有效治疗")))
 
 
+def test_domestic_suppliers_are_real_and_honest():
+    check("≥3 domestic suppliers listed", len(CN.SUPPLIERS_CN) >= 3)
+    for name, url, what in CN.SUPPLIERS_CN:
+        check(f"  supplier well-formed ({name[:16]})",
+              bool(name) and url.startswith("https://") and bool(what))
+    # honest: the note must NOT claim stock; it must tell the user to confirm per compound.
+    note = CN.SUPPLIERS_NOTE_CN.lower()
+    check("sourcing note tells user to confirm (no assumed stock)",
+          "confirm" in note and "do not assume stock" in note)
+
+
 def test_region_cn_swaps_labs_and_pitch():
     with tempfile.TemporaryDirectory() as t:
         d = _run(Path(t))
@@ -84,8 +95,11 @@ def test_region_cn_swaps_labs_and_pitch():
         check("cn markdown lists Crown Bioscience PDX route", "Crown Bioscience" in cn_md)
         check("cn markdown adds the China clinical registry (ChiCTR)", "ChiCTR" in cn_md)
         check("cn markdown carries the run-locally note (Firewall reality)", "blocked" in cn_md.lower())
+        check("cn markdown adds a domestic-sourcing section (TargetMol)",
+              "Where to obtain the compounds" in cn_md and "TargetMol" in cn_md)
         check("global markdown keeps US/EU routes (Reaction Biology)", "Reaction Biology" in gl_md)
         check("global markdown does NOT inject China CROs", "Viva Biotech" not in gl_md)
+        check("global markdown does NOT inject domestic suppliers", "TargetMol" not in gl_md)
         check("both still say 'not medical advice'", "not medical advice" in cn_md and "not medical advice" in gl_md)
 
 

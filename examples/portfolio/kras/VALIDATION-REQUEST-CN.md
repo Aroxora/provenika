@@ -33,6 +33,15 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000133703). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
+## Where to obtain the compounds (domestic suppliers)
+
+Many known ChEMBL actives are catalog items — search each candidate by structure or ChEMBL ID on a domestic supplier to see if it can be PURCHASED (no synthesis, no import) before commissioning a CRO. Availability and price are per-compound; confirm directly — do not assume stock.
+
+- [MedChemExpress (MCE)](https://www.medchemexpress.com) — large bioactive small-molecule & inhibitor catalog + screening libraries — Shanghai
+- [TargetMol](https://www.targetmol.com) — 80,000+ inhibitors/agonists and 800+ compound libraries — Shanghai
+- [Selleck Chemicals (Selleckchem)](https://www.selleckchem.com) — pathway-specific inhibitors & screening libraries (incl. PI3K/Akt/mTOR) — China site selleck.cn
+- [Bide Pharmatech (Bidepharm)](https://www.bidepharm.com) — building blocks & screening compounds for sourcing/synthesis — Shanghai
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds

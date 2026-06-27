@@ -77,6 +77,13 @@ against the company's own website — confirm current scope, eligibility and pri
 | **In-vivo / translation** | **Crown Bioscience 冠科生物** — 2,500+ PDX & 200+ CDX oncology models · **SIMM 上海药物所 / 国家新药筛选中心** (academic collaboration) |
 | **Clinical registry** | **ChiCTR 中国临床试验注册中心** — WHO ICTRP primary registry |
 
+**Where to obtain the compounds (domestic).** Before a CRO can test a molecule, someone supplies it —
+and many known ChEMBL actives are **catalog items**, so the handoff is often "buy it," not "synthesise
+it." The China request lists domestic bioactive-compound suppliers — **MedChemExpress (MCE)**,
+**TargetMol** (80,000+ inhibitors), **Selleck**, **Bidepharm** — so you can search each candidate by
+structure/ChEMBL ID and purchase it domestically (no import). Availability/price are per-compound;
+confirm directly — don't assume stock.
+
 > The candidates are **public-data-prioritised hypotheses, not validated hits** — no binding, cell
 > activity, selectivity, or safety has been measured. The Chinese pitch states this plainly
 > (计算预测的候选化合物，尚未经过任何实验验证) and asks only for the first step: a biochemical IC50.

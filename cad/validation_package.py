@@ -148,6 +148,12 @@ def to_markdown(pkg: dict, run_name: str, region: str = "global") -> str:
             L += [TE.to_markdown(pkg["ot"]), ""]
         except Exception:
             pass
+    if cn:
+        L += ["## Where to obtain the compounds (domestic suppliers)", "",
+              f"{CN.SUPPLIERS_NOTE_CN}", ""]
+        for name, url, what in CN.SUPPLIERS_CN:
+            L.append(f"- [{name}]({url}) — {what}")
+        L.append("")
     L += ["## The experiments that would validate it (in order)", ""]
     for title, assay, question, key, motiv in CHAIN:
         L.append(f"### {title}")
