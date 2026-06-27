@@ -47,6 +47,10 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio'
 
     <section class="cta">
       <p>
+        Why these targets? Each is drawn from the oncogenome ranked by human genetic support for cancer —
+        the prior that ~2×-es approval odds. <a routerLink="/targets">See the full ranked panel →</a>
+      </p>
+      <p>
         Want to test one? The honest first ask is small — a biochemical IC50 to confirm binding, then a
         selectivity panel. <a routerLink="/bench">See the experiment chain and the labs that run it →</a>
       </p>

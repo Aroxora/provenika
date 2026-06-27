@@ -47,6 +47,13 @@ const ROUTE_META: Record<string, RouteMeta> = {
       'translation — how cancer is actually cured, and exactly where AI (AlphaFold-style) saves ' +
       'experimentation vs the irreducible wet-lab and clinical work. Literature-verified; not medical advice.',
   },
+  targets: {
+    title: 'Which cancer targets to pursue — ranked by human genetics | Provenika',
+    description:
+      'A curated oncogene panel ranked by human genetic support for cancer — the prior that ~2x-es ' +
+      'approval odds (Nelson, Nat Genet 2015). Every score fetched live from Open Targets, none ' +
+      'model-produced; surfaces the genetically-validated-but-undrugged targets. Research only; not medical advice.',
+  },
   portfolio: {
     title: 'Bench-ready hypotheses — cited oncology candidates to test | Provenika',
     description:
