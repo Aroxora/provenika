@@ -1,0 +1,11 @@
+rank,chembl_id,ligand_score,vina_best_dG_kcal_per_mol,rank_fusion_NONVALIDATED,prep,smiles,pose_path
+1,CHEMBL5746224,0.882,-9.5,0.941,meeko+pdb2pqr,CN1CCC2(CC1)CN(c1ccc3ncnc(Nc4cccc(Cl)c4F)c3c1)C(=O)O2,docking/CHEMBL5746224/docked.pdbqt
+2,CHEMBL5790648,0.8933,-8.82,0.7878,meeko+pdb2pqr,COc1cc2ncnc(Nc3cccc(Cl)c3F)c2cc1N1CC2(CN(C)C2)OC1=O,docking/CHEMBL5790648/docked.pdbqt
+3,CHEMBL174426,0.8798,-8.3,0.6595,meeko+pdb2pqr,Cn1cnc2cc3c(Nc4cccc(Br)c4)ncnc3cc21,docking/CHEMBL174426/docked.pdbqt
+4,CHEMBL176582,0.9016,-8.21,0.6494,meeko+pdb2pqr,Cn1cnc2cc3ncnc(Nc4cccc(Br)c4)c3cc21,docking/CHEMBL176582/docked.pdbqt
+5,CHEMBL6170958,0.8859,-7.77,0.5387,meeko+pdb2pqr,CCOc1ccc(/C=C2/C(=O)N(c3ccc(Cl)cc3)N=C2C)cc1,docking/CHEMBL6170958/docked.pdbqt
+6,CHEMBL51853,0.8819,-7.63,0.504,meeko+pdb2pqr,Nc1cc2c(Nc3cccc(Br)c3)ncnc2cn1,docking/CHEMBL51853/docked.pdbqt
+7,CHEMBL53428,0.8972,-7.57,0.4977,meeko+pdb2pqr,CN(C)c1cc2ncnc(Nc3cccc(Br)c3)c2cn1,docking/CHEMBL53428/docked.pdbqt
+8,CHEMBL29197,0.8829,-7.46,0.4648,meeko+pdb2pqr,COc1cc2ncnc(Nc3cccc(Br)c3)c2cc1OC,docking/CHEMBL29197/docked.pdbqt
+9,CHEMBL420624,0.8759,-7.44,0.4566,meeko+pdb2pqr,Nc1ccc2c(Nc3cccc(Br)c3)ncnc2c1,docking/CHEMBL420624/docked.pdbqt
+10,CHEMBL54400,0.8843,-7.36,0.4421,meeko+pdb2pqr,CNc1cc2ncnc(Nc3cccc(Br)c3)c2cn1,docking/CHEMBL54400/docked.pdbqt

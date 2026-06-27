@@ -1,0 +1,98 @@
+{
+  "target": "EGFR",
+  "generated": "2026-06-27",
+  "rule": "No value below originates from a language model: each is either fetched live from a cited public source or computed by deterministic open-source code. Re-check with cad/verify.py or by opening verify_url.",
+  "sources": {
+    "uniprot": {
+      "name": "UniProt",
+      "what": "Protein function, length, cross-referenced PDB structures",
+      "docs": "https://www.uniprot.org/help/api"
+    },
+    "chembl": {
+      "name": "ChEMBL (EMBL-EBI)",
+      "what": "Measured bioactivity, drug-likeness properties, mechanisms",
+      "docs": "https://www.ebi.ac.uk/chembl/api/data/docs"
+    },
+    "rcsb": {
+      "name": "RCSB PDB",
+      "what": "Experimental 3-D protein structures",
+      "docs": "https://data.rcsb.org/"
+    },
+    "alphafold": {
+      "name": "AlphaFold DB (EMBL-EBI)",
+      "what": "Predicted protein structures (model, not experiment)",
+      "docs": "https://alphafold.ebi.ac.uk/"
+    },
+    "benchmarks": {
+      "name": "Published industry benchmarks",
+      "what": "Clinical success / cost / duration priors (cost-benefit model)",
+      "docs": "BIO/Informa CDSR 2011-2020; Wong, Siah & Lo 2019; DiMasi et al. 2016"
+    }
+  },
+  "figures": [
+    {
+      "name": "uniprot_accession",
+      "value": "P00533",
+      "origin": "fetched",
+      "source": "uniprot",
+      "verify_url": "https://www.uniprot.org/uniprotkb/P00533/entry",
+      "note": ""
+    },
+    {
+      "name": "pdb_structure_count",
+      "value": 354,
+      "origin": "fetched",
+      "source": "uniprot",
+      "verify_url": "https://www.uniprot.org/uniprotkb/P00533/entry",
+      "note": ""
+    },
+    {
+      "name": "chembl_potent_activity_records",
+      "value": 21342,
+      "origin": "fetched",
+      "source": "chembl",
+      "verify_url": "https://www.ebi.ac.uk/chembl/api/data/activity?target_chembl_id=CHEMBL203&pchembl_value__isnull=false&limit=1&format=json",
+      "note": ""
+    },
+    {
+      "name": "chembl_known_mechanism_drugs",
+      "value": 49,
+      "origin": "fetched",
+      "source": "chembl",
+      "verify_url": "https://www.ebi.ac.uk/chembl/api/data/mechanism?target_chembl_id=CHEMBL203&limit=50&format=json",
+      "note": ""
+    },
+    {
+      "name": "ranked_ligand_candidates",
+      "value": 25,
+      "origin": "fetched",
+      "source": "chembl",
+      "verify_url": "https://www.ebi.ac.uk/chembl/api/data/docs",
+      "note": "ChEMBL bioactivities ranked by a transparent potency+drug-likeness score"
+    },
+    {
+      "name": "receptor_pdb_id",
+      "value": "4UV7",
+      "origin": "fetched",
+      "source": "rcsb",
+      "verify_url": "https://www.rcsb.org/structure/4UV7",
+      "note": ""
+    },
+    {
+      "name": "probability_of_approval",
+      "value": 0.0513,
+      "origin": "computed",
+      "source": "https://doi.org/10.1093/biostatistics/kxx069",
+      "verify_url": "https://doi.org/10.1093/biostatistics/kxx069",
+      "note": "BIO/Informa CDSR 2011-2020 \u00d7 oncology factor (cad/cost_benefit.py)"
+    },
+    {
+      "name": "benefit_cost_ratio",
+      "value": 0.86,
+      "origin": "computed",
+      "source": "https://doi.org/10.1093/biostatistics/kxx069",
+      "verify_url": "https://doi.org/10.1093/biostatistics/kxx069",
+      "note": "risk-adjusted revenue / expected remaining cost (cad/cost_benefit.py)"
+    }
+  ]
+}

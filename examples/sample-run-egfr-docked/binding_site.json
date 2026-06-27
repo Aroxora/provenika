@@ -1,0 +1,28 @@
+{
+  "pdb": "1M17",
+  "ligand": {
+    "resName": "AQ4",
+    "chain": "A",
+    "resSeq": "999"
+  },
+  "ligandAtoms": 29,
+  "center": [
+    21.7,
+    0.3,
+    52.09
+  ],
+  "size": [
+    31.7,
+    20.7,
+    23.1
+  ],
+  "pad": 8.0,
+  "volume_A3": 15158.0,
+  "heavyAtoms": 29,
+  "ligandContacts": 29,
+  "ligandBuried": 1.0,
+  "ligandWarning": null,
+  "alternatives": [],
+  "dockCommand": "python3 cad/dock.py --receptor structures/1M17.pdb --smiles \"<ligand SMILES>\" --center 21.7 0.3 52.09 --size 31.7 20.7 23.1",
+  "disclaimer": "Box from the buried, drug-like co-crystal ligand envelope. Research only."
+}
