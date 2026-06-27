@@ -1,38 +1,50 @@
 {
+  "benchmark": "Provenika redocking \u2014 39 oncology co-crystal complexes (kinase inhibitors + others)",
+  "produced_on": "AWS EC2 c6i.2xlarge (us-east-1), conda-forge docking stack",
+  "seed": 42,
+  "rmsd_threshold_A": 2.0,
+  "versions": {
+    "vina": "AutoDock Vina f458505-mod",
+    "obabel": "Open Babel 3.1.0",
+    "meeko": "0.7.1",
+    "pdb2pqr": "3.7.1",
+    "rdkit": "2025.09.5",
+    "gemmi": "installed"
+  },
   "summary": {
-    "candidates": 39,
-    "evaluable": 27,
-    "skipped_or_errored": 12,
-    "success_count": 17,
-    "success_rate": 0.63,
-    "mean_rmsd": 2.117,
-    "median_rmsd": 1.393,
-    "workers": 3,
-    "minutes": 20.1
+    "complexes": 38,
+    "mean_rmsd": 2.683,
+    "median_rmsd": 1.903,
+    "success_rate": 0.526,
+    "success_count": 20,
+    "threshold_A": 2.0,
+    "attempted": 39,
+    "evaluable": 38,
+    "success_rate_all_attempted": 0.513
   },
   "results": [
     {
       "pdb": "1M17",
       "ligand": "AQ4",
-      "rmsd": 1.393,
+      "rmsd": 1.426,
       "correct_pose": true
     },
     {
       "pdb": "1XKK",
       "ligand": "FMM",
-      "rmsd": 2.908,
+      "rmsd": 3.012,
       "correct_pose": false
     },
     {
       "pdb": "2ITY",
       "ligand": "IRE",
-      "rmsd": 3.545,
+      "rmsd": 6.478,
       "correct_pose": false
     },
     {
       "pdb": "3POZ",
       "ligand": "03P",
-      "rmsd": 1.132,
+      "rmsd": 1.113,
       "correct_pose": true
     },
     {
@@ -44,193 +56,205 @@
     {
       "pdb": "3W2S",
       "ligand": "W2R",
-      "rmsd": 0.794,
+      "rmsd": 1.134,
       "correct_pose": true
     },
     {
       "pdb": "4I22",
       "ligand": "IRE",
-      "rmsd": 3.348,
+      "rmsd": 3.236,
       "correct_pose": false
     },
     {
       "pdb": "2J5F",
       "ligand": "DJK",
-      "rmsd": 1.496,
-      "correct_pose": true
+      "rmsd": 6.129,
+      "correct_pose": false
     },
     {
       "pdb": "4G5J",
       "ligand": "0WN",
-      "rmsd": 2.831,
+      "rmsd": 5.747,
       "correct_pose": false
     },
     {
       "pdb": "1IEP",
       "ligand": "STI",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 1.903,
+      "correct_pose": true
     },
     {
       "pdb": "2HYY",
       "ligand": "STI",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 1.21,
+      "correct_pose": true
     },
     {
       "pdb": "3CS9",
       "ligand": "NIL",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 0.551,
+      "correct_pose": true
     },
     {
       "pdb": "3UE4",
       "ligand": "DB8",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 3.854,
+      "correct_pose": false
     },
     {
       "pdb": "2GQG",
       "ligand": "PTR",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 3.399,
+      "correct_pose": false
     },
     {
       "pdb": "1T46",
       "ligand": "STI",
-      "rmsd": 0.618,
+      "rmsd": 0.629,
       "correct_pose": true
     },
     {
       "pdb": "3G0E",
       "ligand": "B49",
-      "rmsd": 0.461,
-      "correct_pose": true
+      "rmsd": 2.116,
+      "correct_pose": false
     },
     {
       "pdb": "3OG7",
       "ligand": "032",
-      "rmsd": 0.532,
-      "correct_pose": true
+      "rmsd": 5.942,
+      "correct_pose": false
     },
     {
       "pdb": "1UWH",
       "ligand": "BAX",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 0.736,
+      "correct_pose": true
     },
     {
       "pdb": "4RZV",
       "ligand": "032",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 1.454,
+      "correct_pose": true
     },
     {
       "pdb": "2A4L",
       "ligand": "RRC",
-      "rmsd": 1.666,
+      "rmsd": 1.635,
       "correct_pose": true
     },
     {
       "pdb": "1H1S",
       "ligand": "4SP",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 4.478,
+      "correct_pose": false
     },
     {
       "pdb": "1KE5",
       "ligand": "LS1",
-      "rmsd": 1.314,
+      "rmsd": 0.411,
       "correct_pose": true
     },
     {
       "pdb": "4EK3",
       "ligand": "ACE",
-      "rmsd": 5.293,
+      "rmsd": 5.301,
       "correct_pose": false
     },
     {
       "pdb": "5L2I",
       "ligand": "LQQ",
-      "rmsd": 1.047,
+      "rmsd": 1.057,
       "correct_pose": true
     },
     {
       "pdb": "2SRC",
       "ligand": "PTR",
-      "rmsd": 2.466,
+      "rmsd": 2.432,
       "correct_pose": false
     },
     {
       "pdb": "1Y57",
       "ligand": "MPZ",
-      "rmsd": 3.918,
+      "rmsd": 3.648,
       "correct_pose": false
     },
     {
       "pdb": "1A9U",
       "ligand": "SB2",
-      "rmsd": 0.517,
+      "rmsd": 0.525,
       "correct_pose": true
     },
     {
       "pdb": "1OUK",
       "ligand": "084",
-      "rmsd": 6.553,
+      "rmsd": 6.535,
       "correct_pose": false
     },
     {
       "pdb": "3GCS",
       "ligand": "BAX",
-      "rmsd": 0.476,
+      "rmsd": 0.563,
       "correct_pose": true
     },
     {
       "pdb": "1UYL",
-      "skip": "no drug-like ligand detected"
+      "skip": "no docked pose"
     },
     {
       "pdb": "2FWZ",
       "ligand": "H71",
-      "rmsd": 1.07,
+      "rmsd": 1.033,
       "correct_pose": true
     },
     {
       "pdb": "1YET",
       "ligand": "GDM",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 6.356,
+      "correct_pose": false
     },
     {
       "pdb": "3LQ8",
       "ligand": "88Z",
-      "rmsd": 1.222,
+      "rmsd": 1.512,
       "correct_pose": true
     },
     {
       "pdb": "3KRR",
       "ligand": "DQX",
-      "rmsd": 1.947,
+      "rmsd": 1.807,
       "correct_pose": true
     },
     {
       "pdb": "3H10",
       "ligand": "97B",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 3.706,
+      "correct_pose": false
     },
     {
       "pdb": "4Z3V",
       "ligand": "4L6",
-      "rmsd": 0.206,
+      "rmsd": 0.221,
       "correct_pose": true
     },
     {
       "pdb": "2XP2",
       "ligand": "VGH",
-      "rmsd": 3.292,
+      "rmsd": 2.195,
       "correct_pose": false
     },
     {
       "pdb": "4XUF",
       "ligand": "P30",
-      "error": "obrms could not match reference and docked molecules (RMSD=inf)"
+      "rmsd": 1.437,
+      "correct_pose": true
     },
     {
       "pdb": "3ERT",
       "ligand": "OHT",
-      "rmsd": 1.357,
+      "rmsd": 1.282,
       "correct_pose": true
     }
-  ]
+  ],
+  "note": "Redocking reproduces a KNOWN binding mode (necessary, not sufficient). Heavy-atom RMSD via obrms + RDKit template fallback; reference is the SINGLE co-crystal copy the box was built from (a prior all-chains extraction inflated multi-copy RMSDs to 50-70 A \u2014 fixed, lifting success 37.8%->52.6%). Research only; not medical advice."
 }

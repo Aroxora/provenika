@@ -1,65 +1,50 @@
-# Redocking validation — real, measured, at benchmark scale
+# Redocking validation — real, measured on AWS
 
 This is an **actual** run of the pipeline's docking against AutoDock Vina, so its accuracy is
-*measured*, not asserted. It answers "is it validated?" the only honest way: run the standard
-redocking test — dock a known co-crystal ligand back into its receptor and measure RMSD to the
-crystallographic pose (≤ 2 Å = correct) — on a real set, and report exactly what came out.
+*measured*, not asserted. Dock a known co-crystal ligand back into its receptor and measure the
+heavy-atom RMSD to the crystallographic pose (≤ 2 Å = correct), over a 39-complex oncology set.
 
-## The benchmark-scale result
+## The result (produced on AWS)
 
-A 39-complex oncology co-crystal set (kinase inhibitors + a few others), ligands auto-detected,
-prepped with **Meeko + pdb2pqr**, docked with **AutoDock Vina 1.2.7** (fixed seed, focused box),
-RMSD by symmetry-aware **`obrms`**. Run in parallel locally (~20 min). Machine-readable:
-[`batch_results.json`](batch_results.json); runner: [`batch_redock.py`](batch_redock.py).
+Run on an **AWS EC2 c6i.2xlarge** with the conda-forge stack — **AutoDock Vina f458505-mod, Open
+Babel 3.1.0, Meeko 0.7.1, pdb2pqr 3.7.1** (fixed seed 42, focused box, RMSD by symmetry-aware
+`obrms` with an RDKit template fallback). Machine-readable: [`batch_results.json`](batch_results.json);
+runner: [`batch_redock.py`](batch_redock.py).
 
 | Metric | Value |
 |---|---|
 | Candidates | 39 |
-| **Evaluable** (fetched + docked + RMSD-matched) | **27** |
-| **Correct pose (≤2 Å)** | **17 / 27 = 63%** |
-| Median RMSD | **1.39 Å** |
-| Mean RMSD | 2.12 Å |
-| Self-filtered | 12 (11 `obrms` couldn't match large flexible ligands; 1 no drug-like ligand) |
+| **Evaluable** | **38** |
+| **Correct pose (≤ 2 Å)** | **20 / 38 = 52.6%** |
+| Median RMSD | **1.90 Å** |
+| Mean RMSD | 2.68 Å |
 
-**63% success at a median 1.39 Å** is squarely in the published range for AutoDock Vina redocking
-on diverse sets (~50–70% ≤2 Å). It is a real, honest figure — not cherry-picked.
+Examples both ways (from `batch_results.json`): excellent — 4Z3V (BTK) 0.22 Å, 1KE5 (CDK2) 0.41 Å,
+1A9U (p38) 0.53 Å, 3CS9 0.55 Å, 1T46 (imatinib/KIT) 0.63 Å, 1IEP (imatinib/ABL) 1.90 Å; poor (real
+docking misses, honestly kept) — 1OUK 6.5 Å, 2J5F 6.1 Å, 3OG7 5.9 Å.
 
-Examples both ways (from `batch_results.json`): excellent — 4Z3V (BTK) 0.21 Å, 3G0E (KIT) 0.46 Å,
-1T46 (imatinib/KIT) 0.62 Å, 3OG7 (vemurafenib/BRAF) 0.53 Å, 1M17 (erlotinib/EGFR) 1.39 Å; poor —
-1XKK (lapatinib) 2.9 Å, 2ITY (gefitinib) 3.5 Å, 4HJO 5.8 Å.
+## Two real bugs this run surfaced (and fixed)
 
-## How to reproduce
+Executing on a clean host — not just unit-testing — caught two genuine bugs:
+
+1. **All-chains reference extraction.** The crystal reference was built from the ligand resname
+   across *every chain*, so a multi-copy structure compared 2 copies against the 1-copy docked pose
+   and the RMSD exploded to **50–70 Å** (physically impossible in a focused box). Fixed to extract the
+   single copy the box was built from. This alone lifted the score **37.8% → 52.6%**, mean **13.2 → 2.7 Å**
+   (1IEP 62 → 1.9, 2HYY 53 → 1.2, 4XUF 70 → 1.4, 1UWH 27 → 0.7, 4RZV 39 → 1.5).
+2. **Missing `gemmi`.** Meeko 0.7+ imports `gemmi`, which pip didn't pull in; without it dock.py
+   silently fell back to the ~7.9 Å Open-Babel prep. Now declared in `cad/requirements-docking.txt`.
+
+## How to reproduce (any Vina-equipped host)
 
 ```bash
-# Vina + Open Babel via micromamba (standalone, no admin); Meeko + pdb2pqr via pip
-micromamba create -p ./dockenv -c conda-forge vina openbabel && pip install meeko pdb2pqr
-export PATH=$PWD/dockenv/bin:$PATH
-python3 examples/validation-redock/batch_redock.py      # parallel, ~20 min
-# or a single curated trio:
-python3 cad/validate.py --redock cad/validation_benchmark.json --json
+make setup-docking          # conda vina+openbabel + pip meeko pdb2pqr gemmi rdkit
+python3 cad/dock.py --check # expect: Ready to dock (docking-grade prep)
+make redock                 # the 39-complex batch (parallel)
+# Re-derive the committed summary from its own rows, offline (no Vina, no network):
+python3 cad/validate.py --recheck examples/validation-redock/batch_results.json
 ```
 
-## The honest story behind these numbers
-
-The passing figure was *earned*, and the failures along the way are the point of validation:
-1. **The harness was broken** — it produced poses but errored on *every* RMSD. Fixed (RCSB SMILES
-   template for docking + `obrms`).
-2. **Crude prep failed the science** — Open Babel-only prep redocked erlotinib at 7.9 Å. Upgrading
-   to Meeko + pdb2pqr brought it to ~1.4 Å. `dock.py` now uses them when present (Open Babel fallback).
-3. **At scale it's 63%, not 100%** — the encouraging 2/2 on three complexes was optimistic; the
-   honest at-scale number is lower, as it should be.
-
-## Known limits of this validation (so a PASS isn't over-read)
-
-- **`obrms` can't RMSD-match ~11 of the candidates** (large/flexible ligands like imatinib in ABL):
-  they dock, but the crystal-vs-docked molecule graphs don't align. That's a comparison-robustness
-  gap (a template-based atom map would help), not a docking failure — but it means the 27 evaluable
-  skew toward smaller, more rigid ligands.
-- A 39-complex set is **not** the full Astex/PDBbind; a rigorous claim needs hundreds of complexes
-  and cross-docking.
-- Redocking measures **pose reproduction** — *necessary, not sufficient*. It is **not** prospective
-  accuracy, **not** affinity/enrichment validation, and **never** clinical validation.
-
-Bottom line: the docking **reproduces known binding modes at a credible rate (63%, median 1.39 Å)** —
-*measured*. The tool remains research-grade in-silico triage; its output is a hypothesis for the wet
-lab, and it is never a clinical instrument.
+**52.6% at a 1.90 Å median** is squarely in the published range for AutoDock Vina redocking on diverse
+sets. It is a real, honest figure — redocking reproduces a *known* binding mode, a necessary check,
+**not** proof of prospective accuracy. Research only; not medical advice.
