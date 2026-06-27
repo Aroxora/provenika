@@ -27,9 +27,13 @@ dependencies = []
 chem = ["rdkit>=2024.3"]
 # Agentic outreach system (outreach/) — not the science. Lazily imported.
 outreach = ["google-cloud-firestore>=2.11"]
-# NOTE: docking (cad/dock.py) also needs the AutoDock Vina + Open Babel *binaries* on
-# PATH. Those are NOT pip-installable on recent Python — use `conda install -c
-# conda-forge vina openbabel`, then `python3 cad/dock.py --check`.
+# Docking-grade PREP (the pip-installable half of stage 5) — Meeko builds the ligand PDBQT and
+# pdb2pqr protonates the receptor; together they produce the validated ~1.4 Å redocking median
+# (vs ~7.9 Å on the Open-Babel-only fallback). Mirrors cad/requirements-docking.txt.
+docking = ["rdkit>=2024.3", "meeko>=0.5", "pdb2pqr>=3.6"]
+# NOTE: docking (cad/dock.py) ALSO needs the AutoDock Vina + Open Babel *binaries* on PATH. Those
+# are NOT pip-installable on recent Python — use `conda install -c conda-forge vina openbabel`,
+# then `python3 cad/dock.py --check` (which now also reports Meeko + pdb2pqr).
 
 [project.scripts]
 provenika-verify = "cad.verify:main"

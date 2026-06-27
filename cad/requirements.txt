@@ -18,16 +18,20 @@ rdkit>=2024.3        # cheminformatics: descriptors, QED, PAINS/Brenk, scaffolds
                      # ChEMBL-computed properties are used and similarity is off.
 
 # -----------------------------------------------------------------------------
-# NOT pip-installable — required ONLY by cad/dock.py (optional stage 6, docking).
-# AutoDock Vina + Open Babel must be on PATH. The reliable cross-platform path is
-# conda; `pip install vina` does NOT build on recent Python (no wheels, needs
-# Boost) and there is no Homebrew `vina` formula, so do not rely on it.
+# DOCKING (optional stage 5, cad/dock.py + cad/validate.py --redock). Two layers:
 #
-#   conda install -c conda-forge vina openbabel        # recommended (all OSes)
-#   # macOS without conda: brew install open-babel, then install a Vina release
-#   #   binary from https://github.com/ccsb-scripps/AutoDock-Vina/releases on PATH
+#  1. Docking-grade PREP — pip-installable, and what produces the validated ~1.4 Å redocking
+#     median (vs ~7.9 Å on the Open-Babel-only fallback). Install with:
+#         pip install -r cad/requirements-docking.txt        # Meeko + pdb2pqr (needs the RDKit above)
 #
-# Check what you have:  python3 cad/dock.py --check
+#  2. The Vina + Open Babel BINARIES — NOT pip-installable on recent Python (`pip install vina`
+#     has no wheels / needs Boost; no Homebrew `vina` formula). Use conda:
+#         conda install -c conda-forge vina openbabel        # recommended (all OSes)
+#         # macOS without conda: brew install open-babel, then a Vina release binary on PATH
+#         #   from https://github.com/ccsb-scripps/AutoDock-Vina/releases
+#
+# Check the WHOLE stack (binaries + prep):  python3 cad/dock.py --check
+# Without the prep layer dock.py still runs, on the inferior Open-Babel path — never a fake score.
 # -----------------------------------------------------------------------------
 
 # -----------------------------------------------------------------------------

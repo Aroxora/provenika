@@ -1,0 +1,18 @@
+# Provenika — docking-grade prep dependencies (optional; stage 5 / cad/dock.py + cad/validate.py)
+# =============================================================================
+# These two ARE pip-installable (unlike the Vina + Open Babel BINARIES) and are what lift the
+# redocking benchmark from the Open-Babel-only fallback (~7.9 Å) to the validated ~1.4 Å median:
+#
+#   * Meeko   — builds a correct AutoDock torsion tree + atom typing for the LIGAND PDBQT
+#               (Open Babel's PDBQT is sometimes rejected by Vina outright).
+#   * pdb2pqr — protonates the RECEPTOR and assigns charges at pH 7 (markedly better than
+#               Open Babel's polar-H guess).
+#
+# Install:   pip install -r cad/requirements-docking.txt
+# Then install the BINARIES (no pip wheels): conda install -c conda-forge vina openbabel
+# Confirm the whole stack is present:         python3 cad/dock.py --check
+# RDKit (cad/requirements.txt) is also required for Meeko ligand prep.
+# =============================================================================
+
+meeko>=0.5          # docking-grade ligand PDBQT (torsion tree + AutoDock atom typing)
+pdb2pqr>=3.6        # receptor protonation + charge assignment at pH 7 (provides pdb2pqr30)

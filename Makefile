@@ -9,7 +9,7 @@ OUT    ?= runs/$(shell printf '%s' "$(TARGET)" | tr '[:upper:]' '[:lower:]')
 PY     ?= python3
 
 .DEFAULT_GOAL := help
-.PHONY: help setup build verify pipeline example dock-check test smoke readme clean
+.PHONY: help setup setup-docking build verify pipeline example dock-check redock redock-starter test smoke readme clean
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -17,6 +17,11 @@ help:  ## Show this help
 
 setup:  ## Install Python deps (RDKit; the pipeline also runs without it)
 	$(PY) -m pip install -r requirements.txt
+
+setup-docking:  ## Install docking-grade ligand/receptor prep (Meeko + pdb2pqr → the validated ~1.4A path)
+	$(PY) -m pip install -r cad/requirements-docking.txt
+	@echo "Now install the Vina + Open Babel BINARIES (not pip): conda install -c conda-forge vina openbabel"
+	@echo "Then confirm the full stack: make dock-check"
 
 build:  ## Build the Node OSINT tools + cancer-cli (dist/)
 	npm install && npm run build
@@ -31,14 +36,25 @@ pipeline:  ## Run the full pipeline for TARGET into OUT, then re-prove every fig
 
 example: pipeline  ## Alias for `pipeline`
 
-dock-check:  ## Report whether AutoDock Vina + Open Babel are installed (for docking)
+dock-check:  ## Report the full docking stack (Vina + Open Babel + Meeko + pdb2pqr)
 	$(PY) cad/dock.py --check
+
+redock:  ## Reproduce the benchmark-scale redocking validation (needs the docking stack; ~20 min)
+	$(PY) examples/validation-redock/batch_redock.py
+
+redock-starter:  ## Quick 3-complex redocking smoke test (needs Vina + Open Babel)
+	$(PY) cad/validate.py --redock cad/validation_benchmark.json --json
 
 test:  ## Run the offline checks CI runs (no network needed)
 	$(PY) -m compileall -q cad cicd
 	$(PY) cad/test_provenance.py
 	$(PY) cad/test_verify_manifest.py
 	$(PY) cad/test_verify_hits.py
+	$(PY) cad/test_mutations.py
+	$(PY) cad/test_triage_filters.py
+	$(PY) cad/test_validate.py
+	$(PY) cad/test_batch_dock.py
+	$(PY) cad/test_dock_meeko.py
 	$(PY) cad/test_cheminformatics.py
 	$(PY) cad/test_no_rdkit.py
 	$(PY) cad/test_degradation.py

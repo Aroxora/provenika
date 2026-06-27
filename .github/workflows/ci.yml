@@ -81,6 +81,14 @@ jobs:
         run: python3 cad/test_verify_manifest.py
       - name: Verifier independently re-fetches hit QED from ChEMBL (offline, mocked)
         run: python3 cad/test_verify_hits.py
+      - name: Mutation/variant parser (allele-specific oncology queries, offline)
+        run: python3 cad/test_mutations.py
+      - name: Triage data-quality — median aggregation, quality gate, variant filter, max_phase (offline, mocked)
+        run: python3 cad/test_triage_filters.py
+      - name: Validation harness — enrichment guard + leakage refusal (offline, mocked)
+        run: python3 cad/test_validate.py
+      - name: Batch-dock stage — gating + rank fusion (offline, Vina stubbed)
+        run: python3 cad/test_batch_dock.py
       - name: Stdlib-only guarantee (cad/ imports + degrades without RDKit)
         run: python3 cad/test_no_rdkit.py
       - name: Graceful degradation (single data-source outage → partial dossier, not a crash)
@@ -99,6 +107,10 @@ jobs:
         run: python3 cad/test_dock.py
       - name: Validation harness metric math — ROC AUC / enrichment / pose-RMSD (offline)
         run: python3 cad/validate.py --self-test
+      - name: Docking-grade ligand prep (Meeko) regression — guards the validated ~1.4A path
+        run: |
+          python3 -m pip install --quiet meeko pdb2pqr rdkit || true
+          python3 cad/test_dock_meeko.py
       - name: Outreach agent E2E + edge cases (offline, no network, never sends)
         run: python3 outreach/test_e2e.py
       - name: Verify a deterministic artifact end-to-end (offline)

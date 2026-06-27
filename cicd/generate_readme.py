@@ -1,292 +1,120 @@
 #!/usr/bin/env python3
 """
-README generator — STRATEGY-first.
+README generator — LIMITATIONS-only.
 
-Emits a README whose spine is the project's actual strategy: a terminal-bound agent
-cannot cure cancer, so it acts as an *auditable evidence engine* — "compute or cite,
-never assert" — and the anti-hallucination guarantee is enforced and re-checkable.
+By request, README.md is a candid, exhaustive list of this project's LIMITATIONS — nothing else.
+The usage narrative and anti-hallucination strategy live in docs/ and the web app; the README's
+single job here is to be honest about what this tool does NOT do and where it falls short.
 
-Design rules (read before editing):
-  * Research / decision-support tool. NOT a treatment recommender. Never tell anyone
-    to start/stop/substitute a therapy; no discovery/cure claims; no per-patient advice.
-  * Every line should be a real, runnable command or a verifiable fact. If you add a
-    command, RUN IT FIRST. The install section is load-bearing — a stranded first-time
-    user is the worst failure mode for a tool whose whole pitch is trust.
-  * Lead with the anti-hallucination strategy; keep operational sections runnable.
-  * The dynamic tool count is the only generated value; the framing is curated here.
-  * This TEMPLATE is the source of truth for README.md (cicd/runner.py regenerates it).
-    Edit here, then run `python3 cicd/generate_readme.py`, and commit both.
+Edit the LIMITATIONS string below, then run `python3 cicd/generate_readme.py`, and commit both.
+Nothing parses the README programmatically (cicd/check_readme.sh keeps its own command list), so the
+content is free-form prose.
 """
 
-import subprocess
-import json
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 
+LIMITATIONS = r"""# Provenika — Limitations
 
-def get_tool_data():
-    script = """
-    const { createCancerTools } = require('./dist/tools/cancer/index.js');
-    console.log(JSON.stringify({ toolCount: createCancerTools().length }));
-    """
-    result = subprocess.run(['node', '-e', script], cwd=ROOT, capture_output=True, text=True)
-    if result.returncode != 0:
-        return {"toolCount": 0}
-    try:
-        return json.loads(result.stdout)
-    except json.JSONDecodeError:
-        return {"toolCount": 0}
+Provenika is an auditable oncology **research** tool (CADD triage → structure → docking setup →
+feasibility), developed by **[ErosolarAI](https://erosolarai.com)**. This file lists, candidly and
+completely, what it does **not** do and where it falls short.
 
+> **Research only — not medical advice, not a treatment recommendation, not a diagnosis.**
+> A computational hit is not proof of anything.
 
-TEMPLATE = r"""# Provenika — auditable oncology evidence engine *(compute or cite, never assert)*
+## Execution / environment
 
-> A terminal-bound AI agent **cannot cure cancer.** It cannot run a lab, see a patient, or
-> touch a device — and the deadliest failure mode of "AI for medicine" is a confident,
-> plausible, **fabricated** number. So this project does the one thing such an agent *can*
-> do honestly: turn **public** oncology data into **ranked, fully-cited, independently
-> re-verifiable** hypotheses for human scientists — and make a fabricated number easy to catch.
+- **Still requires a Vina-equipped host to execute** (the code is implemented + unit-tested with
+  stubs, just not runnable here): the actual batch-dock run and regenerating the 39-complex
+  redocking artifact — `vina`/`obabel`/`obrms` aren't installed in this environment.
+- Docking-grade prep (Meeko + pdb2pqr → the validated ~1.4 Å path) is optional; without it the
+  pipeline silently falls back to the inferior Open-Babel prep (~7.9 Å). `cad/dock.py --check` flags
+  this, and the wrapper never fabricates a score.
 
-**This is the strategy.** Not "an AI that discovers drugs." An **auditable evidence engine**
-that accelerates the cheap, in-silico *front* of drug discovery (target triage → ligand
-shortlist → structure → docking setup → feasibility), where every figure can be traced back
-to a public record and re-proven with one command.
+## Triage / shortlist
 
-**⚠️ Research only.** Generates hypotheses for experimental follow-up. **Not medical advice,
-not a treatment recommendation, not a diagnosis.** A computational hit is not proof of anything.
+- **Rediscovery, not discovery.** Triage ranks compounds ChEMBL has *already measured* against the
+  target. It cannot score a novel/unmeasured molecule by potency — only by 2-D similarity to known
+  actives or by docking. It surfaces known chemotypes and close analogs, not de novo molecules.
+- **Median consensus is floor-biased.** The per-molecule consensus is the median of measurements at
+  or above `--min-pchembl` (the descending scan stops at the floor), so it is a transparent,
+  slightly upward-biased consensus; lower the floor to widen it. `potency_suspect` flags a
+  near-ceiling potency backed by < 2 measurements, but cannot vet the assay itself.
+- **Selectivity is a proxy.** `n_potent_targets` counts distinct human ChEMBL targets a hit is potent
+  against; it does not separate single-protein from complex/cell-line targets, and *absence of
+  off-target data is not evidence of selectivity*. It is an opt-out probe (extra API calls).
+- **Assay pooling.** IC50/Ki/Kd/EC50 are pooled onto one pChEMBL axis; `--binding-only` restricts to
+  biochemical binding assays, but a mixed `assay_format` remains a coarse signal.
+- **ChEMBL coverage is uneven** across targets and alleles; a sparsely-measured target yields a thin,
+  less trustworthy shortlist.
 
-**▶ Try it live, no install:** **[provenika.com](https://provenika.com)** — the same analyses,
-interactive in the browser (disease → targets → triage → structure → models), every figure
-traceable to its public source. The command-line pipeline below is the keyless, scriptable core.
+## Allele / mutation handling
 
----
+- **The receptor mutation check is advisory.** It reads the residue at the requested position using
+  the structure's *author* numbering, which usually — but not always — aligns with UniProt. It
+  reports a finding (match / wild-type / other / unverifiable) and never asserts a silent match.
+- **Structures are not auto-matched to the allele.** `fetch_structure` prefers a holo entry among the
+  top candidates but can land on an apo structure (no docking box) or a *wild-type* structure for an
+  allele-specific campaign — it flags this, it does not fix it. Supply a mutant holo PDB with `--pdb`.
 
-## The one rule everything else serves
+## Validation evidence
 
-> **No figure shown to a human originates from a language model.**
-> Every number is either **(a) fetched live** from a named public database, or **(b) computed**
-> by deterministic, open-source code whose formula is cited. The LLM orchestrates and explains;
-> it is **never** a source of facts.
+- **Enrichment uses presumed-inactive decoys.** Property-matched decoys are *assumed* inactive
+  (DUD-E-style); a decoy could coincidentally be an unmeasured active. The committed AUC measures
+  whether structure recovers *known* actives over decoys — **necessary, not sufficient**, and not a
+  prediction of prospective accuracy or efficacy. Decoy sampling varies run-to-run; one target (EGFR)
+  is committed.
+- **Redocking validates a *known* pose.** ≤ 2 Å redocking success (median ~1.4 Å on the curated set)
+  is a necessary check, not proof of prospective accuracy. Cross-docking, induced fit, and
+  prospective virtual screening are harder and are **not** validated here.
+- **The rank-fusion column is NON-VALIDATED** — a transparent combination of two unvalidated triage
+  signals (ligand score + Vina ΔG). Vina ΔG is an approximate ranking aid weakly correlated with true
+  affinity — **never** a measured Kd/IC50.
+- **Verify proves re-derivability, not query-design correctness.** A wrong-but-stable query
+  reproduces and passes. Free-text prose, the `cad/intel/` digests, and structure byte-integrity are
+  **not** covered by the provenance/verify spine.
 
-Because a promise is worth nothing in medicine, the rule is **enforced and re-checkable**:
+## Docking box
 
-| Mechanism | File | What it guarantees |
-|-----------|------|--------------------|
-| **Provenance manifest** | `cad/provenance.py` → `provenance.json` | Every reported figure is tagged `fetched`/`computed`, with its source and a **re-verification URL**. The code *cannot* record a value whose origin is "model" — it raises. |
-| **Independent verifier** | `cad/verify.py` | Re-pulls every figure from its live source → `PASS` / `DRIFT` / `FAIL`. Checks SMILES are **byte-equal to ChEMBL** (raw HTTP, separate code path) and recomputes deterministic scores. Non-zero exit gates CI. A run with **no target-specific evidence never earns a green banner.** |
-| **No fabricated docking** | `cad/dock.py` | A thin wrapper on AutoDock Vina. If the binary is absent it prints exact install steps and exits — it **never** invents a score. (`--check` reports what you have.) |
-| **No verdict without a target** | `cad/run_pipeline.py` | If a target can't be resolved (unknown gene, or a fictional one), the pipeline **refuses to emit a feasibility verdict and exits non-zero** — it will not hand you a confident "proceed" for a target it never assessed. |
-| **Heuristics labeled as heuristics** | `cad/cost_benefit.py`, `cad/virtual_triage.py` | Scoring weights and priors are marked as transparent, editable, **non-validated** design choices — not dressed up as data. The feasibility verdict is a **modality/phase-level benchmark, not a target-specific prediction**, and says so. |
-| **A hard line on advice** | repo-wide | No per-patient recommendations, survival estimates, or treatment plans. Tools that crossed that line were neutralized (see [`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md)). |
+- A whole-receptor **blind box** is weak; an oversized one (> 30 Å on an axis) is flagged unreliable.
+  Pocket detection for apo targets (fpocket / P2Rank) is **not** built in.
+- The committed redocking success was measured at a focused (pad 4 Å) box; the wider production box
+  (pad 8 Å) is a different, un-certified configuration (search effort scales with box volume to
+  compensate, but that is not separately validated).
 
-**Honest scope:** the guarantee covers *figures in machine-readable artifacts*. Free-text
-prose and the `cad/intel/` news digests are **leads to verify, never validated facts**, and are
-labeled as such. See [`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md) for exactly what
-is and is not covered, and what `verify.py` does and does **not** prove.
+## Cost-benefit
 
----
+- **Target-independent.** A modality/phase-level benchmark from public priors (BIO/Informa, DiMasi,
+  Wong et al.); identical inputs give identical figures for *any* target — it carries no
+  target/molecule signal. The preclinical LOA and several multipliers are author estimates; the
+  verdict bands are unsourced heuristics. Not a valuation, not financial advice.
 
-## Prove it yourself in 10 seconds
+## Explicitly NOT covered
 
-```bash
-python3 cad/verify.py --target EGFR     # fetch-and-cite EGFR's headline figures, live, with URLs
-```
-```
-✅ PASS  EGFR: ChEMBL potent activities = 21342   verify: https://www.ebi.ac.uk/chembl/api/data/activity?...
-✅ PASS  EGFR: known-mechanism drugs = 49         verify: https://www.ebi.ac.uk/chembl/api/data/mechanism?...
-✅ PASS  EGFR: PDB structures = 354               verify: https://www.uniprot.org/uniprotkb/P00533/entry
-```
-Open any URL. The number is there, in the public database — not in this tool's imagination.
-(Exact counts above are illustrative; the live values are what print, and they grow over time.)
+- No ADMET/tox prediction, no free-energy perturbation (FEP), no generative/de-novo design, no QSAR
+  efficacy models, no kinome selectivity panels beyond the ChEMBL proxy.
+- No per-patient recommendations, doses, diagnoses, prognoses, or treatment plans — and nothing that
+  would direct care.
 
-This needs **only Python 3** — no build, no pip install, no key. (Don't want to run anything?
-Browse a committed real run in [`examples/sample-run-egfr/`](examples/sample-run-egfr/).)
+## Web app
 
----
-
-## Install
-
-```bash
-git clone https://github.com/Aroxora/provenika && cd provenika
-
-# 1) Python CADD pipeline — the science. stdlib-only; RDKit is the ONE optional dep.
-python3 --version                       # 3.10+ recommended (CI uses 3.12)
-pip install -r cad/requirements.txt     # installs RDKit (similarity, PAINS/Brenk, QED, scaffolds)
-python3 cad/verify.py --target EGFR      # confirm it works — live, cited, no build needed
-
-# 2) Node OSINT tools + cancer-cli — optional, for the live literature/trials/gene search
-npm install && npm run build            # builds dist/bin/cancer-cli.js
-```
-
-**Shortcut:** `make setup && make verify`, then `make` to list every one-command target
-(`pipeline`, `test`, `smoke`, `dock-check`, …). `make test` runs the offline checks CI runs;
-`make smoke` re-runs every headline command in this README live, so it can't drift from reality.
-
-**Optional extras** (only if you need them):
-
-```bash
-# Docking (stage 6) needs two non-pip binaries on PATH — conda is the reliable path:
-conda install -c conda-forge vina openbabel
-python3 cad/dock.py --check             # ✅/❌ for vina + obabel, then the next command works
-# (`pip install vina` does NOT build on recent Python; there's no Homebrew vina formula.)
-
-# The research website (Angular) is a separate build, not needed for the pipeline:
-cd web && npm ci && npx ng build        # or `npm start` for a dev server
-```
-
-> Without RDKit the pipeline still runs end-to-end (it uses ChEMBL-computed properties and
-> turns off 2-D similarity). Docking is the only part that needs non-pip software.
+- [provenika.com](https://provenika.com) is a **separate browser reimplementation**. Its triage now
+  mirrors the CLI's data-quality logic (quality gate, median consensus, suspect flag, allele filter),
+  but it does **not** run docking, the selectivity probe, or the full provenance/verify spine — it is
+  a convenience view, not the audited core.
 
 ---
 
-## The pipeline (one command, real public data)
-
-```bash
-python3 cad/run_pipeline.py --target EGFR --modality small_molecule --phase phase1 \
-    --incidence 60000 --price 150000 --out runs/egfr
-python3 cad/verify.py --run runs/egfr          # re-prove every figure it wrote
-```
-
-Produces in `runs/egfr/` (see a committed real example in [`examples/sample-run-egfr/`](examples/sample-run-egfr/)):
-
-| Artifact | What it is | Source |
-|----------|-----------|--------|
-| `dossier.json` | Druggability snapshot: function, # PDB structures, ChEMBL ligand count, known drugs | UniProt + ChEMBL |
-| `hits.csv` | Ranked ligand candidates (SMILES + ChEMBL links) for docking/ADMET | ChEMBL bioactivity |
-| `hits.sdf` | The same hits as 3-D structures (property-tagged) — load into PyMOL/Maestro/docking (optional; needs RDKit) | RDKit |
-| `liabilities.json` | Per-hit liabilities: PAINS/Brenk alerts, GSK 4/400 & Pfizer 3/75 developability flags, synthetic-accessibility score (optional; needs RDKit) | RDKit |
-| `structures/` | Best experimental PDB (or AlphaFold model) | RCSB PDB / AlphaFold |
-| `binding_site.json` | Docking box computed from the co-crystal ligand envelope | deterministic geometry |
-| `cost_benefit.json` | Approval prob., expected cost/time, risk-adjusted return (published priors) | BIO/Informa, DiMasi, Wong |
-| **`provenance.json`** | **Every figure → origin + source + verify URL** | this repo |
-| `SUMMARY.md` | One-page tie-together + the exact next command | this repo |
-
-**If the target isn't real** (or can't be resolved): the pipeline prints a clear message,
-writes **nothing**, and **exits non-zero** — it will not fabricate a "Favorable — proceed"
-verdict for a gene it never found. Try it: `--target NOTAREALGENE`.
-
-**Single stages:** `target_report.py` · `virtual_triage.py` · `fetch_structure.py` ·
-`binding_site.py` · `cost_benefit.py` · `dock.py` — each takes `--json`. Full design &
-validity caveats: **[`docs/REAL-CAD-ROADMAP.md`](docs/REAL-CAD-ROADMAP.md)**.
-
----
-
-## Verifying a run (what the labels mean)
-
-`python3 cad/verify.py --run <dir>` re-pulls every figure from its live source:
-
-- **`PASS`** — the saved figure reproduces from the source today.
-- **`DRIFT`** — it changed but is the same order of magnitude (a living database gained
-  records). **Not** a failure; re-run the pipeline to refresh.
-- **`FAIL`** — could not be reproduced, differs wildly, or the source returns nothing where a
-  value was claimed → treat as suspect. **Non-zero exit gates CI.**
-
-A run that contains **no target-specific evidence** (no dossier, no hits) does **not** get the
-"every figure reproduced" banner — an empty/unresolved run is flagged, not blessed. The SMILES
-identity check (byte-equal to ChEMBL) and the deterministic recomputes are the genuinely
-independent checks; the count checks prove *reproducibility/freshness*, not that the query
-design is the right one. See [`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md).
-
----
-
-## What this does — and deliberately does **not** — do
-
-**Does (real, today):** resolve a target to UniProt/ChEMBL; count structures & known drugs;
-rank measured-active ligands by potency + drug-likeness (RDKit); flag each hit's **structural
-liabilities** — PAINS / Brenk alerts, GSK 4/400 + Pfizer 3/75 developability/tox-risk, and
-synthetic accessibility (RDKit);
-fetch a 3-D structure; build a docking box; run a transparent feasibility model; emit a cited,
-re-verifiable dossier; map a disease to its association-scored druggable targets (Open Targets);
-and search PubMed / ClinicalTrials.gov / cBioPortal / ChEMBL / KEGG / RCSB PDB / UniProt live
-({tool_count} tool definitions in total — but only ~21 are keyless live-API lookups; the rest need a
-Tavily key or are static reference datasets / templates, see below). **Resilient:** if one data source
-is down it degrades to a partial dossier (clearly marked) rather than failing outright.
-
-**Does not (by design):** cure, treat, or diagnose anyone · recommend a therapy or generate a
-treatment plan · estimate a patient's prognosis · design de-novo molecules with "validated"
-scores · prove a molecule is safe or effective · replace docking/ADMET/wet-lab/a clinician.
-**Triage ≠ validation.**
-
----
-
-## OSINT one-liners (pick & justify a target) — keyless
-
-```bash
-cancer-cli --self-test                       # live-check all 8 data sources
-cancer-cli "search literature <topic>"       # PubMed         cancer-cli "analyze gene <symbol>"      # UniProt
-cancer-cli "find clinical trials <cancer>"   # ClinicalTrials cancer-cli "pathway analysis <gene>"    # KEGG
-cancer-cli "find drug targets <gene>"        # ChEMBL         cancer-cli "find targets for disease <d>" # Open Targets
-```
-`cancer-cli` = `node dist/bin/cancer-cli.js`. **These six research one-liners (and `--self-test`)
-need no API key** — they dispatch straight to the public databases and print cited results live.
-Free sources, all live (the same 8 `--self-test` checks): PubMed · ClinicalTrials.gov · cBioPortal ·
-ChEMBL · KEGG · RCSB PDB · UniProt · Open Targets. (Only open-ended, conversational queries fall
-through to the optional LLM agent, which needs a model key: `cancer-cli --key <DEEPSEEK_API_KEY>`.)
-
-### Worked example — from a disease to a triaged, cited lead (keyless)
-
-The one-liners and the pipeline chain into one research path:
-
-```bash
-cancer-cli "find targets for disease melanoma"  # → ranked targets + druggability; e.g. BRAF (small-molecule tractable)
-cancer-cli "find drug targets BRAF"             # → measured-active BRAF ligands (ChEMBL)
-python3 cad/run_pipeline.py --target BRAF --out runs/braf   # full dossier: ligands, structure, docking box, feasibility
-python3 cad/verify.py --run runs/braf           # re-prove every figure from its public source
-```
-
-Disease → association-scored, tractability-filtered targets → measured-active ligands → a cited,
-re-verifiable dossier. Every step keyless (docking is the only optional non-pip extra), and the
-last command re-derives every figure so nothing rests on trust. **Triage, not validation** — these
-are leads for wet-lab follow-up, never a claim a target or molecule works.
-
-## Can this be a real business? (honest analysis)
-
-We asked it seriously, with cited market data and a skeptical investor's eye — including the
-uncomfortable fact that **all our data sources are free and public** (no data moat). The verdict,
-the comparables (Schrödinger, Certara, scite), and the only defensible wedges are in
-**[`business/`](business/)**. Short version: not a classic venture rocket on its own, but a
-credible **open-core + provenance/audit** play and a strong research/credibility asset.
-
-## Pitch & fundraising — in the open
-
-- **[`pitch/`](pitch/)** — YC application draft, investor pitch, and one-pager. Honest by construction: every claim is grounded in the cited business analysis, and traction figures are `[fill in]` placeholders — never invented.
-- **[`outreach/`](outreach/)** — an agentic outreach system (RAG memory · AWS Lambda · Firestore) that researches prospects, drafts emails *grounded in the pitch docs* (so it can't fabricate traction), and — human-approved, **dry-run by default** — sends, classifies replies, and schedules follow-ups.
-- **Public outreach log** — the website's **Outreach** tab shows a **privacy-redacted, real-counts** history of who we've contacted and what came back. Secrets, email addresses, and message contents are **never** published; names appear only with consent.
-
-## Docs
-
-- **[`docs/ANTI-HALLUCINATION.md`](docs/ANTI-HALLUCINATION.md)** — the no-fabrication architecture, exactly what's guaranteed, and what `verify.py` proves (and doesn't).
-- **[`docs/REAL-CAD-ROADMAP.md`](docs/REAL-CAD-ROADMAP.md)** — pipeline stages, what's implemented vs. wrapper-only, validity caveats.
-- **[`docs/IMPLEMENTATION.md`](docs/IMPLEMENTATION.md)** — architecture, how to run/extend the pipeline & web app, CI/CD, deploy.
-- **[`business/`](business/)** — market, competition, moat, and the fundability verdict.
-
-## Notes
-
-- **Triage ≠ validation.** Scores rank hypotheses; docking/ADMET/wet-lab confirm them.
-- **Cite the source.** Every figure points to a public record — `verify.py` re-pulls it for you.
-- **Live data.** Everything is fetched on demand from public APIs (no cache, no key). If a *known* target fails to resolve, the source (ChEMBL/UniProt/PDB) may be momentarily down or rate-limited — wait and retry; the tool fails loudly rather than guessing.
-- Cost-benefit numbers are rough public benchmarks (BIO/Informa, DiMasi, Wong et al.), modality/phase-level — not a target-specific prediction and not a valuation.
-
-## License
-
-MIT — research and decision-support only; not a substitute for professional medical advice.
-
----
-
-*Strategy & disclaimers maintained by hand; operational sections regenerated by `cicd/generate_readme.py` ({tool_count} tools).*
+Developed by **[ErosolarAI](https://erosolarai.com)**. MIT — research and decision-support only; not
+a substitute for professional medical advice.
 """
 
 
-def generate_readme(data):
-    return TEMPLATE.replace("{tool_count}", str(data.get("toolCount", 0)))
-
-
 def main():
-    print("  Generating strategy-first README...")
-    data = get_tool_data()
-    (ROOT / "README.md").write_text(generate_readme(data))
-    print(f"  README.md updated ({data.get('toolCount', 0)} tools)")
-    return True
+    (ROOT / "README.md").write_text(LIMITATIONS)
+    print("  README.md updated (limitations-only)")
 
 
 if __name__ == "__main__":
