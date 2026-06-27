@@ -47,6 +47,13 @@ const ROUTE_META: Record<string, RouteMeta> = {
       'translation — how cancer is actually cured, and exactly where AI (AlphaFold-style) saves ' +
       'experimentation vs the irreducible wet-lab and clinical work. Literature-verified; not medical advice.',
   },
+  impact: {
+    title: 'What Provenika actually does — real, re-provable progress | Provenika',
+    description:
+      'The verifiable accomplishment: bench-ready oncology hypotheses, the genetics-ranked oncogenome, a ' +
+      'docking pipeline validated by redocking (52.6% within 2 Å) and ligand enrichment (ROC AUC 0.89), ' +
+      'and a complete in-China workflow. Every figure links to its source. Research only; not medical advice.',
+  },
   targets: {
     title: 'Which cancer targets to pursue — ranked by human genetics | Provenika',
     description:
