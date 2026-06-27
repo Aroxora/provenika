@@ -31,6 +31,27 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000141736). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
+## Standard of care for this target (what a new molecule must beat)
+
+Drugs that already act on this target, from ChEMBL's known-mechanism data — the existing bar. A new candidate has to earn its place against these on **potency, selectivity, resistance coverage, or tolerability**, not just bind.
+
+| Drug | Stage | mechanism | record |
+|---|---|---|---|
+| Trastuzumab | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1201585/) |
+| Pertuzumab | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2007641/) |
+| Trastuzumab Emtansine | approved | binding agent | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1743082/) |
+| Lapatinib Ditosylate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1201179/) |
+| Afatinib Dimaleate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2105712/) |
+| Tucatinib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3989868/) |
+| Allitinib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1947204/) |
+| Cp-724714 | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL483321/) |
+| Ac-480 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1645462/) |
+| Cudc-101 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL598797/) |
+| Jnj-26483327 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3109738/) |
+| Av-412 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL6067986/) |
+
+**Already approved against this target:** Trastuzumab, Pertuzumab, Trastuzumab Emtansine, Lapatinib Ditosylate, Afatinib Dimaleate, Tucatinib. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds

@@ -34,6 +34,24 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000121879). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
+## Standard of care for this target (what a new molecule must beat)
+
+Drugs that already act on this target, from ChEMBL's known-mechanism data — the existing bar. A new candidate has to earn its place against these on **potency, selectivity, resistance coverage, or tolerability**, not just bind.
+
+| Drug | Stage | mechanism | record |
+|---|---|---|---|
+| Alpelisib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2396661/) |
+| Copanlisib Hydrochloride | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3545068/) |
+| Copanlisib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3218576/) |
+| Inavolisib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4650215/) |
+| Fimepinostat | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3622533/) |
+| Serabelisib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3935857/) |
+| Bay-1082439 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3644672/) |
+| Pki-179 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1258517/) |
+| Pwt-33579 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3545323/) |
+
+**Already approved against this target:** Alpelisib, Copanlisib Hydrochloride, Copanlisib, Inavolisib. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
+
 ## Where to obtain the compounds (domestic suppliers)
 
 Many known ChEMBL actives are catalog items — search each candidate by structure or ChEMBL ID on a domestic supplier to see if it can be PURCHASED (no synthesis, no import) before commissioning a CRO. Availability and price are per-compound; confirm directly — do not assume stock.

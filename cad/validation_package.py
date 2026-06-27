@@ -24,6 +24,7 @@ import argparse
 import csv
 import json
 import sys
+import urllib.request
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -75,6 +76,47 @@ CHAIN = [
 ]
 
 
+def _chembl_name_phase(cid: str) -> tuple[str | None, float | None]:
+    """Resolve a ChEMBL molecule id to (preferred name, max_phase). Raw HTTP, best-effort."""
+    try:
+        url = f"https://www.ebi.ac.uk/chembl/api/data/molecule/{cid}.json"
+        req = urllib.request.Request(url, headers={"User-Agent": "provenika-validation/1.0 (research)"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            d = json.load(r)
+        ph = d.get("max_phase")
+        try:
+            ph = float(ph) if ph is not None else None
+        except (TypeError, ValueError):
+            ph = None
+        return d.get("pref_name"), ph
+    except Exception:
+        return None, None
+
+
+_PHASE_LABEL = {4.0: "approved", 3.0: "phase 3", 2.0: "phase 2", 1.0: "phase 1"}
+
+
+def standard_of_care(dossier: dict, limit: int = 12) -> list[dict]:
+    """The drugs that already hit this target — the bar a new molecule must clear. Reads the dossier's
+    known-mechanism drugs (real ChEMBL mechanism data, re-verified by cad/verify.py), resolves each to a
+    name + clinical phase, dedupes by name, and returns the most-advanced first. Network best-effort;
+    returns [] if there are no known-mechanism drugs or the lookups fail (never raises)."""
+    kmd = ((dossier.get("chembl") or {}).get("known_mechanism_drugs")) or []
+    seen, out = set(), []
+    for m in kmd[:limit]:
+        cid = m.get("molecule_chembl_id")
+        if not cid:
+            continue
+        name, phase = _chembl_name_phase(cid)
+        if not name or name.upper() in seen:
+            continue
+        seen.add(name.upper())
+        out.append({"name": name, "phase": phase, "chembl_id": cid,
+                    "action": m.get("action_type")})
+    out.sort(key=lambda d: (d["phase"] if d["phase"] is not None else -1), reverse=True)
+    return out
+
+
 def _load(run: Path) -> dict:
     out: dict = {}
     dj = run / "dossier.json"
@@ -116,8 +158,9 @@ def build(run: Path, top_n: int = 5) -> dict:
             "status": (r.get("dev_phase") or "—"),
             "chembl_url": f"https://www.ebi.ac.uk/chembl/compound_report_card/{r.get('chembl_id')}/",
         })
+    soc = standard_of_care(dossier)  # best-effort; [] if none or offline
     return {"target": target, "has_docking": "docked" in data, "candidates": candidates,
-            "n_candidates": len(candidates), "ot": ot}
+            "n_candidates": len(candidates), "ot": ot, "standard_of_care": soc}
 
 
 def _status_summary(candidates: list[dict]) -> str | None:
@@ -171,6 +214,23 @@ def to_markdown(pkg: dict, run_name: str, region: str = "global") -> str:
             L += [TE.to_markdown(pkg["ot"]), ""]
         except Exception:
             pass
+    soc = pkg.get("standard_of_care") or []
+    if soc:
+        approved = [d for d in soc if d.get("phase") == 4.0]
+        L += ["## Standard of care for this target (what a new molecule must beat)", "",
+              "Drugs that already act on this target, from ChEMBL's known-mechanism data — the existing bar. "
+              "A new candidate has to earn its place against these on **potency, selectivity, resistance "
+              "coverage, or tolerability**, not just bind.", "",
+              "| Drug | Stage | mechanism | record |", "|---|---|---|---|"]
+        for d in soc:
+            stage = _PHASE_LABEL.get(d.get("phase"), "research/other")
+            L.append(f"| {d['name'].title()} | {stage} | {(d.get('action') or '').lower()} | "
+                     f"[ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/{d['chembl_id']}/) |")
+        if approved:
+            names = ", ".join(d["name"].title() for d in approved[:6])
+            L += ["", f"**Already approved against this target:** {names}. The honest goal for a new "
+                  f"molecule is a differentiated advantage over these, not merely activity."]
+        L.append("")
     if cn:
         L += ["## Where to obtain the compounds (domestic suppliers)", "",
               f"{CN.SUPPLIERS_NOTE_CN}", ""]

@@ -35,6 +35,27 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000146648). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
+## Standard of care for this target (what a new molecule must beat)
+
+Drugs that already act on this target, from ChEMBL's known-mechanism data — the existing bar. A new candidate has to earn its place against these on **potency, selectivity, resistance coverage, or tolerability**, not just bind.
+
+| Drug | Stage | mechanism | record |
+|---|---|---|---|
+| Panitumumab | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1201827/) |
+| Cetuximab | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1201577/) |
+| Erlotinib Hydrochloride | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1079742/) |
+| Gefitinib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL939/) |
+| Lapatinib Ditosylate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1201179/) |
+| Afatinib Dimaleate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2105712/) |
+| Osimertinib Mesylate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3545063/) |
+| Necitumumab | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1743047/) |
+| Allitinib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1947204/) |
+| Falnidamol | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL258940/) |
+| Ac-480 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1645462/) |
+| Azd-4769 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL422872/) |
+
+**Already approved against this target:** Panitumumab, Cetuximab, Erlotinib Hydrochloride, Gefitinib, Lapatinib Ditosylate, Afatinib Dimaleate. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
+
 ## Where to obtain the compounds (domestic suppliers)
 
 Many known ChEMBL actives are catalog items — search each candidate by structure or ChEMBL ID on a domestic supplier to see if it can be PURCHASED (no synthesis, no import) before commissioning a CRO. Availability and price are per-compound; confirm directly — do not assume stock.

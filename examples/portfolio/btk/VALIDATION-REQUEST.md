@@ -31,6 +31,27 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000010671). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
+## Standard of care for this target (what a new molecule must beat)
+
+Drugs that already act on this target, from ChEMBL's known-mechanism data — the existing bar. A new candidate has to earn its place against these on **potency, selectivity, resistance coverage, or tolerability**, not just bind.
+
+| Drug | Stage | mechanism | record |
+|---|---|---|---|
+| Ibrutinib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1873475/) |
+| Tirabrutinib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4071161/) |
+| Acalabrutinib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3707348/) |
+| Zanubrutinib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3936761/) |
+| Evobrutinib | phase 3 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4072833/) |
+| Fenebrutinib | phase 3 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4065122/) |
+| Spebrutinib Besylate | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3301600/) |
+| Poseltinib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4163691/) |
+| Branebrutinib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4297674/) |
+| Bms-986142 | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3900554/) |
+| Elsubrutinib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4594348/) |
+| Msc-2364447 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3545193/) |
+
+**Already approved against this target:** Ibrutinib, Tirabrutinib, Acalabrutinib, Zanubrutinib. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds

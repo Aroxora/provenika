@@ -75,6 +75,37 @@ def test_status_summary_flips_on_clinical_compounds():
     check("no candidates → no summary line", V._status_summary([]) is None)
 
 
+def test_standard_of_care_anchors_to_approved_drugs():
+    # Stub the ChEMBL name/phase resolver so this stays OFFLINE.
+    canned = {
+        "CHEMBL1": ("IBRUTINIB", 4.0), "CHEMBL2": ("ACALABRUTINIB", 4.0),
+        "CHEMBL3": ("SPEBRUTINIB", 2.0), "CHEMBL4": ("IBRUTINIB", 4.0),  # dup name -> deduped
+    }
+    V._chembl_name_phase = lambda cid: canned.get(cid, (None, None))
+    dossier = {"chembl": {"known_mechanism_drugs": [
+        {"molecule_chembl_id": "CHEMBL3", "action_type": "INHIBITOR"},
+        {"molecule_chembl_id": "CHEMBL1", "action_type": "INHIBITOR"},
+        {"molecule_chembl_id": "CHEMBL2", "action_type": "INHIBITOR"},
+        {"molecule_chembl_id": "CHEMBL4", "action_type": "INHIBITOR"},
+    ]}}
+    soc = V.standard_of_care(dossier)
+    check("dedupes by name (4 records -> 3 drugs)", len(soc) == 3)
+    check("most-advanced first (approved before phase 2)", soc[0]["phase"] == 4.0 and soc[-1]["phase"] == 2.0)
+    pkg = {"target": "BTK", "candidates": [], "n_candidates": 0, "standard_of_care": soc}
+    md = V.to_markdown(pkg, "btk")
+    check("renders the standard-of-care section", "Standard of care for this target" in md)
+    check("names an approved drug", "Ibrutinib" in md)
+    check("honest framing: must beat, not just bind", "must beat" in md and "differentiated advantage" in md)
+
+
+def test_standard_of_care_empty_is_silent():
+    # No known-mechanism drugs -> no network, no section (the offline default for the test dossiers).
+    with tempfile.TemporaryDirectory() as t:
+        d = _run(Path(t))
+        pkg = V.build(d)
+        check("no SoC section when dossier has no known drugs", "Standard of care for this target" not in V.to_markdown(pkg, "x"))
+
+
 def test_pitch_is_a_draft_only():
     with tempfile.TemporaryDirectory() as t:
         pkg = V.build(_run(Path(t)))

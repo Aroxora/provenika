@@ -31,6 +31,27 @@ _*Vina ΔG is a predicted ranking aid, NOT a measured affinity. SMILES in the ru
 
 _Source: [Open Targets Platform (platform.opentargets.org)](https://platform.opentargets.org/target/ENSG00000157764). Open Targets aggregates evidence; scores are heuristic, not outcome predictions. Human genetic support raises a population-level prior of clinical success (Nelson, Nat Genet 2015), not a per-program forecast; absence is not evidence against. Germline signal translates imperfectly to somatic oncology. Research only._
 
+## Standard of care for this target (what a new molecule must beat)
+
+Drugs that already act on this target, from ChEMBL's known-mechanism data — the existing bar. A new candidate has to earn its place against these on **potency, selectivity, resistance coverage, or tolerability**, not just bind.
+
+| Drug | Stage | mechanism | record |
+|---|---|---|---|
+| Dabrafenib Mesylate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2105729/) |
+| Regorafenib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1946170/) |
+| Sorafenib Tosylate | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1200485/) |
+| Vemurafenib | approved | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL1229517/) |
+| Lifirafenib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4209157/) |
+| Cep-32496 | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL2029988/) |
+| Plixorafenib | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL4303729/) |
+| Raf-265 | phase 2 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL558752/) |
+| Arq-736 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL5314407/) |
+| Lgx-806 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3545263/) |
+| Ly-3009120 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3577124/) |
+| Rg-7256 | phase 1 | inhibitor | [ChEMBL](https://www.ebi.ac.uk/chembl/compound_report_card/CHEMBL3545080/) |
+
+**Already approved against this target:** Dabrafenib Mesylate, Regorafenib, Sorafenib Tosylate, Vemurafenib. The honest goal for a new molecule is a differentiated advantage over these, not merely activity.
+
 ## The experiments that would validate it (in order)
 
 ### 1. Confirm it binds
