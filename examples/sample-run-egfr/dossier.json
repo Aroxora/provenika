@@ -273,6 +273,8 @@
       "1Z9I"
     ]
   },
+  "variant_filter": null,
+  "variant_records": null,
   "next": "python3 cad/virtual_triage.py --target \"EGFR\" --out hits.csv",
   "disclaimer": "Public-data orientation only. Not validation, not medical advice."
 }

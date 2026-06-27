@@ -1,6 +1,6 @@
 {
   "target": "EGFR",
-  "generated": "2026-06-23",
+  "generated": "2026-06-27",
   "rule": "No value below originates from a language model: each is either fetched live from a cited public source or computed by deterministic open-source code. Re-check with cad/verify.py or by opening verify_url.",
   "sources": {
     "uniprot": {
@@ -72,30 +72,11 @@
     },
     {
       "name": "receptor_pdb_id",
-      "value": "8A27",
+      "value": "4UV7",
       "origin": "fetched",
       "source": "rcsb",
-      "verify_url": "https://www.rcsb.org/structure/8A27",
+      "verify_url": "https://www.rcsb.org/structure/4UV7",
       "note": ""
-    },
-    {
-      "name": "docking_box",
-      "value": {
-        "center": [
-          23.81,
-          -10.62,
-          -11.55
-        ],
-        "size": [
-          34.2,
-          24.1,
-          30.0
-        ]
-      },
-      "origin": "computed",
-      "source": "geometric envelope of the co-crystal ligand in the receptor PDB",
-      "verify_url": "geometric envelope of the co-crystal ligand in the receptor PDB",
-      "note": "derived from 8A27 via cad/binding_site.py"
     },
     {
       "name": "probability_of_approval",
@@ -107,7 +88,7 @@
     },
     {
       "name": "benefit_cost_ratio",
-      "value": 1.03,
+      "value": 0.86,
       "origin": "computed",
       "source": "https://doi.org/10.1093/biostatistics/kxx069",
       "verify_url": "https://doi.org/10.1093/biostatistics/kxx069",
