@@ -1,109 +1,81 @@
 #!/usr/bin/env python3
 """
-README generator — LIMITATIONS-only.
+README generator — ENVIRONMENT-LIMITATIONS-only.
 
-By request, README.md is a candid, exhaustive list of this project's LIMITATIONS — nothing else.
-The usage narrative and anti-hallucination strategy live in docs/ and the web app; the README's
-single job here is to be honest about what this tool does NOT do and where it falls short.
+By request, README.md lists ONLY the limitations imposed by the execution environment (this
+machine, or a cloud host such as AWS / Google Cloud / CI) and exactly what is needed to solve each.
+The scientific caveats live in docs/ and in each tool's --help; they are not repeated here.
 
 Edit the LIMITATIONS string below, then run `python3 cicd/generate_readme.py`, and commit both.
-Nothing parses the README programmatically (cicd/check_readme.sh keeps its own command list), so the
-content is free-form prose.
+Nothing parses the README programmatically (cicd/check_readme.sh keeps its own command list).
 """
 
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 
-LIMITATIONS = r"""# Provenika — Limitations
+LIMITATIONS = r"""# Provenika — Environment limitations & how to solve them
 
-Provenika is an auditable oncology **research** tool (CADD triage → structure → docking setup →
-feasibility), developed by **[ErosolarAI](https://erosolarai.com)**. This file lists, candidly and
-completely, what it does **not** do and where it falls short.
+Everything in this repo is implemented and unit-tested. The only things that cannot *run to
+completion* are gated on tools or compute absent from the current machine. Each limitation below is
+paired with exactly what is needed to solve it — on **this machine**, on **AWS**, on **Google
+Cloud**, or in **CI**.
 
-> **Research only — not medical advice, not a treatment recommendation, not a diagnosis.**
-> A computational hit is not proof of anything.
+> Research only — not medical advice. (Scientific caveats live in `docs/` and each tool's `--help`.)
 
-## Execution / environment
+## 1. Docking cannot execute here — no AutoDock Vina / Open Babel / `obrms`
 
-- **Still requires a Vina-equipped host to execute** (the code is implemented + unit-tested with
-  stubs, just not runnable here): the actual batch-dock run and regenerating the 39-complex
-  redocking artifact — `vina`/`obabel`/`obrms` aren't installed in this environment.
-- Docking-grade prep (Meeko + pdb2pqr → the validated ~1.4 Å path) is optional; without it the
-  pipeline silently falls back to the inferior Open-Babel prep (~7.9 Å). `cad/dock.py --check` flags
-  this, and the wrapper never fabricates a score.
+**What's blocked.** `cad/dock.py`, the batch-dock stage (`cad/batch_dock.py`, `run_pipeline
+--dock-top-n`), and the redocking validation (`cad/validate.py --redock`). The wrappers are gated on
+the real binaries and **never fabricate a score**, so they currently SKIP. RDKit + Meeko + pdb2pqr
+(the pip half of the prep) ARE installed; only the Vina + Open Babel + `obrms` binaries are missing.
 
-## Triage / shortlist
+**Solve it — this machine (macOS):** Vina + Open Babel are not reliably pip/brew-installable, so use
+conda/micromamba:
+```bash
+micromamba create -p ./dockenv -c conda-forge vina openbabel
+export PATH=$PWD/dockenv/bin:$PATH
+pip install -r cad/requirements-docking.txt        # meeko + pdb2pqr
+python3 cad/dock.py --check                          # expect: Ready to dock (docking-grade prep)
+```
 
-- **Rediscovery, not discovery.** Triage ranks compounds ChEMBL has *already measured* against the
-  target. It cannot score a novel/unmeasured molecule by potency — only by 2-D similarity to known
-  actives or by docking. It surfaces known chemotypes and close analogs, not de novo molecules.
-- **Median consensus is floor-biased.** The per-molecule consensus is the median of measurements at
-  or above `--min-pchembl` (the descending scan stops at the floor), so it is a transparent,
-  slightly upward-biased consensus; lower the floor to widen it. `potency_suspect` flags a
-  near-ceiling potency backed by < 2 measurements, but cannot vet the assay itself.
-- **Selectivity is a proxy.** `n_potent_targets` counts distinct human ChEMBL targets a hit is potent
-  against; it does not separate single-protein from complex/cell-line targets, and *absence of
-  off-target data is not evidence of selectivity*. It is an opt-out probe (extra API calls).
-- **Assay pooling.** IC50/Ki/Kd/EC50 are pooled onto one pChEMBL axis; `--binding-only` restricts to
-  biochemical binding assays, but a mixed `assay_format` remains a coarse signal.
-- **ChEMBL coverage is uneven** across targets and alleles; a sparsely-measured target yields a thin,
-  less trustworthy shortlist.
+**Solve it — AWS:** a CPU instance (docking is CPU-bound and parallelizes across cores, e.g.
+`c7i.4xlarge`) with Miniconda → the same conda + pip install, then `make redock`. Or wrap it as an
+**AWS Batch** job for fan-out.
 
-## Allele / mutation handling
+**Solve it — Google Cloud:** a Compute Engine `c3-highcpu` VM (or **Cloud Batch**) with the identical
+setup; `make redock`.
 
-- **The receptor mutation check is advisory.** It reads the residue at the requested position using
-  the structure's *author* numbering, which usually — but not always — aligns with UniProt. It
-  reports a finding (match / wild-type / other / unverifiable) and never asserts a silent match.
-- **Structures are not auto-matched to the allele.** `fetch_structure` prefers a holo entry among the
-  top candidates but can land on an apo structure (no docking box) or a *wild-type* structure for an
-  allele-specific campaign — it flags this, it does not fix it. Supply a mutant holo PDB with `--pdb`.
+**Solve it — CI:** add a `mamba-org/setup-micromamba` step installing `vina openbabel`, then run
+`python3 cad/validate.py --redock cad/validation_benchmark.json` (3-complex smoke). Gate the full
+benchmark behind `workflow_dispatch` (~20 min).
 
-## Validation evidence
+## 2. The benchmark-scale redocking number can't be regenerated here
 
-- **Enrichment uses presumed-inactive decoys.** Property-matched decoys are *assumed* inactive
-  (DUD-E-style); a decoy could coincidentally be an unmeasured active. The committed AUC measures
-  whether structure recovers *known* actives over decoys — **necessary, not sufficient**, and not a
-  prediction of prospective accuracy or efficacy. Decoy sampling varies run-to-run; one target (EGFR)
-  is committed.
-- **Redocking validates a *known* pose.** ≤ 2 Å redocking success (median ~1.4 Å on the curated set)
-  is a necessary check, not proof of prospective accuracy. Cross-docking, induced fit, and
-  prospective virtual screening are harder and are **not** validated here.
-- **The rank-fusion column is NON-VALIDATED** — a transparent combination of two unvalidated triage
-  signals (ligand score + Vina ΔG). Vina ΔG is an approximate ranking aid weakly correlated with true
-  affinity — **never** a measured Kd/IC50.
-- **Verify proves re-derivability, not query-design correctness.** A wrong-but-stable query
-  reproduces and passes. Free-text prose, the `cad/intel/` digests, and structure byte-integrity are
-  **not** covered by the provenance/verify spine.
+**What's blocked.** Reproducing the committed redocking result
+(`examples/validation-redock/batch_results.json`, 39 complexes) needs §1's stack.
 
-## Docking box
+**Solve it.** On any host from §1: `python3 examples/validation-redock/batch_redock.py` (runs in
+parallel, ~20 min), then commit the regenerated `batch_results.json`. `python3 cad/validate.py
+--recheck <file>` re-derives the summary **offline**, so the committed number stays auditable
+anywhere.
 
-- A whole-receptor **blind box** is weak; an oversized one (> 30 Å on an axis) is flagged unreliable.
-  Pocket detection for apo targets (fpocket / P2Rank) is **not** built in.
-- The committed redocking success was measured at a focused (pad 4 Å) box; the wider production box
-  (pad 8 Å) is a different, un-certified configuration (search effort scales with box volume to
-  compensate, but that is not separately validated).
+## 3. Throughput is bounded by public-API latency + local core count
 
-## Cost-benefit
+**What's slow.** The cheminformatics precompute (38 targets), the per-hit selectivity probe, and
+large enrichment/benchmark sweeps are bounded by ChEMBL round-trips and this machine's cores — fine
+for a few targets, slow at scale.
 
-- **Target-independent.** A modality/phase-level benchmark from public priors (BIO/Informa, DiMasi,
-  Wong et al.); identical inputs give identical figures for *any* target — it carries no
-  target/molecule signal. The preclinical LOA and several multipliers are author estimates; the
-  verdict bands are unsourced heuristics. Not a valuation, not financial advice.
+**Solve it.** Run on a higher-core AWS/GCP instance (more parallel docks/requests), or an **AWS
+Batch / GCP Cloud Batch / Cloud Run** job for fan-out, and cache ChEMBL responses. No code change
+needed — `--no-selectivity` and `--scan` already bound the work.
 
-## Explicitly NOT covered
+## 4. Outbound network access to the public databases is required
 
-- No ADMET/tox prediction, no free-energy perturbation (FEP), no generative/de-novo design, no QSAR
-  efficacy models, no kinome selectivity panels beyond the ChEMBL proxy.
-- No per-patient recommendations, doses, diagnoses, prognoses, or treatment plans — and nothing that
-  would direct care.
-
-## Web app
-
-- [provenika.com](https://provenika.com) is a **separate browser reimplementation**. Its triage now
-  mirrors the CLI's data-quality logic (quality gate, median consensus, suspect flag, allele filter),
-  but it does **not** run docking, the selectivity probe, or the full provenance/verify spine — it is
-  a convenience view, not the audited core.
+**What's needed.** Outbound HTTPS to **ChEMBL** (`ebi.ac.uk`), **UniProt** (`rest.uniprot.org`),
+**RCSB PDB** (`rcsb.org`), and **AlphaFold** (`alphafold.ebi.ac.uk`). Present on this machine; a
+locked-down cloud host or CI runner must allow egress to those domains (or proxy them) — otherwise
+the pipeline degrades to a clearly-marked partial dossier rather than failing silently.
 
 ---
 
@@ -114,7 +86,7 @@ a substitute for professional medical advice.
 
 def main():
     (ROOT / "README.md").write_text(LIMITATIONS)
-    print("  README.md updated (limitations-only)")
+    print("  README.md updated (environment-limitations-only)")
 
 
 if __name__ == "__main__":
