@@ -15,4 +15,8 @@
 # =============================================================================
 
 meeko>=0.5          # docking-grade ligand PDBQT (torsion tree + AutoDock atom typing)
+gemmi               # REQUIRED by Meeko 0.7+ at import time (meeko.polymer -> chemtempgen -> gemmi);
+                    # pip does not always pull it in, and without it `import meeko` raises and dock.py
+                    # silently falls back to the inferior Open-Babel prep (~7.9 A). Verified on a
+                    # clean AWS host: installing gemmi flips dock.py --check to "docking-grade prep".
 pdb2pqr>=3.6        # receptor protonation + charge assignment at pH 7 (provides pdb2pqr30)

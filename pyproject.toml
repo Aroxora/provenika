@@ -30,7 +30,7 @@ outreach = ["google-cloud-firestore>=2.11"]
 # Docking-grade PREP (the pip-installable half of stage 5) — Meeko builds the ligand PDBQT and
 # pdb2pqr protonates the receptor; together they produce the validated ~1.4 Å redocking median
 # (vs ~7.9 Å on the Open-Babel-only fallback). Mirrors cad/requirements-docking.txt.
-docking = ["rdkit>=2024.3", "meeko>=0.5", "pdb2pqr>=3.6"]
+docking = ["rdkit>=2024.3", "meeko>=0.5", "gemmi", "pdb2pqr>=3.6"]  # gemmi: meeko 0.7+ imports it
 # NOTE: docking (cad/dock.py) ALSO needs the AutoDock Vina + Open Babel *binaries* on PATH. Those
 # are NOT pip-installable on recent Python — use `conda install -c conda-forge vina openbabel`,
 # then `python3 cad/dock.py --check` (which now also reports Meeko + pdb2pqr).

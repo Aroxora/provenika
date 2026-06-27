@@ -41,6 +41,11 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 
 RMSD_SUCCESS_A = 2.0  # Å — standard "correct pose" threshold for redocking.
+# A focused-box redocking cannot yield a meaningful pose-RMSD this large with the CORRECT atom
+# correspondence (the box only spans the ligand + a few Å). A bigger obrms value therefore signals a
+# FAILED atom mapping (e.g. a symmetry flip), not a genuinely far pose — so we cross-check it against
+# the RDKit template RMSD and keep the smaller (RMSD is by definition a minimum over correspondences).
+IMPLAUSIBLE_REDOCK_RMSD_A = 10.0
 
 
 # --------------------------------------------------------------------------------------
@@ -350,15 +355,31 @@ def recheck_enrichment_file(path: str) -> dict:
 # Redocking runner (LIVE — needs Vina + Open Babel; gated, never fabricates)
 # --------------------------------------------------------------------------------------
 
-def _extract_crystal_ligand(pdb_text: str, resname: str, out_dir: str):
-    """Write the named co-crystal ligand's heavy atoms to a PDB and load it as an RDKit mol
-    (bond orders perceived). Returns (rdkit_mol, path) or (None, reason)."""
+def _extract_crystal_ligand(pdb_text: str, resname: str, out_dir: str,
+                            chain: str | None = None, resseq: str | None = None):
+    """Write ONE co-crystal ligand copy's heavy atoms to a PDB and load it as an RDKit mol.
+
+    CRITICAL: when a structure has multiple copies of the ligand (different chains — common for
+    kinases), filtering by resname ALONE concatenates every copy into one disconnected molecule,
+    while the docking box + pose are for a SINGLE copy — so the RMSD compares 2 copies against 1 and
+    explodes (e.g. 50-70 Å). Passing the (chain, resseq) of the copy `select_ligand` built the box
+    from restricts the reference to that same copy, which is what the pose must reproduce. Returns
+    (rdkit_mol, path) or (None, reason)."""
     try:
         from rdkit import Chem
     except Exception as e:  # pragma: no cover
         return None, f"RDKit unavailable: {e}"
-    lines = [ln for ln in pdb_text.splitlines()
-             if ln.startswith("HETATM") and ln[17:20].strip() == resname.upper()]
+
+    def match(ln: str) -> bool:
+        if not ln.startswith("HETATM") or ln[17:20].strip() != resname.upper():
+            return False
+        if chain is not None and ln[21:22] != chain:
+            return False
+        if resseq is not None and ln[22:26].strip() != str(resseq):
+            return False
+        return True
+
+    lines = [ln for ln in pdb_text.splitlines() if match(ln)]
     if not lines:
         return None, f"ligand {resname} not found in structure"
     path = os.path.join(out_dir, f"ref_{resname}.pdb")
@@ -428,11 +449,17 @@ def _redock_rmsd(ref_pdb: str, docked_pdbqt: str, out_dir: str, template_smiles:
     tok = out.split()[-1] if out.split() else ""
     try:
         val = float(tok)
-        if val == val and val != float("inf"):  # finite → obrms matched; use it
-            return round(val, 3), None
+        if val == val and val != float("inf"):  # finite → obrms matched
+            if val <= IMPLAUSIBLE_REDOCK_RMSD_A:
+                return round(val, 3), None      # plausible → trust obrms (fast path, unchanged)
+            # Finite but implausibly large → likely a failed atom correspondence. Cross-check with the
+            # template RMSD and keep the smaller; never larger than obrms, so this can only correct a
+            # mis-mapping, never inflate a genuine failure (if the pose is truly far, both agree).
+            t_rmsd, _ = _template_rmsd_fallback(ref_pdb, docked_pdbqt, template_smiles, out_dir)
+            return round(min(val, t_rmsd) if t_rmsd is not None else val, 3), None
     except ValueError:
         pass
-    # obrms could not match (NaN/inf/no number) → RDKit template fallback before giving up.
+    # obrms could not match at all (NaN/inf/no number) → RDKit template fallback before giving up.
     rmsd, ferr = _template_rmsd_fallback(ref_pdb, docked_pdbqt, template_smiles, out_dir)
     if rmsd is not None:
         return rmsd, None
@@ -457,24 +484,30 @@ def redock_one(pdb_id: str, resname: str, out_dir: str, cpu: int | None = None) 
         rec["error"] = f"could not fetch {pdb_id}: {e}"
         return rec
 
-    ref_mol, ref_info = _extract_crystal_ligand(pdb_text, resname, out_dir)
+    # Select the ligand FIRST so the box and the reference come from the SAME single copy (chain +
+    # resSeq). A TIGHTER pad than the pipeline default (focused redocking, standard practice).
+    lig = bsm.select_ligand(pdb_text)
+    if not lig or not lig.get("resName"):
+        rec["skip"] = "no drug-like ligand detected to define the box"
+        return rec
+    box = bsm.box(lig["atoms"], pad=4.0)
+    rec_pdb = os.path.join(out_dir, f"{pdb_id}.pdb")
+    Path(rec_pdb).write_text(pdb_text)
+    rec["ligand"] = lig["resName"]
+
+    # Reference = the exact copy the box was built from (chain+resSeq), not every copy in the crystal.
+    ref_mol, ref_info = _extract_crystal_ligand(pdb_text, lig["resName"], out_dir,
+                                                chain=lig.get("chain"), resseq=lig.get("resSeq"))
     if ref_mol is None:
         rec["skip"] = ref_info
         return rec
 
-    # Box from the (improved) co-crystal-ligand selection; a TIGHTER pad than the pipeline default
-    # (focused redocking, standard practice). Receptor saved for docking.
-    lig = bsm.select_ligand(pdb_text)
-    box = bsm.box(lig["atoms"], pad=4.0)
-    rec_pdb = os.path.join(out_dir, f"{pdb_id}.pdb")
-    Path(rec_pdb).write_text(pdb_text)
-
     from rdkit import Chem
     # Dock the ligand's CORRECT structure from the RCSB SMILES template (a PDB-perceived SMILES of
     # the crystal ligand is often wrong, which is what broke the earlier RMSD comparison).
-    template_smiles = _chemcomp_smiles(resname)
+    template_smiles = _chemcomp_smiles(lig["resName"])
     if not template_smiles:
-        rec["error"] = f"could not fetch a SMILES template for ligand {resname} (RCSB chemcomp)"
+        rec["error"] = f"could not fetch a SMILES template for ligand {lig['resName']} (RCSB chemcomp)"
         return rec
     tmpl = Chem.MolFromSmiles(template_smiles)
     dock_smiles = Chem.MolToSmiles(tmpl) if tmpl is not None else template_smiles

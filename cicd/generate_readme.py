@@ -16,12 +16,17 @@ ROOT = Path(__file__).parent.parent
 
 LIMITATIONS = r"""# Provenika — Environment limitations & how to solve them
 
+> ## ⚠️ Not for patient care
+> Provenika does not diagnose, treat, or advise on any patient, and neither does this review.
+> Nothing here is medical advice. A computational hit is a hypothesis for the wet lab, never
+> evidence a therapy works.
+
 Everything in this repo is implemented and unit-tested. The only things that cannot *run to
 completion* are gated on tools or compute absent from the current machine. Each limitation below is
 paired with exactly what is needed to solve it — on **this machine**, on **AWS**, on **Google
 Cloud**, or in **CI**.
 
-> Research only — not medical advice. (Scientific caveats live in `docs/` and each tool's `--help`.)
+> Scientific caveats live in `docs/` and each tool's `--help`.
 
 ## 1. Docking cannot execute here — no AutoDock Vina / Open Babel / `obrms`
 
