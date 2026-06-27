@@ -100,6 +100,13 @@ export class Portfolio {
       genetic: 'Strong human genetic support for melanoma (0.70, Open Targets)',
       geneticStrong: true,
     },
+    {
+      target: 'KRAS',
+      context: 'Pancreatic / colorectal / NSCLC — the historically "undruggable" oncogene (sotorasib / adagrasib G12C class)',
+      note: 'A prioritized shortlist of potent KRAS ligands from public ChEMBL bioactivity, with developability flags and a full experimental-validation request.',
+      genetic: 'Strong human genetic support for gastric cancer (0.90, Open Targets)',
+      geneticStrong: true,
+    },
   ];
 
   slug(t: string): string {

@@ -1,0 +1,37 @@
+{
+  "pdb": "9IAY",
+  "ligand": {
+    "resName": "GDP",
+    "chain": "A",
+    "resSeq": "201"
+  },
+  "ligandAtoms": 40,
+  "center": [
+    26.73,
+    2.89,
+    21.5
+  ],
+  "size": [
+    24.0,
+    25.6,
+    25.1
+  ],
+  "pad": 8.0,
+  "volume_A3": 15421.4,
+  "heavyAtoms": 28,
+  "ligandContacts": 40,
+  "ligandBuried": 1.0,
+  "ligandWarning": null,
+  "alternatives": [
+    {
+      "resName": "WYU",
+      "chain": "A",
+      "resSeq": "204",
+      "heavyAtoms": 32,
+      "contacts": 55,
+      "buried": 0.932
+    }
+  ],
+  "dockCommand": "python3 cad/dock.py --receptor structures/9IAY.pdb --smiles \"<ligand SMILES>\" --center 26.73 2.89 21.5 --size 24.0 25.6 25.1",
+  "disclaimer": "Box from the buried, drug-like co-crystal ligand envelope. Research only."
+}

@@ -61,6 +61,27 @@ def test_unresolvable_qed_is_skipped_not_failed():
         assert _status(checks, "QED re-fetched") is None, checks  # never fabricates a pass/fail
 
 
+def test_desalted_parent_smiles_passes():
+    # ChEMBL holds a salt/co-crystal ('.'-joined); the pipeline docks (and stores) the parent fragment.
+    # The SMILES check must NOT flag the pipeline's own deterministic desalting as fabrication.
+    v._chembl_canonical_smiles = lambda cid: "CCO.Cl"           # ethanol·HCl — parent is the largest fragment
+    v._chembl_qed = lambda cid: 0.50
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv(Path(d), "0.50"), checks)        # saved smiles is "CCO" (the parent)
+        assert _status(checks, "SMILES match ChEMBL") == v.PASS, checks
+
+
+def test_edited_smiles_still_fails():
+    # An edited/transposed SMILES that is NOT ChEMBL's molecule (nor its parent) must still FAIL.
+    v._chembl_canonical_smiles = lambda cid: "CCN"               # different molecule from saved "CCO"
+    v._chembl_qed = lambda cid: 0.50
+    with tempfile.TemporaryDirectory() as d:
+        checks = []
+        v.verify_hits(_hits_csv(Path(d), "0.50"), checks)
+        assert _status(checks, "SMILES match ChEMBL") == v.FAIL, checks
+
+
 def test_potency_match_passes():
     v._chembl_canonical_smiles = lambda cid: "CCO"
     v._chembl_qed = lambda cid: 0.50

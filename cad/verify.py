@@ -19,7 +19,9 @@ What this DOES and does NOT prove (read this — honesty is the point):
     the right one. A wrong-but-stable query would pass.
   * The SMILES check IS independent: it fetches each top ligand's canonical
     SMILES straight from ChEMBL over raw HTTP (not via the triage code) and
-    requires byte-equality with hits.csv — catching an edited/transposed SMILES.
+    requires it to match hits.csv as the same molecule — exactly, or as ChEMBL's
+    desalted parent fragment (the pipeline docks the parent, not the counter-ion) —
+    catching an edited/transposed SMILES while not false-flagging legitimate desalting.
   * Deterministic artifacts (cost_benefit.json, the triage score, the docking box —
     re-derived from the co-crystal ligand — and the per-hit liability fields: PAINS/Brenk
     + GSK/Pfizer developability + SA score) are recomputed and must reproduce EXACTLY —
@@ -76,6 +78,44 @@ def _chembl_canonical_smiles(chembl_id: str) -> str | None:
     if not data:
         return None
     return ((data.get("molecule_structures") or {}).get("canonical_smiles"))
+
+
+try:                                            # optional — only used to canonicalise for comparison
+    from rdkit import Chem as _Chem             # noqa: N811
+    _RDKIT = True
+except Exception:                               # pragma: no cover - env without RDKit
+    _Chem = None
+    _RDKIT = False
+
+
+def _canon(smiles: str) -> str | None:
+    if not _RDKIT:
+        return None
+    try:
+        m = _Chem.MolFromSmiles(smiles)
+        return _Chem.MolToSmiles(m) if m is not None else None
+    except Exception:
+        return None
+
+
+def _smiles_matches_chembl(saved: str, raw: str) -> bool:
+    """Does the saved (pipeline) SMILES represent the same molecule ChEMBL holds for that ID?
+
+    The triage stores the DESALTED parent (largest_organic_fragment) — ChEMBL's canonical record for a
+    salt/co-crystal is '.'-joined (e.g. `parent.OCC(F)(F)F`), so a raw byte-compare would false-flag the
+    pipeline's own deterministic desalting as 'fabricated'. This independently reimplements the documented
+    contract: accept the saved value iff it equals ChEMBL's record OR its parent fragment (longest token,
+    the RDKit-free desalt the triage falls back to), comparing both as written and — when RDKit is present —
+    as canonical SMILES. An edited/transposed SMILES that is NOT ChEMBL's parent still fails every branch."""
+    if saved == raw:
+        return True
+    parent = max(raw.split("."), key=len) if "." in raw else raw
+    if saved == parent:
+        return True
+    cs = _canon(saved)
+    if cs is not None and cs in {_canon(raw), _canon(parent)}:
+        return True
+    return False
 
 
 def _chembl_qed(chembl_id: str) -> float | None:
@@ -251,7 +291,7 @@ def verify_hits(path: Path, checks: list, target_id: str | None = None, max_rows
         live = _chembl_canonical_smiles(cid)
         if live is None:
             unresolved += 1
-        elif saved and live != saved:
+        elif saved and not _smiles_matches_chembl(saved, live):
             mismatched += 1
     if mismatched:
         checks.append((f"top {len(rows)} ligand SMILES match ChEMBL", FAIL,
@@ -261,7 +301,7 @@ def verify_hits(path: Path, checks: list, target_id: str | None = None, max_rows
         checks.append((f"top {len(rows)} ligand SMILES match ChEMBL", FAIL,
                        "could not resolve any molecule at ChEMBL to compare", ""))
     else:
-        note = "byte-equal to ChEMBL canonical SMILES" + (
+        note = "matches ChEMBL canonical SMILES (exact or desalted parent)" + (
             f" ({unresolved} unresolved, skipped)" if unresolved else "")
         checks.append((f"top {len(rows) - unresolved} ligand SMILES match ChEMBL", PASS, note,
                        prov.source_url("chembl", "entry", rows[0].get("chembl_id", ""))))

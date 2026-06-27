@@ -1,0 +1,45 @@
+{
+  "query": "KRAS",
+  "chembl_target": {
+    "id": "CHEMBL2189121",
+    "name": "GTPase KRas",
+    "type": "SINGLE PROTEIN",
+    "organism": "Homo sapiens"
+  },
+  "chembl": {
+    "potent_activity_records": 5089,
+    "known_mechanism_drugs": [
+      {
+        "molecule_chembl_id": "CHEMBL4535757",
+        "action_type": "INHIBITOR",
+        "mechanism": "GTPase KRas inhibitor"
+      },
+      {
+        "molecule_chembl_id": "CHEMBL4594350",
+        "action_type": "INHIBITOR",
+        "mechanism": "GTPase KRas inhibitor"
+      }
+    ]
+  },
+  "uniprot": {
+    "accession": "P01116",
+    "name": "GTPase KRas",
+    "length": 189,
+    "function": "Signal transducer in the Ras-MAPK signaling pathway that regulates cell proliferation and survival (PubMed:22711838, PubMed:23698361). Ras proteins bind GDP/GTP and possess intrinsic GTPase activity (PubMed:20949621, PubMed:39809765). Activates MAPK1/MAPK3 resulting in phosphorylation and ultimately degradation of GJA1 (By similarity). Plays a role in promoting oncogenic events by inducing transcriptional silencing of tumor suppressor genes (TSGs) in colorectal cancer (CRC) cells in a ZNF304-dependent manner (PubMed:24623306). Recognized by LZTR1 that mediates its ubiquitination by a BCR (BTB-CUL3-RBX1) E3 ubiquitin-protein ligase complex (PubMed:40934300)",
+    "pdb_count": 427,
+    "pdb_examples": [
+      "1D8D",
+      "1D8E",
+      "1KZO",
+      "1KZP",
+      "1N4P",
+      "1N4Q",
+      "1N4R",
+      "1N4S"
+    ]
+  },
+  "variant_filter": null,
+  "variant_records": null,
+  "next": "python3 cad/virtual_triage.py --target \"KRAS\" --out hits.csv",
+  "disclaimer": "Public-data orientation only. Not validation, not medical advice."
+}
