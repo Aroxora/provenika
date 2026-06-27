@@ -19,6 +19,9 @@ import { RouterLink } from '@angular/router';
     <h3>Open source</h3>
     <p><a href="https://github.com/Aroxora/provenika" target="_blank" rel="noopener">github.com/Aroxora/provenika</a> — full pipeline in <code>cad/</code>, outreach agent in <code>outreach/</code>, this site in <code>web/</code>.</p>
 
+    <h3>Who builds it</h3>
+    <p>Built in <strong>Beijing</strong> by <strong>Bo Shang</strong> at <a href="https://erosolarai.com" target="_blank" rel="noopener">ErosolarAI</a> — and run from there, on the command line, because the work doesn't depend on any one network being reachable. The bench path is deliberately China-first: domestic compound suppliers and CROs, with a Simplified-Chinese pitch, so a hypothesis can go from a screen in Beijing to a real assay without crossing a border. See <a routerLink="/impact">what it adds up to</a> and the <a href="https://github.com/Aroxora/provenika/blob/main/docs/CHINA.md" target="_blank" rel="noopener">in-China guide</a>.</p>
+
     <h3>Contact</h3>
     <p>Bo Shang — <a href="mailto:bo@shang.software">bo@shang.software</a> · <a href="mailto:bo@trenchwork.org">bo@trenchwork.org</a> · +1 508-260-0326</p>
 
