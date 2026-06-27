@@ -9,6 +9,7 @@ export const routes: Routes = [
   // New primary routes
   { path: '', pathMatch: 'full', loadComponent: () => import('./features/landing/landing').then(m => m.Landing) },
   { path: 'cure', loadComponent: () => import('./features/cure/cure').then(m => m.Cure) },
+  { path: 'bench', loadComponent: () => import('./features/bench/bench').then(m => m.Bench) },
   { path: 'explore', loadComponent: () => import('./features/explorer/explorer').then(m => m.Explorer) },
   { path: 'log', loadComponent: () => import('./features/log/log').then(m => m.AgentLog) },
   { path: 'investors', loadComponent: () => import('./features/investors/investors').then(m => m.Investors) },

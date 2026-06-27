@@ -47,6 +47,13 @@ const ROUTE_META: Record<string, RouteMeta> = {
       'translation — how cancer is actually cured, and exactly where AI (AlphaFold-style) saves ' +
       'experimentation vs the irreducible wet-lab and clinical work. Literature-verified; not medical advice.',
   },
+  bench: {
+    title: 'To the bench — test a hypothesis with real labs | Provenika',
+    description:
+      'The bridge from a cited computational hypothesis to actual bio testing: the ordered chain of ' +
+      'experiments (binding → selectivity → cell → ADMET) and the real labs, CROs, and free programs ' +
+      '(NCI-60, SGC) that run each. Research only; not medical advice.',
+  },
   explore: {
     title: 'Explore a target — Provenika',
     description:

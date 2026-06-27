@@ -1,0 +1,70 @@
+#!/usr/bin/env python3
+"""Offline tests for the validation-package / bench-bridge generator (cad/validation_package.py)."""
+
+from __future__ import annotations
+
+import csv
+import json
+import sys
+import tempfile
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import validation_package as V  # noqa: E402
+
+_passed = 0
+
+
+def check(name: str, cond: bool) -> None:
+    global _passed
+    if not cond:
+        print(f"  FAIL  {name}", file=sys.stderr)
+        raise SystemExit(1)
+    print(f"  ok  {name}")
+    _passed += 1
+
+
+def _run(d: Path):
+    (d / "dossier.json").write_text(json.dumps({"chembl_target": {"name": "EGFR"}, "query": "EGFR"}))
+    with (d / "docked_hits.csv").open("w", newline="") as fh:
+        w = csv.DictWriter(fh, fieldnames=["chembl_id", "smiles", "vina_best_dG_kcal_per_mol", "pchembl_median"])
+        w.writeheader()
+        w.writerow({"chembl_id": "CHEMBL5746224", "smiles": "CCO", "vina_best_dG_kcal_per_mol": "-9.5", "pchembl_median": "9.5"})
+        w.writerow({"chembl_id": "CHEMBL176582", "smiles": "CCN", "vina_best_dG_kcal_per_mol": "-8.2", "pchembl_median": "11.0"})
+    return d
+
+
+def test_build_and_markdown():
+    with tempfile.TemporaryDirectory() as t:
+        d = _run(Path(t))
+        pkg = V.build(d, top_n=5)
+        check("target resolved", pkg["target"] == "EGFR")
+        check("candidates loaded from docked_hits", pkg["n_candidates"] == 2)
+        check("uses docking when present", pkg["has_docking"] is True)
+        md = V.to_markdown(pkg, "egfr")
+        check("markdown lists the candidate", "CHEMBL5746224" in md)
+        check("markdown has all 4 experiment steps", all(s in md for s in
+              ("Confirm it binds", "Prove selectivity", "Engage the target", "ADMET")))
+        check("markdown names a real free route (NCI-60)", "NCI-60" in md and "dtp.cancer.gov" in md)
+        check("markdown is honest: hypotheses not validated hits", "not validated hits" in md.lower())
+        check("ΔG labeled not a measured affinity", "NOT a measured affinity" in md)
+
+
+def test_pitch_is_a_draft_only():
+    with tempfile.TemporaryDirectory() as t:
+        pkg = V.build(_run(Path(t)))
+        email = V.pitch_email(pkg)
+        check("pitch is honest about hypotheses", "not validated hits" in email)
+        check("pitch references a real route", "NCI DTP" in email)
+        check("pitch leaves the human to send", "[your name]" in email)
+
+
+def main():
+    tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
+    for t in tests:
+        t()
+    print(f"\n{_passed} validation-package assertions passed across {len(tests)} tests.")
+
+
+if __name__ == "__main__":
+    main()

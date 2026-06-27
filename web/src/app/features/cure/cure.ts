@@ -75,7 +75,7 @@ interface Pillar {
       </p>
       <div class="cta-row">
         <a routerLink="/explore" class="btn primary large">Explore the in-silico front →</a>
-        <a href="https://github.com/Aroxora/provenika/blob/main/docs/CURING-CANCER.md" target="_blank" rel="noopener" class="btn ghost large">Full cited source ↗</a>
+        <a routerLink="/bench" class="btn ghost large">Take it to the bench →</a>
       </div>
       <p class="disc muted">Research only. Not medical advice, not a treatment recommendation, not a diagnosis.</p>
     </section>
