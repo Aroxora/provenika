@@ -14,6 +14,7 @@ work is labelled as such.
 
 **▶ The full, cited version: [`docs/CURING-CANCER.md`](docs/CURING-CANCER.md)** · live at
 **[provenika.com](https://provenika.com)**.
+**▶ In mainland China (本地运行 + 国内 CRO 实验路线 + 中文 pitch): [`docs/CHINA.md`](docs/CHINA.md).**
 
 | Lever | Proven today | Where AI saves the experiment | Still irreducibly experimental |
 |---|---|---|---|
