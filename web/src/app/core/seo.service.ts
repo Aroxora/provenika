@@ -34,8 +34,11 @@ const DEFAULT_DESC =
 // Keyed by the first path segment. '' is the landing page.
 const ROUTE_META: Record<string, RouteMeta> = {
   '': {
-    title: 'Provenika — auditable oncology evidence engine',
-    description: DEFAULT_DESC,
+    title: 'Provenika — what AI can replace in the experiment (and what only the lab & clinic can)',
+    description:
+      'Exactly how much of cancer-drug discovery AI and compute can do — and the part only the wet ' +
+      'lab, animals, and the clinic can — to actually cure cancer. Literature-verified, public data, ' +
+      'fully auditable. Research only; not medical advice.',
   },
   explore: {
     title: 'Explore a target — Provenika',

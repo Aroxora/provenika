@@ -1,95 +1,73 @@
 #!/usr/bin/env python3
 """
-README generator — "what the cloud cannot fix."
+README generator — "what AI can replace in the experiment, and what only the lab and clinic can do."
 
-By request, README.md states which limitations remain even with full cloud (AWS) access, WHY compute
-cannot fix them, and WHAT is actually required to fix each. The infrastructure limitations (docking
-binaries, benchmark compute) were resolved on AWS and are noted at the end for the record.
-
-Edit the LIMITATIONS string below, then run `python3 cicd/generate_readme.py`, and commit both.
+provenika.com leads with one honest claim: exactly how much of cancer-drug discovery AI/compute can
+do, and the part they cannot — that only the wet lab, animals, and the clinic can. The detailed
+per-limit body is the FACT-CHECKED output of a multi-agent literature-verification run (34 methods
+kept, 1 dropped; every tool, citation and accuracy figure was adversarially checked against the
+literature — no hallucination). It lives in `cicd/experimental_limits_body.md`; this file wraps it
+with the leading framing + overview table. Edit either, then run `python3 cicd/generate_readme.py`.
 """
 
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 
-LIMITATIONS = r"""# Provenika — what the cloud cannot fix (and what actually can)
+LEAD = r"""# Provenika — what AI can replace in the experiment, and what only the lab and clinic can do to cure cancer
 
 > ## ⚠️ Not for patient care
 > Provenika does not diagnose, treat, or advise on any patient, and neither does this review.
 > Nothing here is medical advice. A computational hit is a hypothesis for the wet lab, never
 > evidence a therapy works.
 
-The **infrastructure** limitations are gone: given AWS, docking runs and the redocking benchmark
-regenerates (AutoDock Vina + Open Babel + Meeko + pdb2pqr on an EC2 instance — the committed result
-in [`examples/validation-redock/`](examples/validation-redock/) was produced there). But cloud
-compute buys *tooling and parallelism, not experimental truth.* The limitations below **cannot be
-fixed by AWS — or by any amount of compute.** Each says exactly what *is* required.
+**[provenika.com](https://provenika.com) leads with one honest claim:** here is exactly *how much* of
+cancer-drug discovery AI and compute can do — and *the part they cannot do*, that only the wet lab,
+animals, and the clinic can, to actually cure cancer in full.
 
-## 1. A docking score is not efficacy
+AI is genuinely useful at the cheap, in-silico **front** of discovery: it can rank, prioritise, and
+de-risk what to make and test, sometimes substituting for a *step* (a predicted structure, a proposed
+route, a triaged shortlist). But **every computational method below narrows an experiment — none
+replaces it.** The decision-grade truth (does it bind? can it be made? does it engage the target in a
+cell? is it selective, safe, and effective in a human?) is still measured at the bench, in animals,
+and in the clinic. That gap is why ~97% of oncology programs that enter trials never reach patients.
 
-**Why AWS can't fix it.** AutoDock Vina's ΔG is an approximate ranking aid, only weakly correlated
-with true binding affinity; redocking validates that a *known* pose reproduces, not that a *new*
-prediction is right. Running more docking on more cores just produces more approximate numbers.
-**What's required.** Wet-lab assays — biochemical and cellular potency — and even those don't settle
-it: in-vitro ≠ in-vivo ≠ clinical. Physics-based free-energy methods (FEP/MD) *can* run on AWS GPUs,
-but they are force-field-limited and need per-target experimental anchoring to be trusted.
+Each method below was **literature-verified** (real open-source tool, real citation, real accuracy
+figure, honest limitation) — nothing is asserted that wasn't fact-checked.
 
-## 2. Rediscovery, not discovery
+## What AI can do — and what's still required (overview)
 
-**Why AWS can't fix it.** Triage ranks compounds ChEMBL has *already measured*; no amount of compute
-invents new chemical matter or measures a molecule no one has made.
-**What's required.** De-novo / generative design **with a validated evaluation harness**, then actual
-**synthesis and assay** of the proposed molecules. The bottleneck is the chemistry and the assay, not
-the GPU.
+| Experimental limit | What AI/compute really does (verified) | What still *requires* experiment |
+|---|---|---|
+| **Binding affinity** | FEP/TI ΔΔG on a congeneric series (~1 kcal/mol floor); gnina/RTMScore pose rescoring | SPR / ITC / enzyme IC50 — a measured Kd |
+| **Synthesis** | retrosynthesis routes (AiZynthFinder, ASKCOS); SA/SC/RA synthesizability scores | a chemist actually making the molecule |
+| **Cell engagement** | permeability/efflux *liability* flags (ADMET-AI, BOILED-Egg) | CETSA / NanoBRET in-cell target-engagement assay |
+| **Selectivity** | off-target *nominations* (SEA, PIDGIN, reverse-docking, kinome ML) | KinomeScan / radioligand safety panels |
+| **ADMET / PK** | QSAR endpoint estimates (ADMET-AI, ADMETlab); PBPK if parameterised | in-vitro ADME (Caco-2, microsomes, hERG) + animal PK |
+| **Missing structure / data** | predicted structures & co-folds (AlphaFold2/3, Boltz, Chai); active learning | X-ray / cryo-EM + new bioactivity measurement |
+| **Efficacy & safety** | shifts the *population prior* (genetic validation ~2×, Open Targets) | **Phase 1–3 clinical trials** — nothing predicts this |
 
-## 3. "Inactive" decoys are an assumption, not a fact
+Read it as: **AI gets you to a better hypothesis, faster and cheaper. It does not get you to a cure.**
+The rest of this document is the honest, cited detail behind each row.
 
-**Why AWS can't fix it.** The enrichment AUC labels property-matched decoys as inactive; compute
-cannot confirm that a molecule *doesn't* bind — absence of data is not evidence of inactivity.
-**What's required.** Experimentally-confirmed inactives, or curated assay sets (DUD-E / DEKOIS with
-their documented caveats). That is measured data, not cycles.
+"""
 
-## 4. Missing data — and third-party API latency
-
-**Why AWS can't fix it.** A sparsely-measured target stays sparse no matter how many instances you
-launch, and ChEMBL/UniProt/RCSB are EBI/RCSB public services with their own rate and latency limits —
-compute does not speed up someone else's API, it only hammers it.
-**What's required.** Someone to **measure** the missing bioactivity. Caching/mirroring mitigates the
-latency; it does not add a single data point that the public databases don't already hold.
-
-## 5. Allele-specific structures that don't exist yet
-
-**Why AWS can't fix it.** No cloud conjures a co-crystal of a specific mutant (e.g. a resistance
-allele) that has never been solved; Provenika can only *flag* when the auto-picked structure is
-wild-type, not produce the mutant.
-**What's required.** An experimentally-determined holo structure of the mutant (X-ray / cryo-EM), or
-carefully-validated modeling that is then treated as a hypothesis, not an answer.
-
-## 6. The hard gap: a hit is a hypothesis, not a drug
-
-**Why AWS can't fix it.** ADMET, toxicity, PK, efficacy, safety, and the clinic are wet-lab and human
-work. Scaling the cheap in-silico *front* of discovery never substitutes for experiment, and nothing
-here may direct care.
-**What's required.** In-vitro → in-vivo → clinical trials, run by qualified scientists and clinicians.
-Provenika's job ends at a ranked, cited, re-verifiable **hypothesis** handed to that process.
-
+ATTRIB = r"""
 ---
 
-**Resolved on AWS (for the record).** The two *infrastructure* limitations — the absent docking
-binaries and regenerating the 39-complex redocking benchmark — were solved by running on an EC2
-instance with the conda-forge Vina stack; executing it there also surfaced and fixed two real bugs
-(a missing `gemmi` dependency, and an all-chains reference-ligand extraction that inflated multi-copy
-RMSDs). Reproduce with `make setup-docking && make redock` on any Vina-equipped host.
-
-Developed by **[ErosolarAI](https://erosolarai.com)**. MIT — research and decision-support only; not
-a substitute for professional medical advice.
+Developed by **[ErosolarAI](https://erosolarai.com)**. In-silico triage only. MIT — research and
+decision-support only; **not** a substitute for professional medical advice, diagnosis, or treatment.
 """
 
 
+def generate_readme() -> str:
+    body = (ROOT / "cicd" / "experimental_limits_body.md").read_text()
+    return LEAD + "\n" + body.rstrip() + "\n" + ATTRIB
+
+
 def main():
-    (ROOT / "README.md").write_text(LIMITATIONS)
-    print("  README.md updated (what-the-cloud-cannot-fix)")
+    (ROOT / "README.md").write_text(generate_readme())
+    print("  README.md updated (AI-can-replace / what-only-lab-and-clinic-can-do)")
 
 
 if __name__ == "__main__":
