@@ -34,11 +34,11 @@ const DEFAULT_DESC =
 // Keyed by the first path segment. '' is the landing page.
 const ROUTE_META: Record<string, RouteMeta> = {
   '': {
-    title: 'Provenika — what AI can replace in the experiment (and what only the lab & clinic can)',
+    title: 'How cancer is actually being cured — and where AI saves the experiment | Provenika',
     description:
-      'Exactly how much of cancer-drug discovery AI and compute can do — and the part only the wet ' +
-      'lab, animals, and the clinic can — to actually cure cancer. Literature-verified, public data, ' +
-      'fully auditable. Research only; not medical advice.',
+      'The five levers actually curing cancer — prevention, early detection, precision therapy, ' +
+      'immunotherapy, resistance — and exactly where AI (AlphaFold-style) saves experimentation vs ' +
+      'what only the wet lab and clinic can do. Literature-verified. Research only; not medical advice.',
   },
   explore: {
     title: 'Explore a target — Provenika',
