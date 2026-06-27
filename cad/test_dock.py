@@ -65,6 +65,19 @@ def test_receptor_bbox_none_on_empty(tmpfile="/tmp/provenika-dock-test3.pdb"):
     assert dock.receptor_bbox("/no/such/file.pdb") is None
 
 
+def test_scaled_exhaustiveness_scales_with_volume():
+    # A ~focused box (20³=8000 Å³) stays at the base effort; a big box gets proportionally more.
+    assert dock.scaled_exhaustiveness([20, 20, 20]) == 8           # 8000/8000 = 1 -> max(8,1)
+    assert dock.scaled_exhaustiveness([60, 60, 60]) == 27          # 216000/8000 = 27
+    assert dock.scaled_exhaustiveness([10, 10, 10], 8) == 8        # tiny box never drops below base
+    assert dock.scaled_exhaustiveness(["x", 1, 1]) == 8            # bad input -> base, never crashes
+
+
+def test_blind_axis_cap_present():
+    # The guard constant must exist so an oversized whole-receptor blind box is flagged unreliable.
+    assert dock.BLIND_AXIS_CAP == 30.0
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:

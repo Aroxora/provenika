@@ -107,6 +107,9 @@ def test_box_center_is_bounding_box_midpoint():
     b = bs.box(pts, pad=8.0)
     assert b["center"] == [1.0, 2.0, 3.0]   # midpoints (min+max)/2, not means
     assert b["size"] == [18.0, 20.0, 22.0]  # extent + 2*8
+    # Box is now self-describing: the pad it was built at + the resulting volume travel with it.
+    assert b["pad"] == 8.0
+    assert b["volume_A3"] == round(18.0 * 20.0 * 22.0, 1)
 
 
 def _cif(rows):

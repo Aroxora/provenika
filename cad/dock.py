@@ -56,18 +56,46 @@ def _have(binary: str) -> bool:
     return shutil.which(binary) is not None
 
 
+def _have_meeko() -> bool:
+    """Meeko (+ RDKit) for docking-grade LIGAND PDBQT prep — pip-installable, optional."""
+    try:
+        import meeko  # noqa: F401
+        from rdkit import Chem  # noqa: F401  (meeko ligand prep needs RDKit)
+        return True
+    except Exception:
+        return False
+
+
+def docking_prep_status() -> dict:
+    """Which prep tools are present. meeko/pdb2pqr are the docking-GRADE path (validated ~1.4 Å
+    redocking); without them dock.py still runs, but on the inferior Open-Babel-only path (~7.9 Å)."""
+    return {"vina": _have("vina"), "obabel": _have("obabel"),
+            "meeko": _have_meeko(), "pdb2pqr": _have("pdb2pqr30")}
+
+
 def check_deps() -> int:
-    """Report whether the docking binaries are installed. Exit 0 iff both present."""
-    have_vina, have_obabel = _have("vina"), _have("obabel")
+    """Report the full docking stack. Exit 0 iff the required binaries (Vina + Open Babel) are
+    present; a missing Meeko/pdb2pqr is a DEGRADED warning (still exit 0), not a hard failure."""
+    s = docking_prep_status()
     mark = lambda ok: "found" if ok else "MISSING"
-    print("Docking dependencies (cad/dock.py — AutoDock Vina + Open Babel on PATH):")
-    print(f"  AutoDock Vina (`vina`):  {mark(have_vina)}")
-    print(f"  Open Babel (`obabel`):   {mark(have_obabel)}")
-    if have_vina and have_obabel:
-        print("\nReady to dock.")
+    print("Docking stack (cad/dock.py):")
+    print("  Required (BINARIES, conda/release — NOT pip):")
+    print(f"    AutoDock Vina (`vina`):  {mark(s['vina'])}")
+    print(f"    Open Babel (`obabel`):   {mark(s['obabel'])}")
+    print("  Docking-grade prep (pip: `pip install -r cad/requirements-docking.txt`):")
+    print(f"    Meeko (ligand PDBQT):    {mark(s['meeko'])}")
+    print(f"    pdb2pqr (`pdb2pqr30`):   {mark(s['pdb2pqr'])}")
+    if not (s["vina"] and s["obabel"]):
+        print("\n" + INSTALL_HELP, file=sys.stderr)
+        return 3
+    if not (s["meeko"] and s["pdb2pqr"]):
+        missing = ", ".join(n for n, k in (("Meeko", "meeko"), ("pdb2pqr", "pdb2pqr")) if not s[k])
+        print(f"\n⚠️  DEGRADED: {missing} absent → Open-Babel-only prep (~7.9 Å redocking, NOT the "
+              "validated ~1.4 Å). Install: pip install -r cad/requirements-docking.txt", file=sys.stderr)
+        print("Ready to dock (degraded prep).")
         return 0
-    print("\n" + INSTALL_HELP, file=sys.stderr)
-    return 3
+    print("\nReady to dock (docking-grade prep: Meeko + pdb2pqr).")
+    return 0
 
 
 def _run(cmd: list[str]) -> subprocess.CompletedProcess:
@@ -181,6 +209,21 @@ def _box_cmd(center, size) -> list[str]:
             "--size_x", str(sx), "--size_y", str(sy), "--size_z", str(sz)]
 
 
+BLIND_AXIS_CAP = 30.0  # Å — above this, a whole-receptor blind box is too large to trust a score.
+
+
+def scaled_exhaustiveness(size, base: int = 8) -> int:
+    """Scale Vina search effort to box VOLUME so a large box isn't under-searched at the effort a
+    small box was validated with (~8 for a focused redocking box; ~1 unit per 8000 Å³). Never goes
+    BELOW `base` (the caller's floor). A pad-8 production box is bigger than the pad-4 box the 1.4 Å
+    benchmark was measured at, so it needs more search effort to be comparable."""
+    try:
+        vol = float(size[0]) * float(size[1]) * float(size[2])
+    except (TypeError, ValueError, IndexError):
+        return base
+    return max(base, round(vol / 8000.0))
+
+
 def receptor_bbox(path: str, margin: float = 5.0):
     """Whole-receptor docking box from the structure's atom coordinates: center =
     bounding-box midpoint, size = extent + 2*margin (Å). Used for a blind box when no
@@ -206,6 +249,40 @@ def receptor_bbox(path: str, margin: float = 5.0):
     return center, size
 
 
+def dock_one(receptor: str, *, center, size, out_dir: str, smiles: str | None = None,
+             ligand: str | None = None, exhaustiveness: int = 8, seed: int | None = None,
+             cpu: int | None = None) -> dict | None:
+    """Prep + dock ONE ligand into a GIVEN box and return {scores, best, pose_path, prep} — or None
+    on any failure (bad prep, Vina error, no parsable score). The caller MUST have confirmed Vina +
+    Open Babel are present (gating lives one level up, in batch_dock / run). Never fabricates a score
+    — a failure is None, never a number. Reused by the batch-dock stage so the shortlist is docked the
+    exact same way a single ligand is."""
+    os.makedirs(out_dir, exist_ok=True)
+    try:
+        receptor_pdbqt = prep_receptor(receptor, out_dir)
+        ligand_pdbqt = prep_ligand(ligand, smiles, out_dir)
+    except SystemExit:
+        return None
+    out_pose = os.path.join(out_dir, "docked.pdbqt")
+    exh = scaled_exhaustiveness(size, exhaustiveness)  # don't under-search a large box
+    cmd = ["vina", "--receptor", receptor_pdbqt, "--ligand", ligand_pdbqt,
+           "--out", out_pose, "--exhaustiveness", str(exh)]
+    if seed is not None:
+        cmd += ["--seed", str(seed)]
+    if cpu is not None:
+        cmd += ["--cpu", str(cpu)]
+    cmd += _box_cmd(center, size)
+    res = _run(cmd)
+    if res.returncode != 0:
+        return None
+    scores = parse_vina_scores(out_pose, res.stdout)
+    if not scores:
+        return None
+    s = docking_prep_status()
+    return {"scores": scores, "best": min(scores), "pose_path": out_pose,
+            "prep": "meeko+pdb2pqr" if (s["meeko"] and s["pdb2pqr"]) else "openbabel"}
+
+
 def run(args) -> int:
     # Box may come straight from cad/binding_site.py --json output (validated early).
     if args.box_json and not args.center:
@@ -223,18 +300,19 @@ def run(args) -> int:
         return 3
 
     os.makedirs(args.out, exist_ok=True)
+    s = docking_prep_status()
+    if not (s["meeko"] and s["pdb2pqr"]):
+        print("⚠️  Open-Babel-only prep (Meeko/pdb2pqr absent) — ~7.9 Å redocking, not the validated "
+              "~1.4 Å. `pip install -r cad/requirements-docking.txt` for docking-grade prep.",
+              file=sys.stderr)
     receptor = prep_receptor(args.receptor, args.out)
     ligand = prep_ligand(args.ligand, args.smiles, args.out)
     out_pose = os.path.join(args.out, "docked.pdbqt")
 
-    cmd = ["vina", "--receptor", receptor, "--ligand", ligand,
-           "--out", out_pose, "--exhaustiveness", str(args.exhaustiveness)]
-    if getattr(args, "seed", None) is not None:
-        cmd += ["--seed", str(args.seed)]   # fixed seed → reproducible docking (Vina is stochastic)
-    if getattr(args, "cpu", None) is not None:
-        cmd += ["--cpu", str(args.cpu)]     # cap cores per run so a batch can parallelize across complexes
-    if args.center:
-        cmd += _box_cmd(args.center, args.size)
+    # Resolve the box first (explicit pocket vs whole-receptor blind), so search effort can scale to it.
+    blind = not args.center
+    if not blind:
+        center, size = args.center, args.size
     else:
         # Vina has no blind/auto-box mode — build an explicit box spanning the whole receptor.
         bbox = receptor_bbox(receptor)
@@ -243,9 +321,24 @@ def run(args) -> int:
                   "Pass --center/--size, or --box-json from cad/binding_site.py.", file=sys.stderr)
             return 1
         center, size = bbox
-        print(f"No --center given: blind box over the whole receptor (center {center}, size {size} Å) — "
-              "weaker; prefer a focused pocket from cad/binding_site.py / fpocket / P2Rank.", file=sys.stderr)
-        cmd += _box_cmd(center, size)
+        oversized = any(float(a) > BLIND_AXIS_CAP for a in size)
+        msg = (f"No --center given: blind box over the whole receptor (center {center}, size {size} Å)")
+        if oversized:
+            print(f"⚠️  {msg}. An axis exceeds {BLIND_AXIS_CAP:.0f} Å — pose-finding over this volume is "
+                  "UNRELIABLE and the affinity is NOT a comparable score. Strongly prefer a focused "
+                  "pocket (cad/binding_site.py / fpocket / P2Rank).", file=sys.stderr)
+        else:
+            print(f"{msg} — weaker; prefer a focused pocket from cad/binding_site.py / fpocket / P2Rank.",
+                  file=sys.stderr)
+
+    exh = scaled_exhaustiveness(size, args.exhaustiveness)  # don't under-search a large box
+    cmd = ["vina", "--receptor", receptor, "--ligand", ligand,
+           "--out", out_pose, "--exhaustiveness", str(exh)]
+    if getattr(args, "seed", None) is not None:
+        cmd += ["--seed", str(args.seed)]   # fixed seed → reproducible docking (Vina is stochastic)
+    if getattr(args, "cpu", None) is not None:
+        cmd += ["--cpu", str(args.cpu)]     # cap cores per run so a batch can parallelize across complexes
+    cmd += _box_cmd(center, size)
 
     print(f"Running: {' '.join(cmd)}")
     res = _run(cmd)

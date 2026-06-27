@@ -110,6 +110,37 @@ def test_mean_plddt(tmp="/tmp/provenika-af-test.pdb"):
     assert fs._mean_plddt("/no/such/file") is None
 
 
+def _ca_res(serial, resname, resseq):
+    return (f"{'ATOM':<6}{serial:>5} {'CA':<4}{'':1}{resname:>3} {'A':1}{resseq:>4}"
+            f"{'':4}{0.0:8.3f}{0.0:8.3f}{0.0:8.3f}{1.0:6.2f}{0.0:6.2f}{'':10}{'C':>2}")
+
+
+def test_mutation_check_match_wildtype_other_unverifiable(tmp="/tmp/provenika-mut-test.pdb"):
+    # A structure with CYS@12 (the G12C mutant), LEU@858, and no residue 790.
+    Path(tmp).write_text("\n".join([
+        _ca_res(1, "CYS", 12), _ca_res(2, "LEU", 858), _ca_res(3, "ALA", 100)]) + "\n")
+    res = fs._ca_residues(tmp)
+    assert res[12] == "CYS" and res[858] == "LEU", res
+
+    def status(mut):
+        return fs.check_structure_mutations(tmp, {mut})[0]["status"]
+
+    assert status("G12C") == "match"          # residue 12 IS cysteine
+    assert status("G12D") == "other"          # 12 is C, neither D nor wild-type G
+    assert status("T790M") == "unverifiable"  # residue 790 absent
+    # A wild-type structure (GLY@12) must be flagged 'wildtype', NOT a silent G12C pass.
+    Path(tmp).write_text(_ca_res(1, "GLY", 12) + "\n")
+    f = fs.check_structure_mutations(tmp, {"G12C"})[0]
+    assert f["status"] == "wildtype", f
+    note = fs.summarize_mutation_check([f])
+    assert "NOT G12C" in note and "wild-type" in note, note
+
+
+def test_mutation_check_empty_when_no_variant():
+    assert fs.check_structure_mutations("/no/such/file", set()) == []
+    assert fs.summarize_mutation_check([]) is None
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:

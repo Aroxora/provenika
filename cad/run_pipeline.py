@@ -64,6 +64,9 @@ def main(argv=None) -> int:
     p.add_argument("--price", type=float, default=150000)
     p.add_argument("--min-pchembl", type=float, default=7.0)
     p.add_argument("--limit", type=int, default=25)
+    p.add_argument("--dock-top-n", type=int, default=0,
+                   help="Also batch-dock the top-N shortlist hits into the box (stage 6; needs "
+                        "AutoDock Vina + Open Babel — gated, skips cleanly if absent). Default 0 = off.")
     p.add_argument("--out", default="runs/out")
     args = p.parse_args(argv)
 
@@ -120,12 +123,32 @@ def main(argv=None) -> int:
             (out / "binding_site.json").write_text(json.dumps(box, indent=2))
     else:
         print("  (no experimental PDB — skipping box; AlphaFold model only)")
+    # Never leave a STALE binding_site.json from a previous run when this run produced no box —
+    # otherwise verify.py would recompute a box for a structure this run didn't use and FAIL.
+    if not box and (out / "binding_site.json").exists():
+        (out / "binding_site.json").unlink()
 
     print(f"[5/5] Cost-benefit / feasibility ({args.modality} @ {args.phase})…")
     cb = _run_json("cost_benefit.py", ["--modality", args.modality, "--phase", args.phase,
                                        "--incidence", str(args.incidence), "--price", str(args.price)])
     if cb:
         (out / "cost_benefit.json").write_text(json.dumps(cb, indent=2))
+
+    # Optional stage 6 — structure-based batch docking of the shortlist (gated on Vina + Open Babel;
+    # skips cleanly with no fabricated score when they are absent, so the default run is unaffected).
+    docked = None
+    if args.dock_top_n and box and pdb_id and (out / "hits.csv").exists():
+        recs = sorted((out / "structures").glob(f"{pdb_id}.*")) if (out / "structures").exists() else []
+        if recs:
+            print(f"[6] Batch docking top {args.dock_top_n} hits (AutoDock Vina + Open Babel)…")
+            import batch_dock as bdm
+            docked = bdm.run_batch(str(out / "hits.csv"), str(out / "binding_site.json"),
+                                   str(recs[0]), str(out), top_n=args.dock_top_n)
+            if docked.get("status") == "ok":
+                print(f"  docked {docked['docked']}/{docked['attempted']} → docked_hits.csv "
+                      f"(prep: {docked.get('prep')})")
+            else:
+                print(f"  ({docked.get('status')}: {str(docked.get('reason', ''))[:120]})")
 
     # provenance.json — where every reported figure came from (anti-hallucination
     # spine). Re-check it with `python3 cad/verify.py --run <out>`.
@@ -227,7 +250,16 @@ def main(argv=None) -> int:
                       "- (install RDKit — `pip install rdkit` — to flag PAINS/Brenk structural alerts on the hits)", ""]
     structs = sorted((out / "structures").glob("*")) if (out / "structures").exists() else []
     if structs:
-        lines += ["## Structure", f"- {structs[0].name} → `structures/`", ""]
+        lines += ["## Structure", f"- {structs[0].name} → `structures/`"]
+        if struct and struct.get("note"):
+            lines.append(f"- {struct['note']}")
+        mc = (struct or {}).get("mutation_check") or []
+        flagged = [m for m in mc if m.get("status") in ("wildtype", "other", "unverifiable")]
+        if flagged:
+            lines.append("- ⚠️ The chosen structure is NOT confirmed to carry the requested allele "
+                         "(see above) — a docking box built from it is the wild-type/other pocket. "
+                         "Supply a mutant holo PDB with `--pdb` for an allele-specific campaign.")
+        lines.append("")
     if box:
         lig = box.get("ligand", {})
         lines += [
@@ -248,10 +280,22 @@ def main(argv=None) -> int:
             f"- **{cb['verdict']}**",
             "",
         ]
+    if docked and docked.get("status") == "ok":
+        lines += [
+            "## Structure-based docking (stage 6)",
+            f"- Docked {docked['docked']}/{docked['attempted']} top hits into the box → `docked_hits.csv` "
+            f"(prep: {docked.get('prep')}).",
+            "- Columns: `vina_best_dG_kcal_per_mol` (predicted ranking aid, NOT a measured affinity) and "
+            "a `rank_fusion_NONVALIDATED` combining the ligand + docking scores (transparent, non-validated).",
+            "",
+        ]
     lines.append("## Next step: dock (stage 6)")
-    if box and structs:
-        lines.append("- Confirm AutoDock Vina + Open Babel are installed: `python3 cad/dock.py --check`")
-        lines.append(f"- `python3 cad/dock.py --receptor {out}/structures/{structs[0].name} "
+    if docked and docked.get("status") == "ok":
+        lines.append("- Done above (`docked_hits.csv`). Inspect each pose under `docking/<chembl_id>/`.")
+    elif box and structs:
+        lines.append("- Confirm the docking stack is installed: `python3 cad/dock.py --check`")
+        lines.append(f"- Batch-dock the shortlist: re-run with `--dock-top-n 10`, or one ligand: "
+                     f"`python3 cad/dock.py --receptor {out}/structures/{structs[0].name} "
                      f"--smiles \"<hit SMILES from hits.csv>\" --box-json {out}/binding_site.json`")
     else:
         lines.append("- No experimental box available; pick a pocket (fpocket/P2Rank) or an AlphaFold model first.")
@@ -266,7 +310,7 @@ def main(argv=None) -> int:
 
     # Report only what actually got written — never list files that don't exist.
     expected = ["SUMMARY.md", "dossier.json", "hits.csv", "hits.sdf", "liabilities.json", "structures",
-                "binding_site.json", "cost_benefit.json", "provenance.json"]
+                "binding_site.json", "cost_benefit.json", "docked_hits.csv", "provenance.json"]
     written = [name for name in expected if (out / name).exists()]
     print(f"\nDone → {out}/  ({', '.join(written)})")
     print(f"Verify every figure is real:  python3 cad/verify.py --run {out}")

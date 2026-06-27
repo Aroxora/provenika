@@ -28,6 +28,10 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import mutations as _mut  # noqa: E402  (stdlib-only shared variant parser)
 
 UNIPROT = "https://rest.uniprot.org/uniprotkb/search"
 RCSB_FILES = "https://files.rcsb.org/download"
@@ -104,6 +108,107 @@ def _mean_plddt(path: str) -> dict | None:
     confident = sum(1 for v in vals if v >= PLDDT_CONFIDENT)
     return {"mean_plddt": round(sum(vals) / len(vals), 1), "residues": len(vals),
             "pct_confident": round(100.0 * confident / len(vals), 1)}
+
+
+def _ca_residues(path: str) -> dict[int, str]:
+    """auth residue number -> 3-letter residue name, read from CA atoms (PDB or mmCIF). Used to
+    spot-check whether a structure carries a requested mutant residue. Numbering is the structure's
+    AUTHOR numbering, which for most human oncology targets aligns with UniProt but is NOT guaranteed
+    — so callers report a finding, never silently assert a match."""
+    try:
+        text = open(path).read()
+    except OSError:
+        return {}
+    out: dict[int, str] = {}
+    if "_atom_site." in text:  # mmCIF
+        lines = text.splitlines()
+        cols, start = [], None
+        for i, ln in enumerate(lines):
+            if ln.strip() == "loop_":
+                cols, j = [], i + 1
+                while j < len(lines) and lines[j].lstrip().startswith("_"):
+                    cols.append(lines[j].strip())
+                    j += 1
+                if any(c.startswith("_atom_site.") for c in cols):
+                    start = j
+                    break
+        if start is None:
+            return out
+        idx = {c: k for k, c in enumerate(cols)}
+
+        def ci(*names):
+            for nm in names:
+                if "_atom_site." + nm in idx:
+                    return idx["_atom_site." + nm]
+            return None
+
+        c_atom, c_comp = ci("auth_atom_id", "label_atom_id"), ci("auth_comp_id", "label_comp_id")
+        c_seq, c_group = ci("auth_seq_id", "label_seq_id"), ci("group_PDB")
+        if None in (c_atom, c_comp, c_seq):
+            return out
+        for ln in lines[start:]:
+            s = ln.strip()
+            if not s or s[0] == "#" or s.startswith(("loop_", "_", "data_")):
+                break
+            p = ln.split()
+            if len(p) < len(cols) or (c_group is not None and p[c_group] != "ATOM"):
+                continue
+            if p[c_atom].strip('"') != "CA":
+                continue
+            try:
+                out[int(p[c_seq])] = p[c_comp]
+            except ValueError:
+                continue
+    else:  # fixed-column PDB
+        for line in text.splitlines():
+            if line.startswith("ATOM") and line[12:16].strip() == "CA":
+                try:
+                    out[int(line[22:26])] = line[17:20].strip()
+                except ValueError:
+                    continue
+    return out
+
+
+def check_structure_mutations(path: str, variants: set[str]) -> list[dict]:
+    """For each requested mutation token, report the residue the structure actually has at that
+    position: {mutation, found_residue, found_one, status} where status is one of
+    match / wildtype / other / unverifiable. Never asserts a match when the position isn't resolved.
+    (Author-numbering caveat applies — this is an advisory check, not a guarantee.)"""
+    res = _ca_residues(path)
+    out = []
+    for tok in sorted(variants):
+        m = _mut.parse_mutation(tok)
+        if not m:
+            continue
+        wt, pos, mut = m
+        three = res.get(pos)
+        one = _mut.three_to_one(three) if three else None
+        status = ("unverifiable" if one is None else
+                  "match" if one == mut else
+                  "wildtype" if one == wt else "other")
+        out.append({"mutation": tok, "found_residue": three, "found_one": one, "status": status})
+    return out
+
+
+def summarize_mutation_check(findings: list[dict]) -> str | None:
+    """One honest line for the report from check_structure_mutations findings, or None if nothing
+    to say. Matches → confirmation; wildtype/other → a loud 'NOT the mutant, supply a holo mutant'."""
+    if not findings:
+        return None
+    parts = []
+    for f in findings:
+        mut, res1 = f["mutation"], (f["found_one"] or "?")
+        if f["status"] == "match":
+            parts.append(f"residue {mut[1:-1]} = {f['found_residue']} — matches {mut}")
+        elif f["status"] == "wildtype":
+            parts.append(f"residue {mut[1:-1]} = {f['found_residue']} (wild-type {res1}) — NOT {mut}; "
+                         f"supply a {mut} holo PDB via --pdb")
+        elif f["status"] == "other":
+            parts.append(f"residue {mut[1:-1]} = {f['found_residue']} ({res1}) — neither {mut} nor "
+                         f"wild-type; verify numbering")
+        else:
+            parts.append(f"residue {mut[1:-1]} not resolved in this structure — {mut} unverifiable")
+    return "; ".join(parts) + " (author numbering — advisory)"
 
 
 def _primary_gene(entry: dict) -> str | None:
@@ -242,13 +347,16 @@ def run(args) -> int:
         _report({"source": "RCSB PDB", "pdb_id": pid, "path": dest, "url": url}, args)
         return 0
 
-    # Resolve target/UniProt
+    # Resolve target/UniProt. An allele-specific query ("KRAS G12C") resolves the BARE gene, then
+    # the chosen structure is spot-checked for the requested mutant residue (see below).
+    variants = _mut.parse_variants(args.target) if args.target else set()
+    resolve_name = _mut.strip_variants(args.target) if (args.target and variants) else args.target
     acc = args.uniprot
     pdbs = []
     if not acc:
-        uni = resolve_uniprot(args.target)
+        uni = resolve_uniprot(resolve_name)
         if not uni:
-            print(f"No reviewed human UniProt entry for '{args.target}'.", file=sys.stderr)
+            print(f"No reviewed human UniProt entry for '{resolve_name}'.", file=sys.stderr)
             return 1
         acc = uni["accession"]
         pdbs = uni["pdbs"]
@@ -268,21 +376,28 @@ def run(args) -> int:
         _download(url, dest)
         cov = best.get("coverage_frac")
         holo = best.get("holo")
+        # Allele check: does THIS structure actually carry the requested mutant residue? (advisory)
+        mutation_check = check_structure_mutations(dest, variants) if variants else []
+        mut_note = summarize_mutation_check(mutation_check)
         if holo is True:
             note = ("holo: a non-solvent ligand makes protein contacts (defines a docking box); "
-                    "mutations are NOT checked — confirm it is the intended, ligandable site")
+                    "confirm it is the intended, ligandable site")
         elif holo is False:
             note = best.get("holo_note", "apo/holo state not confirmed — verify the binding site")
         else:
-            note = ("apo/holo state and mutations are NOT checked — confirm this entry covers the "
-                    "intended, ligandable site")
+            note = ("apo/holo state NOT confirmed — confirm this entry covers the intended, "
+                    "ligandable site")
+        if mut_note:
+            note = f"{mut_note}. {note}"
+        elif not variants:
+            note += "; mutations are NOT checked (no allele requested)"
         if cov is not None and cov < COVERAGE_MIN:
             note = (f"covers only ~{int(cov * 100)}% of the protein — likely a single domain/fragment; "
                     f"confirm it includes the binding site. {note}")
         _report({"source": "RCSB PDB", "uniprot": acc, "pdb_id": best["id"],
                  "method": best["method"], "resolution": best["resolution"],
                  "coverage_frac": cov, "holo": holo, "alternatives": len(pdbs), "path": dest, "url": url,
-                 "note": note}, args)
+                 "mutation_check": mutation_check or None, "note": note}, args)
         return 0
 
     # Fall back to AlphaFold predicted model (current version resolved live, not pinned).

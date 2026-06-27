@@ -28,6 +28,10 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+import mutations as _mut  # noqa: E402  (stdlib-only shared variant parser)
 
 CHEMBL = "https://www.ebi.ac.uk/chembl/api/data"
 UNIPROT = "https://rest.uniprot.org/uniprotkb/search"
@@ -96,6 +100,18 @@ def chembl_snapshot(tid: str) -> dict:
     return {"potent_activity_records": total_potent, "known_mechanism_drugs": drugs}
 
 
+def variant_record_count(tid: str, variants: set[str]) -> int:
+    """Count pChEMBL-bearing activity records annotated with the requested allele(s) — so an
+    allele-specific query ('KRAS G12C') doesn't read gene-level 'rich ligand data' when the SPECIFIC
+    mutant is barely drugged. Sums across tokens (approximate for multi-mutation queries)."""
+    total = 0
+    for mut in sorted(variants):
+        d = _chembl("activity", {"target_chembl_id": tid, "assay_variant_mutation": mut,
+                                 "pchembl_value__isnull": "false", "limit": 1})
+        total += d.get("page_meta", {}).get("total_count", 0)
+    return total
+
+
 def uniprot_summary(name: str) -> dict | None:
     q = f"(gene:{name} OR protein_name:{name}) AND organism_id:9606 AND reviewed:true"
     fields = "accession,id,protein_name,length,cc_function,xref_pdb"
@@ -131,17 +147,25 @@ def run(args) -> int:
     # ChEMBL gives tractability (ligands/drugs); UniProt gives function/structure. They are
     # independent public services — tolerate one being down so a single outage (e.g. a ChEMBL
     # 500) doesn't sink the whole dossier when the rest is reachable.
+    # Allele-specific query ("KRAS G12C"): resolve the BARE gene, then ALSO count how many records
+    # are on the specific mutant, so the read-out isn't gene-level pooled data dressed as variant data.
+    variants = _mut.parse_variants(args.target)
+    resolve_name = _mut.strip_variants(args.target) if variants else args.target
+
     target = chembl = None
+    variant_records = None
     chembl_status = uni_status = "ok"
     try:
-        target = resolve_target(args.target)
+        target = resolve_target(resolve_name)
         if target:
             chembl = chembl_snapshot(target["target_chembl_id"])
+            if variants:
+                variant_records = variant_record_count(target["target_chembl_id"], variants)
     except urllib.error.URLError as e:
         chembl_status = f"unavailable ({_reason(e)})"
 
     try:
-        uni = uniprot_summary(args.target)
+        uni = uniprot_summary(resolve_name)
     except urllib.error.URLError as e:
         uni, uni_status = None, f"unavailable ({_reason(e)})"
 
@@ -168,6 +192,8 @@ def run(args) -> int:
                               if target else None),
             "chembl": chembl_block,
             "uniprot": uni,
+            "variant_filter": sorted(variants) if variants else None,
+            "variant_records": variant_records,
             "next": f"python3 cad/virtual_triage.py --target \"{args.target}\" --out hits.csv",
             "disclaimer": "Public-data orientation only. Not validation, not medical advice.",
         }
@@ -208,6 +234,14 @@ def run(args) -> int:
     else:
         print(f"  ChEMBL bioactivity records (any pChEMBL; not potency-filtered, counts records "
               f"not distinct molecules): {chembl['potent_activity_records']:,}")
+        if variants:
+            allele = ", ".join(sorted(variants))
+            if variant_records:
+                print(f"  …of which {variant_records:,} are annotated to the {allele} variant "
+                      f"(the rest are wild-type/pooled — not {allele}-specific).")
+            else:
+                print(f"  ⚠️  NO {allele}-specific records — the figures above are wild-type/pooled, "
+                      f"NOT for the requested allele. Triage will say the same.")
         drugs = chembl["known_mechanism_drugs"]
         if drugs:
             print(f"  Known drugs/modulators with a defined mechanism: {len(drugs)}")
@@ -219,9 +253,11 @@ def run(args) -> int:
     print("\nRead-out:")
     bits = []
     if chembl is not None:
-        tract = chembl["potent_activity_records"]
-        bits.append("rich ligand data" if tract > 500 else
-                    "moderate ligand data" if tract > 50 else "sparse ligand data")
+        # For an allele-specific query, judge tractability on the VARIANT records, not the gene pool.
+        tract = variant_records if variants else chembl["potent_activity_records"]
+        scope = f"{', '.join(sorted(variants))} " if variants else ""
+        bits.append(f"rich {scope}ligand data" if (tract or 0) > 500 else
+                    f"moderate {scope}ligand data" if (tract or 0) > 50 else f"sparse {scope}ligand data")
     else:
         bits.append("ligand data pending (ChEMBL unavailable)")
     if uni and uni["pdb_count"]:

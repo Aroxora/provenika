@@ -251,9 +251,13 @@ def select_ligand(pdb_text: str) -> dict | None:
     def rank(c):
         # 1) a drug-like group that actually touches the protein is the strongest signal of a
         #    bound inhibitor; 2) then most buried; 3) tiebreak toward the larger drug-like group
-        #    (the real ligand) but the smaller non-drug-like group (avoid huge polymers).
+        #    (the real ligand) but the smaller non-drug-like group (avoid huge polymers); 4) a final
+        #    DETERMINISTIC tiebreak on (chain, resSeq) so two identical co-crystal copies (e.g. one
+        #    inhibitor per chain) always yield the SAME box — otherwise the pick was order-dependent
+        #    and verify.py's recompute could choose the other copy and FAIL on a congruent-but-shifted
+        #    box. Picking a stable copy makes the docking box reproducible.
         return (1 if (c["druglike"] and c["contacts"] > 0) else 0, c["buried"],
-                c["heavyAtoms"] if c["druglike"] else -c["heavyAtoms"])
+                c["heavyAtoms"] if c["druglike"] else -c["heavyAtoms"], c["chain"], c["resSeq"])
 
     ranked = sorted(cands, key=rank, reverse=True)
     best = ranked[0]
@@ -288,7 +292,11 @@ def box(pts: list[tuple[float, float, float]], pad: float = 8.0) -> dict:
     xs, ys, zs = zip(*pts)
     center = [round((min(a) + max(a)) / 2, 2) for a in (xs, ys, zs)]
     size = [round((max(a) - min(a)) + 2 * pad, 1) for a in (xs, ys, zs)]
-    return {"center": center, "size": size}
+    # Record the padding and resulting volume so the box is self-describing: a validated success
+    # rate is tied to the pad it was measured at (a tighter pad redocks a KNOWN pose; a wider one is
+    # right for prospective screening), and the docker can scale search effort to the volume.
+    volume = round(size[0] * size[1] * size[2], 1)
+    return {"center": center, "size": size, "pad": pad, "volume_A3": volume}
 
 
 def run(args) -> int:
@@ -318,6 +326,7 @@ def run(args) -> int:
         print(json.dumps({
             "pdb": pid, "ligand": {k: lig[k] for k in ("resName", "chain", "resSeq")},
             "ligandAtoms": len(lig["atoms"]), "center": b["center"], "size": b["size"],
+            "pad": b["pad"], "volume_A3": b["volume_A3"],
             # Selection diagnostics: how the reference ligand was chosen (buried + drug-like,
             # not just largest) and the runners-up, so a wrong pocket is auditable.
             "heavyAtoms": lig.get("heavyAtoms"), "ligandContacts": lig.get("contacts"),

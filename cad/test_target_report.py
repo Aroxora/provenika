@@ -53,6 +53,27 @@ def test_empty_is_none():
     assert tr._rank_targets([], "EGFR") is None
 
 
+def test_variant_record_count_sums_per_allele(monkeypatch=None):
+    # Mock ChEMBL: each variant query returns a page_meta total_count.
+    counts = {"G12C": 446, "G12D": 120}
+    calls = []
+
+    def fake_chembl(path, params):
+        calls.append(params.get("assay_variant_mutation"))
+        return {"page_meta": {"total_count": counts.get(params.get("assay_variant_mutation"), 0)}}
+
+    orig = tr._chembl
+    tr._chembl = fake_chembl
+    try:
+        assert tr.variant_record_count("CHEMBL2189121", {"G12C"}) == 446
+        assert tr.variant_record_count("CHEMBL2189121", {"G12C", "G12D"}) == 566  # summed
+        assert tr.variant_record_count("CHEMBL2189121", {"Q61X"}) == 0            # no records
+        # the per-allele query carried the assay_variant_mutation filter
+        assert "G12C" in calls
+    finally:
+        tr._chembl = orig
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:
