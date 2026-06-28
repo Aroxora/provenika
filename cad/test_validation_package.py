@@ -115,6 +115,30 @@ def test_pitch_is_a_draft_only():
         check("pitch leaves the human to send", "[your name]" in email)
 
 
+def test_soc_snapshot_scans_runs_labels_phase_and_skips_emptyhanded():
+    # Stub the ChEMBL resolver so this stays OFFLINE.
+    canned = {"CHEMBL1": ("IBRUTINIB", 4.0), "CHEMBL2": ("EVOBRUTINIB", 3.0)}
+    V._chembl_name_phase = lambda cid: canned.get(cid, (None, None))
+    with tempfile.TemporaryDirectory() as t:
+        base = Path(t)
+        run = base / "btk"; run.mkdir()
+        (run / "dossier.json").write_text(json.dumps({"query": "BTK", "chembl": {"known_mechanism_drugs": [
+            {"molecule_chembl_id": "CHEMBL1", "action_type": "INHIBITOR"},
+            {"molecule_chembl_id": "CHEMBL2", "action_type": "INHIBITOR"},
+        ]}}))
+        (base / "no_dossier").mkdir()  # must be skipped, not crash
+        runs = sorted(d for d in base.iterdir() if (d / "dossier.json").exists())
+        snap = V.soc_snapshot(runs)
+        check("only the run with a dossier is captured (dossier-less dir skipped)", snap["n_targets"] == 1)
+        tgt = snap["targets"][0]
+        check("symbol upper-cased from dossier query", tgt["symbol"] == "BTK")
+        check("most-advanced first, labeled 'approved'", tgt["drugs"][0]["phase_label"] == "approved")
+        check("phase-3 drug labeled 'phase 3'", tgt["drugs"][1]["phase_label"] == "phase 3")
+        check("no date stamp unless asked (deterministic)", "generated" not in snap)
+        check("explicit date flows into snapshot", V.soc_snapshot(runs, "2026-06-28")["generated"] == "2026-06-28")
+        check("snapshot carries the must-beat disclaimer", "must beat" in snap["disclaimer"])
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:

@@ -1,0 +1,457 @@
+{
+  "generated": "2026-06-28",
+  "source": "ChEMBL known-mechanism drugs per target (re-verifiable via cad/verify.py), resolved to name + max clinical phase.",
+  "n_targets": 6,
+  "targets": [
+    {
+      "symbol": "BRAF",
+      "n_drugs": 12,
+      "drugs": [
+        {
+          "name": "DABRAFENIB MESYLATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL2105729",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "REGORAFENIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1946170",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "SORAFENIB TOSYLATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1200485",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "VEMURAFENIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1229517",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "LIFIRAFENIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL4209157",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "CEP-32496",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL2029988",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "PLIXORAFENIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL4303729",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "RAF-265",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL558752",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "ARQ-736",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL5314407",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "LGX-806",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3545263",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "LY-3009120",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3577124",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "RG-7256",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3545080",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        }
+      ]
+    },
+    {
+      "symbol": "BTK",
+      "n_drugs": 12,
+      "drugs": [
+        {
+          "name": "IBRUTINIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1873475",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "TIRABRUTINIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL4071161",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "ACALABRUTINIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL3707348",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "ZANUBRUTINIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL3936761",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "EVOBRUTINIB",
+          "phase": 3.0,
+          "chembl_id": "CHEMBL4072833",
+          "action": "INHIBITOR",
+          "phase_label": "phase 3"
+        },
+        {
+          "name": "FENEBRUTINIB",
+          "phase": 3.0,
+          "chembl_id": "CHEMBL4065122",
+          "action": "INHIBITOR",
+          "phase_label": "phase 3"
+        },
+        {
+          "name": "SPEBRUTINIB BESYLATE",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL3301600",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "POSELTINIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL4163691",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "BRANEBRUTINIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL4297674",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "BMS-986142",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL3900554",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "ELSUBRUTINIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL4594348",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "MSC-2364447",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3545193",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        }
+      ]
+    },
+    {
+      "symbol": "EGFR",
+      "n_drugs": 12,
+      "drugs": [
+        {
+          "name": "PANITUMUMAB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1201827",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "CETUXIMAB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1201577",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "ERLOTINIB HYDROCHLORIDE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1079742",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "GEFITINIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL939",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "LAPATINIB DITOSYLATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1201179",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "AFATINIB DIMALEATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL2105712",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "OSIMERTINIB MESYLATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL3545063",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "NECITUMUMAB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1743047",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "ALLITINIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL1947204",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "FALNIDAMOL",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL258940",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "AC-480",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL1645462",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "AZD-4769",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL422872",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        }
+      ]
+    },
+    {
+      "symbol": "ERBB2",
+      "n_drugs": 12,
+      "drugs": [
+        {
+          "name": "TRASTUZUMAB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1201585",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "PERTUZUMAB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL2007641",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "TRASTUZUMAB EMTANSINE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1743082",
+          "action": "BINDING AGENT",
+          "phase_label": "approved"
+        },
+        {
+          "name": "LAPATINIB DITOSYLATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL1201179",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "AFATINIB DIMALEATE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL2105712",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "TUCATINIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL3989868",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "ALLITINIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL1947204",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "CP-724714",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL483321",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "AC-480",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL1645462",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "CUDC-101",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL598797",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "JNJ-26483327",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3109738",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "AV-412",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL6067986",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        }
+      ]
+    },
+    {
+      "symbol": "KRAS",
+      "n_drugs": 2,
+      "drugs": [
+        {
+          "name": "SOTORASIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL4535757",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "ADAGRASIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL4594350",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        }
+      ]
+    },
+    {
+      "symbol": "PIK3CA",
+      "n_drugs": 9,
+      "drugs": [
+        {
+          "name": "ALPELISIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL2396661",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "COPANLISIB HYDROCHLORIDE",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL3545068",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "COPANLISIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL3218576",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "INAVOLISIB",
+          "phase": 4.0,
+          "chembl_id": "CHEMBL4650215",
+          "action": "INHIBITOR",
+          "phase_label": "approved"
+        },
+        {
+          "name": "FIMEPINOSTAT",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL3622533",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "SERABELISIB",
+          "phase": 2.0,
+          "chembl_id": "CHEMBL3935857",
+          "action": "INHIBITOR",
+          "phase_label": "phase 2"
+        },
+        {
+          "name": "BAY-1082439",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3644672",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "PKI-179",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL1258517",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        },
+        {
+          "name": "PWT-33579",
+          "phase": 1.0,
+          "chembl_id": "CHEMBL3545323",
+          "action": "INHIBITOR",
+          "phase_label": "phase 1"
+        }
+      ]
+    }
+  ],
+  "disclaimer": "The bar a new molecule must beat — on potency, selectivity, resistance coverage, or tolerability, not merely binding. Drugs are real ChEMBL mechanism data; phase is ChEMBL max_phase. Research only; not medical advice."
+}

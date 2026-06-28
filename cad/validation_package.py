@@ -25,6 +25,7 @@ import csv
 import json
 import sys
 import urllib.request
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -119,6 +120,44 @@ def standard_of_care(dossier: dict, limit: int = 12) -> list[dict]:
                     "action": m.get("action_type")})
     out.sort(key=lambda d: (d["phase"] if d["phase"] is not None else -1), reverse=True)
     return out
+
+
+def _phase_label(phase) -> str:
+    """A human label for a ChEMBL max_phase float — 'approved' / 'phase 3' / 'preclinical'."""
+    if phase in _PHASE_LABEL:
+        return _PHASE_LABEL[phase]
+    if phase:
+        return f"phase {phase:g}"
+    return "preclinical"
+
+
+def soc_snapshot(runs, generated: str | None = None) -> dict:
+    """The cross-portfolio standard-of-care snapshot the web surfaces — for each run directory, the drugs
+    that already hit its target (the bar a new molecule must beat), resolved name + clinical phase from
+    that run's committed, re-verifiable dossier. Network best-effort per drug; a run with no known-
+    mechanism drugs (or offline) simply yields an empty list — it never raises and never fabricates."""
+    targets = []
+    for run in runs:
+        run = Path(run)
+        dj = run / "dossier.json"
+        if not dj.exists():
+            continue
+        dossier = json.loads(dj.read_text())
+        symbol = (dossier.get("query") or run.name).upper()
+        drugs = standard_of_care(dossier)
+        for d in drugs:
+            d["phase_label"] = _phase_label(d.get("phase"))
+        targets.append({"symbol": symbol, "n_drugs": len(drugs), "drugs": drugs})
+    payload = {
+        "source": "ChEMBL known-mechanism drugs per target (re-verifiable via cad/verify.py), resolved to "
+                  "name + max clinical phase.",
+        "n_targets": len(targets),
+        "targets": targets,
+        "disclaimer": "The bar a new molecule must beat — on potency, selectivity, resistance coverage, or "
+                      "tolerability, not merely binding. Drugs are real ChEMBL mechanism data; phase is "
+                      "ChEMBL max_phase. Research only; not medical advice.",
+    }
+    return {"generated": generated, **payload} if generated else payload
 
 
 def _load(run: Path) -> dict:
@@ -285,13 +324,38 @@ def pitch_email(pkg: dict) -> str:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description="Generate an experimental-validation request + lab pitch from a run.")
-    p.add_argument("--run", required=True, help="A pipeline run directory.")
+    p.add_argument("--run", help="A pipeline run directory.")
     p.add_argument("--top-n", type=int, default=5)
     p.add_argument("--out", help="Write the markdown request here (default: <run>/VALIDATION-REQUEST.md).")
     p.add_argument("--region", choices=["global", "cn"], default="global",
                    help="cn = mainland-China CROs + a Simplified-Chinese pitch (practical inside China).")
     p.add_argument("--json", action="store_true")
+    p.add_argument("--soc-snapshot", metavar="PORTFOLIO_DIR",
+                   help="Scan a portfolio dir (subdirs with dossier.json) and emit a cross-target "
+                        "standard-of-care JSON snapshot (the bar each new molecule must beat).")
+    p.add_argument("--date", help="The 'generated' date stamped into the snapshot (default: today, ISO).")
     args = p.parse_args(argv)
+
+    if args.soc_snapshot:
+        base = Path(args.soc_snapshot)
+        if not base.exists():
+            print(f"No such portfolio dir: {base}", file=sys.stderr)
+            return 1
+        runs = sorted(d for d in base.iterdir() if (d / "dossier.json").exists())
+        payload = soc_snapshot(runs, generated=args.date or date.today().isoformat())
+        text = json.dumps(payload, indent=2, ensure_ascii=False)
+        if args.out:
+            out = Path(args.out)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text + "\n")
+            print(f"Wrote {out} ({payload['n_targets']} targets).", file=sys.stderr)
+        else:
+            print(text)
+        return 0
+
+    if not args.run:
+        print("Provide --run <dir> (or --soc-snapshot <portfolio dir>).", file=sys.stderr)
+        return 1
     run = Path(args.run)
     if not run.exists():
         print(f"No such run: {run}", file=sys.stderr)
