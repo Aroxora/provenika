@@ -1,7 +1,7 @@
 {
   "generated": "2026-06-27",
   "source": "Curated, literature-cited reference (cad/resistance.py) — textbook on-target clinical resistance.",
-  "n_targets": 4,
+  "n_targets": 5,
   "targets": [
     {
       "symbol": "EGFR",
@@ -70,6 +70,20 @@
         }
       ],
       "unmet": "lorlatinib-resistant compound mutations (e.g. G1202R + L1196M) are the next gap."
+    },
+    {
+      "symbol": "KRAS",
+      "context": "KRAS G12C-mutant NSCLC / colorectal, on covalent G12C inhibitors",
+      "mutations": [
+        {
+          "mut": "Y96D / Y96C",
+          "confers": "resistance to covalent G12C inhibitors (sotorasib, adagrasib) — a switch-II-pocket mutation that blocks inhibitor binding",
+          "covered_by": "no approved agent — next-gen tri-complex G12C inhibitors (e.g. RMC-6291) and RAS(ON) inhibitors are still investigational",
+          "ref": "Tanaka et al., Cancer Discov 2021 (adagrasib Y96D); Awad et al., NEJM 2021",
+          "url": "https://www.nejm.org/doi/full/10.1056/NEJMoa2105281"
+        }
+      ],
+      "unmet": "on-target G12C resistance (Y96 switch-II pocket, secondary RAS mutations) and convergent RAS-MAPK reactivation are largely uncovered by approved agents — a live frontier for next-gen and RAS(ON) inhibitors."
     }
   ],
   "disclaimer": "Curated, literature-cited; scoped to textbook on-target clinical resistance — not exhaustive, not a fetched dataset. Resistance is often polyclonal and pathway-level too, and the absence of a target here is not a claim it has none. Research only; not medical advice."

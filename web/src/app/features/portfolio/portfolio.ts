@@ -40,6 +40,9 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio'
             <a [href]="repo + '/' + slug(e.target) + '/VALIDATION-REQUEST.md'" target="_blank" rel="noopener" class="link primary">Validation request →</a>
             <a [href]="repo + '/' + slug(e.target) + '/dossier.json'" target="_blank" rel="noopener" class="link">Dossier</a>
             <a [href]="repo + '/' + slug(e.target) + '/hits.csv'" target="_blank" rel="noopener" class="link">Shortlist</a>
+            @if (hasResistance(e.target)) {
+              <a routerLink="/resistance" class="link resist" title="the specific clinical resistance a next-gen molecule must cover">Resistance gap →</a>
+            }
           </div>
         </div>
       }
@@ -81,7 +84,9 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio'
     .link { font-size:.85rem; padding:.3rem .6rem; border-radius:7px; border:1px solid #24344a;
       text-decoration:none; color:var(--text-dim); background:#0f1722; }
     .link.primary { color:var(--accent); border-color:#1f5e44; }
+    .link.resist { color:#f0a868; border-color:#5e431f; background:#281a10; }
     .link:hover { border-color:var(--accent); }
+    .link.resist:hover { border-color:#f0a868; }
 
     .cta { max-width:880px; } .cta p { line-height:1.5; } .cta a { color:var(--accent); }
     .disc { font-size:.82rem; max-width:74ch; }
@@ -89,6 +94,11 @@ const REPO = 'https://github.com/Aroxora/provenika/blob/main/examples/portfolio'
 })
 export class Portfolio {
   readonly repo = REPO;
+
+  // Portfolio targets that have a curated, cited resistance landscape (kept in sync with cad/resistance.py).
+  private readonly withResistance = new Set(['EGFR', 'BTK', 'ABL1', 'ALK', 'KRAS']);
+  hasResistance(target: string): boolean { return this.withResistance.has(target); }
+
   readonly entries: Entry[] = [
     {
       target: 'BTK',

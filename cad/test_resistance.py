@@ -48,6 +48,9 @@ def test_known_facts_are_right():
     abl = R.landscape_markdown("ABL1")
     check("ABL1 landscape names T315I and ponatinib/asciminib",
           "T315I" in abl and "ponatinib" in abl and "asciminib" in abl)
+    kras = R.landscape_markdown("KRAS")
+    check("KRAS landscape names the Y96 switch-II gap and the G12C inhibitors",
+          "Y96" in kras and "adagrasib" in kras and "RAS(ON)" in kras)
 
 
 def test_markdown_is_honest_and_silent_when_absent():
@@ -55,7 +58,7 @@ def test_markdown_is_honest_and_silent_when_absent():
     check("section frames the unmet need", "Unmet need" in md and "earns its place" in md)
     check("section is honest about scope (not exhaustive)", "not exhaustive" in md)
     check("section says not medical advice", "not medical advice" in md)
-    check("no curated entry -> empty string (silent, not fabricated)", R.landscape_markdown("KRAS") == "")
+    check("no curated entry -> empty string (silent, not fabricated)", R.landscape_markdown("TP53") == "")
 
 
 def test_renders_in_validation_request():
@@ -63,8 +66,8 @@ def test_renders_in_validation_request():
     pkg = {"target": "EGFR", "symbol": "EGFR", "candidates": [], "n_candidates": 0, "standard_of_care": []}
     md = V.to_markdown(pkg, "egfr")
     check("validation request includes the resistance landscape", "Resistance landscape" in md and "T790M" in md)
-    pkg2 = {"target": "KRAS", "symbol": "KRAS", "candidates": [], "n_candidates": 0, "standard_of_care": []}
-    check("no section for a target without a curated entry", "Resistance landscape" not in V.to_markdown(pkg2, "kras"))
+    pkg2 = {"target": "TP53", "symbol": "TP53", "candidates": [], "n_candidates": 0, "standard_of_care": []}
+    check("no section for a target without a curated entry", "Resistance landscape" not in V.to_markdown(pkg2, "tp53"))
 
 
 def test_json_payload_is_well_formed_and_faithful():
