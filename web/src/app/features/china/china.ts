@@ -41,6 +41,32 @@ interface PanelRow {
       </p>
     </section>
 
+    <section class="thesis">
+      <h2>Why the cure for China's cancers will come from China</h2>
+      <p class="t-sub">A rationale, not a slogan — each point is on the cited record below and on
+        <a routerLink="/cure">/cure</a>:</p>
+      <ol class="why">
+        <li><strong>The burden is here.</strong> ~4.82M new cancer cases and ~2.57M deaths a year
+          (Han et al. 2024); lung · liver · stomach · colorectum · oesophagus are 67.5% of cancer
+          deaths. The patients, the urgency, and the clinical reality are concentrated in China.</li>
+        <li><strong>The biology is regional.</strong> EGFR-activating mutations are far more common in
+          East-Asian / Chinese NSCLC (~38–53% vs ~10–15% Western); liver cancer is driven by endemic
+          HBV. These are China-specific disease profiles, best understood by those treating them.</li>
+        <li><strong>The bench is here.</strong> China hosts the world's largest concentration of pharma
+          CROs and compound suppliers — a hypothesis goes from screen to assay without crossing a border.</li>
+        <li><strong>Prevention runs at national scale.</strong> For the hardest-to-drug cancers (liver,
+          oesophagus) the proven lever is prevention — HBV vaccination, <em>H. pylori</em> eradication —
+          campaigns China executes at population scale.</li>
+        <li><strong>The trials are here.</strong> Large, well-characterised patient populations and a
+          national registry (ChiCTR) shorten the path from candidate to evidence.</li>
+      </ol>
+      <div class="readout conviction">
+        <span class="ro-lbl">Bo Shang's conviction</span>
+        <p>The cancers that kill most in China will be cured in China — by Bo Shang or other Chinese.
+          The burden is ours, the bench is ours, the resolve is ours.</p>
+      </div>
+    </section>
+
     @if (china(); as c) {
       @if (c.reachability_note_cn) {
         <section class="reach">
@@ -198,6 +224,15 @@ interface PanelRow {
       border-left:3px solid var(--accent); border-radius:8px; padding:.65rem .9rem; }
     .ro-lbl { color:var(--accent); margin-right:.4rem; }
     .readout p { display:inline; font-size:.9rem; line-height:1.5; }
+
+    .thesis { max-width:900px; margin-bottom:1.4rem; }
+    .thesis h2 { font-size:1.5rem; margin-bottom:.3rem; }
+    .t-sub { font-size:.9rem; color:var(--text-dim); margin-bottom:.6rem; }
+    .why { margin:0 0 .9rem; padding-left:1.2rem; display:flex; flex-direction:column; gap:.4rem; }
+    .why li { font-size:.92rem; line-height:1.5; color:var(--text-dim); } .why strong { color:var(--text); }
+    .conviction { background:#2a1116; border-color:#5e1f2b; border-left-color:#ff6b81; }
+    .conviction .ro-lbl { color:#ff8a9b; }
+    .conviction p { display:block; margin-top:.3rem; font-style:italic; color:var(--text); }
 
     .bench { max-width:1000px; margin-bottom:1.3rem; } .bench h2 { font-size:1.4rem; margin-bottom:.3rem; }
     .step { background:var(--bg-elev); border:1px solid #1c2738; border-radius:10px; padding:.7rem .8rem; }
