@@ -27,7 +27,7 @@ import { RouterLink } from '@angular/router';
 
     <h3>Statement</h3>
     <blockquote class="statement">
-      <p>“The SF DA represents the People of California in court — so go represent your little hearts out. Bo Shang does not particularly care, and relies on defense counsel and the Judge ruling in his favor.”</p>
+      <p>“The SF DA represents the People of California in court — so go represent your little hearts out. Bo Shang does not particularly care, and relies on defense counsel and the Judge ruling in his favor. For the record: Bo Shang never threatened the DA — or anyone — at all.”</p>
       <footer>— Bo Shang</footer>
     </blockquote>
     <p class="related">Related sites:
