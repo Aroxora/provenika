@@ -48,6 +48,9 @@ outreach/.state/
 outreach/.outbox/
 **/service-account*.json
 *credentials*.json
+# Firebase Admin SDK keys land with this name from the console — never commit them.
+**/*adminsdk*.json
+*-firebase-adminsdk-*.json
 
 # Logs
 *.log
