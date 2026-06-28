@@ -82,6 +82,28 @@ def test_china_view_orders_by_burden():
     check("unmapped target (ALK) listed as not-mapped, not dropped silently", "ALK" in md and "not mapped" in md)
 
 
+def test_china_web_payload_is_faithful_and_cited():
+    p = CB.china_payload()
+    check("payload names the Han 2022 source + URL", "Han" in p["source"] and "pubmed" in p["source_url"])
+    check("payload carries the 2022 national totals", p["totals"]["new_cases_2022"] == 4824700
+          and p["totals"]["deaths_2022"] == 2574200)
+    keys = {c["key"] for c in p["cancers"]}
+    check("payload covers China's leading cancers", {"lung", "liver", "stomach", "colorectal", "esophagus"} <= keys)
+    check("cancers ordered with the mortality top-5 first (lung #1)", p["cancers"][0]["key"] == "lung")
+    check("prevention-first honesty names the hard-to-drug cancers",
+          "Liver" in p["prevention_readout"] and bool(p["prevention_first"]))
+    check("disclaimer is honest (heuristic, not medical advice, 中文)",
+          "relevance heuristic" in p["disclaimer"] and "not medical advice" in p["disclaimer"]
+          and "仅供研究" in p["disclaimer"])
+    # cn_labs is importable here, so the domestic path should be present and well-formed.
+    check("domestic bench path has all 5 assay steps", len(p.get("bench_path_cn", [])) == 5)
+    check("bench path names a real Chinese CRO", any("WuXi" in l["name"] or "Pharmaron" in l["name"]
+          for s in p["bench_path_cn"] for l in s["labs"]))
+    check("honest reachability caveat (site may be blocked in China) is carried",
+          "blocked" in p.get("reachability_note_cn", ""))
+    check("payload is deterministic (no date stamp)", "generated" not in p)
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:

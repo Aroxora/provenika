@@ -21,6 +21,11 @@ Research only; not medical advice. 仅供研究，非医疗建议。
 
 from __future__ import annotations
 
+import argparse
+import json
+import sys
+from pathlib import Path
+
 SOURCE = ("Han B, Zeng H, Chen W, et al. Cancer incidence and mortality in China, 2022. "
           "J Natl Cancer Center 2024 (PMID 39036382; National Cancer Center of China).")
 SOURCE_URL = "https://pubmed.ncbi.nlm.nih.gov/39036382/"
@@ -138,3 +143,83 @@ def burden_brief_markdown() -> str:
           f"_Source: {SOURCE} <{SOURCE_URL}>. National 2022 estimates, not per-program forecasts; "
           "target↔cancer mapping is a relevance heuristic. Research only; not medical advice._"]
     return "\n".join(L)
+
+
+# National 2022 totals from SOURCE (Han et al.) — carried explicitly so the web can cite them verbatim.
+_TOTALS = {"new_cases_2022": 4824700, "deaths_2022": 2574200,
+           "top5_death_share_pct": 67.5, "top5_case_share_pct": 57.4}
+
+
+def china_payload() -> dict:
+    """The China web snapshot the site surfaces at /china — built only from this module's cited burden
+    table plus (best-effort) cn_labs' verified domestic CRO/supplier routes. Nothing is fetched or
+    fabricated; deterministic (no date), so it is safe to assert in tests."""
+    cancers = [
+        {k: c.get(k) for k in ("key", "name", "cn", "mortality_rank", "new_cases_2022", "asmr_2022",
+                               "driver", "prevention", "druggable", "china_note")}
+        for c in sorted(CHINA_TOP_CANCERS, key=_rank_value)
+    ]
+    prevention_first = [c["name"] for c in CHINA_TOP_CANCERS if not c.get("druggable")]
+    payload = {
+        "source": SOURCE,
+        "source_url": SOURCE_URL,
+        "totals": dict(_TOTALS),
+        "cancers": cancers,
+        "prevention_first": prevention_first,
+        "prevention_readout": (
+            "For " + ", ".join(prevention_first) + " the proven, highest-impact lever in China is "
+            "prevention (HBV vaccination; reducing exposures), not a new small molecule — these cancers "
+            "are hard to drug. Lung, colorectal, gastric and breast carry genuine small-molecule target "
+            "biology, which is where this pipeline contributes most."),
+        "disclaimer": (
+            "National 2022 estimates (Han et al.), not per-program forecasts; the target↔cancer mapping "
+            "is a relevance heuristic, not a claim a target cures that cancer. Research only; not medical "
+            "advice. 仅供研究，非医疗建议。"),
+    }
+    # Domestic experimental path — verified Chinese CROs/suppliers. Best-effort: the burden brief stands
+    # on its own if cn_labs is unavailable.
+    try:
+        import cn_labs as CN
+        steps = [("binding", "Confirm it binds", "生化结合"),
+                 ("selectivity", "Prove selectivity", "选择性"),
+                 ("cell", "Engage the target in a cell", "细胞水平"),
+                 ("admet", "ADMET / PK", "成药性"),
+                 ("translation", "Translation / in-vivo", "转化 · 体内")]
+        payload["bench_path_cn"] = [
+            {"step": key, "title": title, "cn": cn,
+             "labs": [{"name": n, "url": u, "note": w} for (n, u, w) in CN.PARTNERS_CN.get(key, [])]}
+            for key, title, cn in steps
+        ]
+        payload["suppliers_cn"] = [{"name": n, "url": u, "note": w} for (n, u, w) in CN.SUPPLIERS_CN]
+        payload["suppliers_note_cn"] = CN.SUPPLIERS_NOTE_CN
+        reg = CN.CLINICAL_REGISTRY_CN
+        payload["registry_cn"] = {"name": reg[0], "url": reg[1], "note": reg[2]}
+        payload["region_note_cn"] = CN.REGION_NOTE_CN
+        payload["reachability_note_cn"] = CN.REACHABILITY_NOTE_CN
+    except Exception:
+        pass
+    return payload
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(description="China cancer-burden lens — burden brief (markdown) or web JSON.")
+    p.add_argument("--json", action="store_true", help="Emit the China web payload as JSON.")
+    p.add_argument("--out", help="Write the China web JSON to this path (e.g. web/public/data/china.json).")
+    args = p.parse_args(argv)
+    if args.json or args.out:
+        payload = china_payload()
+        text = json.dumps(payload, indent=2, ensure_ascii=False)
+        if args.out:
+            out = Path(args.out)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text + "\n")
+            print(f"Wrote {out} ({len(payload['cancers'])} cancers).", file=sys.stderr)
+        else:
+            print(text)
+        return 0
+    print(burden_brief_markdown())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

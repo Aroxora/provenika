@@ -1,0 +1,212 @@
+{
+  "source": "Han B, Zeng H, Chen W, et al. Cancer incidence and mortality in China, 2022. J Natl Cancer Center 2024 (PMID 39036382; National Cancer Center of China).",
+  "source_url": "https://pubmed.ncbi.nlm.nih.gov/39036382/",
+  "totals": {
+    "new_cases_2022": 4824700,
+    "deaths_2022": 2574200,
+    "top5_death_share_pct": 67.5,
+    "top5_case_share_pct": 57.4
+  },
+  "cancers": [
+    {
+      "key": "lung",
+      "name": "Lung cancer",
+      "cn": "肺癌",
+      "mortality_rank": 1,
+      "new_cases_2022": 1060600,
+      "asmr_2022": 26.7,
+      "driver": "tobacco + ambient/household air pollution",
+      "prevention": "tobacco control / smoking cessation (the dominant modifiable risk)",
+      "druggable": true,
+      "china_note": "China's #1 cancer for both new cases and deaths. EGFR-activating mutations are far more common in East-Asian/Chinese NSCLC (~38–53%) than Western (~10–15%), so EGFR-targeted therapy reaches a disproportionately large share of Chinese patients."
+    },
+    {
+      "key": "liver",
+      "name": "Liver cancer (HCC)",
+      "cn": "肝癌",
+      "mortality_rank": 2,
+      "new_cases_2022": 367700,
+      "asmr_2022": 12.6,
+      "driver": "chronic hepatitis B (HBV); aflatoxin, alcohol, NAFLD",
+      "prevention": "HBV vaccination — prevents the chronic infection behind most Chinese HCC (the first 'anti-cancer vaccine'; WHO/IARC); plus antiviral treatment of chronic HBV",
+      "druggable": false,
+      "china_note": "Disproportionately a Chinese disease via endemic HBV. Prevention (HBV vaccination) is the proven, highest-impact lever; HCC is hard to target with small molecules — FGFR4 (FGF19–FGFR4 axis) is the most selective emerging target."
+    },
+    {
+      "key": "stomach",
+      "name": "Stomach (gastric) cancer",
+      "cn": "胃癌",
+      "mortality_rank": 3,
+      "new_cases_2022": 358700,
+      "asmr_2022": 9.4,
+      "driver": "Helicobacter pylori; diet (salt, preserved foods)",
+      "prevention": "H. pylori test-and-treat — eradicating an IARC class-1 carcinogen lowers gastric-cancer risk (Choi, NEJM 2020; Cochrane)",
+      "druggable": true,
+      "china_note": "Among the highest national burdens worldwide; H. pylori eradication is the proven prevention lever. Targetable subsets: HER2/ERBB2, FGFR2."
+    },
+    {
+      "key": "colorectal",
+      "name": "Colorectal cancer",
+      "cn": "结直肠癌",
+      "mortality_rank": 4,
+      "new_cases_2022": 517100,
+      "asmr_2022": 8.6,
+      "driver": "diet/lifestyle, obesity; incidence rising in China",
+      "prevention": "screening (colonoscopy / FIT) with adenoma removal — interrupts the adenoma→carcinoma sequence",
+      "druggable": true,
+      "china_note": "2nd most common new cancer in China (2022) and rising — a growing target population (KRAS/NRAS/BRAF/EGFR biology)."
+    },
+    {
+      "key": "esophagus",
+      "name": "Oesophageal cancer",
+      "cn": "食管癌",
+      "mortality_rank": 5,
+      "new_cases_2022": null,
+      "asmr_2022": null,
+      "driver": "hot beverages, alcohol/tobacco, diet; regional 'cancer belts'",
+      "prevention": "avoid very-hot beverages, tobacco and heavy alcohol; address the regional risk factors",
+      "druggable": false,
+      "china_note": "China carries a very large share of the world's oesophageal cancer; mostly squamous histology, with limited targeted-therapy options today — prevention dominates."
+    },
+    {
+      "key": "breast",
+      "name": "Breast cancer",
+      "cn": "乳腺癌",
+      "mortality_rank": null,
+      "new_cases_2022": null,
+      "asmr_2022": null,
+      "driver": "the leading cancer in Chinese women by incidence",
+      "prevention": "screening (mammography) for early detection",
+      "druggable": true,
+      "china_note": "Top cancer in women; large target population (HER2/PIK3CA/ER biology)."
+    }
+  ],
+  "prevention_first": [
+    "Liver cancer (HCC)",
+    "Oesophageal cancer"
+  ],
+  "prevention_readout": "For Liver cancer (HCC), Oesophageal cancer the proven, highest-impact lever in China is prevention (HBV vaccination; reducing exposures), not a new small molecule — these cancers are hard to drug. Lung, colorectal, gastric and breast carry genuine small-molecule target biology, which is where this pipeline contributes most.",
+  "disclaimer": "National 2022 estimates (Han et al.), not per-program forecasts; the target↔cancer mapping is a relevance heuristic, not a claim a target cures that cancer. Research only; not medical advice. 仅供研究，非医疗建议。",
+  "bench_path_cn": [
+    {
+      "step": "binding",
+      "title": "Confirm it binds",
+      "cn": "生化结合",
+      "labs": [
+        {
+          "name": "Viva Biotech 维亚生物",
+          "url": "https://www.vivabiotech.com",
+          "note": "SPR/biophysical binding, X-ray co-crystallography & biochemical IC50 on a structure-based (SBDD) platform — Shanghai"
+        },
+        {
+          "name": "WuXi AppTec 药明康德 (WuXi Biology)",
+          "url": "https://www.wuxiapptec.com",
+          "note": "biochemical & binding assays across an integrated biology platform — Shanghai"
+        },
+        {
+          "name": "GenScript 金斯瑞",
+          "url": "https://www.genscript.com",
+          "note": "gene synthesis + recombinant protein/peptide production to make the purified target for binding assays — Nanjing"
+        }
+      ]
+    },
+    {
+      "step": "selectivity",
+      "title": "Prove selectivity",
+      "cn": "选择性",
+      "labs": [
+        {
+          "name": "Pharmaron 康龙化成",
+          "url": "https://www.pharmaron.com",
+          "note": "in-vitro biology incl. kinase profiling & biochemistry for off-target / selectivity panels — Beijing"
+        },
+        {
+          "name": "WuXi AppTec 药明康德",
+          "url": "https://www.wuxiapptec.com",
+          "note": "biology selectivity / target-profiling panels"
+        }
+      ]
+    },
+    {
+      "step": "cell",
+      "title": "Engage the target in a cell",
+      "cn": "细胞水平",
+      "labs": [
+        {
+          "name": "Crown Bioscience 冠科生物",
+          "url": "https://www.crownbio.com",
+          "note": "oncology cell assays across 1000+ cancer cell lines; viability & target-engagement — Suzhou/Taicang"
+        },
+        {
+          "name": "ChemPartner 睿智医药",
+          "url": "https://www.chempartner.com",
+          "note": "in-vitro pharmacology — oncology functional & cell-based assays — Shanghai"
+        }
+      ]
+    },
+    {
+      "step": "admet",
+      "title": "ADMET / PK",
+      "cn": "成药性",
+      "labs": [
+        {
+          "name": "Pharmaron 康龙化成 (DMPK)",
+          "url": "https://www.pharmaron.com",
+          "note": "in-vitro ADMET (liver microsomes, hERG, Caco-2) + in-vivo PK — Beijing/Ningbo"
+        },
+        {
+          "name": "WuXi AppTec 药明康德 (DMPK)",
+          "url": "https://www.wuxiapptec.com",
+          "note": "integrated DMPK / ADME testing platform"
+        }
+      ]
+    },
+    {
+      "step": "translation",
+      "title": "Translation / in-vivo",
+      "cn": "转化 · 体内",
+      "labs": [
+        {
+          "name": "Crown Bioscience 冠科生物",
+          "url": "https://www.crownbio.com",
+          "note": "in-vivo oncology efficacy — 2,500+ PDX and 200+ CDX models — Suzhou/Taicang"
+        },
+        {
+          "name": "SIMM 上海药物所 (CAS) / National Center for Drug Screening 国家新药筛选中心",
+          "url": "https://www.simm.cas.cn",
+          "note": "academic drug-discovery collaboration & high-throughput screening route (not fee-for-service) — Shanghai"
+        }
+      ]
+    }
+  ],
+  "suppliers_cn": [
+    {
+      "name": "MedChemExpress (MCE)",
+      "url": "https://www.medchemexpress.com",
+      "note": "large bioactive small-molecule & inhibitor catalog + screening libraries — Shanghai"
+    },
+    {
+      "name": "TargetMol",
+      "url": "https://www.targetmol.com",
+      "note": "80,000+ inhibitors/agonists and 800+ compound libraries — Shanghai"
+    },
+    {
+      "name": "Selleck Chemicals (Selleckchem)",
+      "url": "https://www.selleckchem.com",
+      "note": "pathway-specific inhibitors & screening libraries (incl. PI3K/Akt/mTOR) — China site selleck.cn"
+    },
+    {
+      "name": "Bide Pharmatech (Bidepharm)",
+      "url": "https://www.bidepharm.com",
+      "note": "building blocks & screening compounds for sourcing/synthesis — Shanghai"
+    }
+  ],
+  "suppliers_note_cn": "Many known ChEMBL actives are catalog items — search each candidate by structure or ChEMBL ID on a domestic supplier to see if it can be PURCHASED (no synthesis, no import) before commissioning a CRO. Availability and price are per-compound; confirm directly — do not assume stock.",
+  "registry_cn": {
+    "name": "ChiCTR 中国临床试验注册中心",
+    "url": "https://www.chictr.org.cn",
+    "note": "China's primary clinical-trial registry (WHO ICTRP primary registry)"
+  },
+  "region_note_cn": "Bench routes below are mainland-China CROs (no cross-border compound shipping, domestic invoicing, Chinese-language contact). Capabilities were verified against each company's own site; confirm current scope, eligibility and pricing directly.",
+  "reachability_note_cn": "Inside China: run this locally — `python3 cad/run_pipeline.py …` then `python3 cad/validation_package.py --run <dir> --region cn`. The hosted site (Firebase/Google) may be blocked; the CLI and these files are not. For the optional plain-language layer use DeepSeek (China-accessible): set DEEPSEEK_API_KEY and run cad/explain.py."
+}
