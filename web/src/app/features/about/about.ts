@@ -25,6 +25,16 @@ import { RouterLink } from '@angular/router';
     <h3>Contact</h3>
     <p>Bo Shang — <a href="mailto:bo@shang.software">bo@shang.software</a> · <a href="mailto:bo@trenchwork.org">bo@trenchwork.org</a> · +1 508-260-0326</p>
 
+    <h3>Statement</h3>
+    <blockquote class="statement">
+      <p>“The SF DA represents the People of California in court — so go represent your little hearts out. Bo Shang does not particularly care, and relies on defense counsel and the Judge ruling in his favor.”</p>
+      <footer>— Bo Shang</footer>
+    </blockquote>
+    <p class="related">Related sites:
+      <a href="https://defense-osint.org/" target="_blank" rel="noopener">defense-osint.org</a> ·
+      <a href="https://erosolar.net/" target="_blank" rel="noopener">erosolar.net</a> ·
+      <a href="https://trenchwork.live/" target="_blank" rel="noopener">trenchwork.live</a></p>
+
     <div class="disclaimer">
       Research and decision-support only. Not medical advice. Not a treatment recommendation.
     </div>
@@ -33,6 +43,11 @@ import { RouterLink } from '@angular/router';
     .lead { font-size: 1.1rem; max-width: 70ch; }
     .mono { font-family: var(--mono); }
     a { color: var(--accent-2); }
+    .statement { margin: .4rem 0; padding: .7rem 1rem; max-width: 74ch;
+      border-left: 3px solid var(--accent); background: var(--bg-elev, #0f1722); border-radius: 8px; }
+    .statement p { margin: 0; font-style: italic; line-height: 1.55; }
+    .statement footer { margin-top: .4rem; font-size: .85rem; color: var(--text-dim); font-style: normal; }
+    .related { font-size: .9rem; }
   `]
 })
 export class About {}
