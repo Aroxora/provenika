@@ -94,7 +94,9 @@ interface Panel {
         <p>
           See which of these we've already worked into a cited, bench-ready hypothesis on the
           <a routerLink="/portfolio">Portfolio →</a>, and how any of them would be tested on
-          <a routerLink="/bench">To the Bench →</a>.
+          <a routerLink="/bench">To the Bench →</a>. For an already-drugged target, the
+          <a routerLink="/resistance">Resistance landscape →</a> names the specific gap a next-gen
+          molecule must cover.
         </p>
         <p class="repro muted">
           Snapshot fetched {{ p.generated }} from {{ p.source }}. Reproduce live:

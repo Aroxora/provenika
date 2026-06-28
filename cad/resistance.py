@@ -17,6 +17,12 @@ resistance. Every entry names its source. Research only; not medical advice.
 
 from __future__ import annotations
 
+import argparse
+import json
+import sys
+from datetime import date
+from pathlib import Path
+
 # Keyed by gene symbol. Each mutation: the change, what it confers resistance to, what (if anything)
 # covers it, and a real citation. `unmet` names the live gap a new molecule could fill.
 RESISTANCE = {
@@ -97,6 +103,82 @@ def landscape_markdown(symbol: str) -> str:
         ref = f"[{m['ref']}]({m['url']})" if m.get("url") else m["ref"]
         L.append(f"| {m['mut']} | {m['confers']} | {m['covered_by']} | {ref} |")
     L += ["", f"**Unmet need:** {r['unmet']}",
-          "", "_Curated, literature-cited; scoped to textbook on-target resistance, not exhaustive. "
-          "Resistance is often polyclonal/pathway-level too. Research only; not medical advice._"]
+          "", f"_{DISCLAIMER}_"]
     return "\n".join(L)
+
+
+# One honesty caveat, shared by every rendering (validation request, CLI markdown, JSON, and the web).
+DISCLAIMER = (
+    "Curated, literature-cited; scoped to textbook on-target clinical resistance — not exhaustive, not a "
+    "fetched dataset. Resistance is often polyclonal and pathway-level too, and the absence of a target "
+    "here is not a claim it has none. Research only; not medical advice."
+)
+
+
+def _mutation_json(m: dict) -> dict:
+    """A clean, JSON-serializable copy of one curated mutation — passing through only known fields, so a
+    stray key can never leak into the published snapshot."""
+    out = {"mut": m["mut"], "confers": m["confers"], "covered_by": m["covered_by"], "ref": m["ref"]}
+    if m.get("url"):
+        out["url"] = m["url"]
+    return out
+
+
+def landscape_payload(generated: str | None = None) -> dict:
+    """The whole curated resistance landscape as a JSON-serializable snapshot — the exact shape the web
+    surfaces at /resistance. Built only from the curated RESISTANCE table; nothing is fetched or
+    fabricated, and insertion order (the curation's own ordering) is preserved."""
+    targets = [
+        {"symbol": sym, "context": rec["context"],
+         "mutations": [_mutation_json(m) for m in rec["mutations"]],
+         "unmet": rec["unmet"]}
+        for sym, rec in RESISTANCE.items()
+    ]
+    payload = {
+        "source": "Curated, literature-cited reference (cad/resistance.py) — textbook on-target clinical resistance.",
+        "n_targets": len(targets),
+        "targets": targets,
+        "disclaimer": DISCLAIMER,
+    }
+    # Only stamp a date when the caller supplies one, so landscape_payload() stays deterministic for tests.
+    return {"generated": generated, **payload} if generated else payload
+
+
+def all_markdown() -> str:
+    """Every curated target's landscape section, concatenated — a human-readable view of the whole table."""
+    return "\n\n".join(landscape_markdown(s) for s in RESISTANCE)
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(
+        description="Clinical resistance landscape — the named, unmet-need gap a next-gen molecule must cover.")
+    p.add_argument("--symbol", help="Print the resistance landscape for one target (markdown).")
+    p.add_argument("--json", action="store_true", help="Emit the whole landscape as JSON.")
+    p.add_argument("--out", help="Write the landscape JSON to this path "
+                   "(e.g. web/public/data/resistance-landscape.json).")
+    p.add_argument("--date", help="The 'generated' date stamped into the JSON (default: today, ISO).")
+    args = p.parse_args(argv)
+
+    if args.symbol:
+        md = landscape_markdown(args.symbol.strip().upper())
+        print(md or f"No curated resistance entry for {args.symbol} (silent — never fabricated).")
+        return 0
+
+    if args.out or args.json:
+        payload = landscape_payload(args.date or date.today().isoformat())
+        text = json.dumps(payload, indent=2, ensure_ascii=False)
+        if args.out:
+            out = Path(args.out)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text + "\n")
+            print(f"Wrote {out} ({payload['n_targets']} targets).", file=sys.stderr)
+        else:
+            print(text)
+        return 0
+
+    print(all_markdown())
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

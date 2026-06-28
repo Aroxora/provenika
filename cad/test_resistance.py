@@ -67,6 +67,24 @@ def test_renders_in_validation_request():
     check("no section for a target without a curated entry", "Resistance landscape" not in V.to_markdown(pkg2, "kras"))
 
 
+def test_json_payload_is_well_formed_and_faithful():
+    p = R.landscape_payload()
+    check("payload stamps no date when none is given (deterministic)", "generated" not in p)
+    check("payload counts every curated target", p["n_targets"] == len(R.RESISTANCE) == len(p["targets"]))
+    syms = {t["symbol"] for t in p["targets"]}
+    check("payload surfaces EGFR/BTK/ABL1/ALK", {"EGFR", "BTK", "ABL1", "ALK"} <= syms)
+    for t in p["targets"]:
+        check(f"{t['symbol']} payload entry keeps context + unmet + mutations",
+              bool(t["context"]) and bool(t["unmet"]) and len(t["mutations"]) >= 1)
+        for m in t["mutations"]:
+            check(f"{t['symbol']} {m['mut']} payload mutation stays cited",
+                  bool(m["confers"]) and bool(m["covered_by"]) and bool(m["ref"]))
+            check(f"{t['symbol']} {m['mut']} payload leaks no unknown keys",
+                  set(m) <= {"mut", "confers", "covered_by", "ref", "url"})
+    check("payload carries the honesty disclaimer", "not medical advice" in p["disclaimer"])
+    check("an explicit date flows into the snapshot", R.landscape_payload("2026-06-27")["generated"] == "2026-06-27")
+
+
 def main():
     tests = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     for t in tests:

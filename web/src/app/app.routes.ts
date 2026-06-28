@@ -12,6 +12,7 @@ export const routes: Routes = [
   { path: 'impact', loadComponent: () => import('./features/impact/impact').then(m => m.Impact) },
   { path: 'targets', loadComponent: () => import('./features/targets/targets').then(m => m.Targets) },
   { path: 'bench', loadComponent: () => import('./features/bench/bench').then(m => m.Bench) },
+  { path: 'resistance', loadComponent: () => import('./features/resistance/resistance').then(m => m.Resistance) },
   { path: 'portfolio', loadComponent: () => import('./features/portfolio/portfolio').then(m => m.Portfolio) },
   { path: 'explore', loadComponent: () => import('./features/explorer/explorer').then(m => m.Explorer) },
   { path: 'log', loadComponent: () => import('./features/log/log').then(m => m.AgentLog) },
