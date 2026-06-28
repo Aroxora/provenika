@@ -8,6 +8,7 @@ interface Pillar {
   proven: string;
   ai: string;
   irreducible: string;
+  link?: { to: string; label: string };
 }
 
 @Component({
@@ -38,6 +39,9 @@ interface Pillar {
           <div class="prow"><span class="tag proven">Proven</span><span>{{ p.proven }}</span></div>
           <div class="prow"><span class="tag good">AI saves the experiment</span><span>{{ p.ai }}</span></div>
           <div class="prow"><span class="tag warn">Irreducibly experimental</span><span>{{ p.irreducible }}</span></div>
+          @if (p.link) {
+            <a class="pillar-link" [routerLink]="p.link.to">{{ p.link.label }}</a>
+          }
         </div>
       }
     </section>
@@ -92,6 +96,8 @@ interface Pillar {
     .tag.proven { background:#10202c; color:#6fb6ff; border:1px solid #1f456e; }
     .tag.good { background:#11231c; color:var(--accent); border:1px solid #1f5e44; }
     .tag.warn { background:#281a10; color:#f0a868; border:1px solid #5e431f; }
+    .pillar-link { display:inline-block; margin-top:.2rem; font-size:.82rem; font-weight:600; color:var(--accent);
+      text-decoration:none; border-bottom:1px solid transparent; } .pillar-link:hover { border-bottom-color:var(--accent); }
 
     .payoff { max-width:78ch; font-size:1rem; line-height:1.55; margin:0 0 1.6rem;
       border-left:3px solid var(--accent); padding-left:.95rem; }
@@ -111,7 +117,7 @@ export class Landing {
     { n: '2', title: 'Early detection', proven: 'FDA-cleared AI today: Paige Prostate, GI Genius (colonoscopy), AI mammography (MASAI trial).', ai: 'Reads the scan or slide already being taken — cuts misses and reader workload.', irreducible: 'You still image or sample a living body; mortality benefit needs prospective trials.' },
     { n: '3', title: 'Precision targeted therapy', proven: 'EGFR / BTK / BRAF / KRAS-G12C inhibitors matched to a tumour driver.', ai: 'AlphaFold2/3 structures (CASP14 GDT 92.4) replace some crystallography; FEP ranks which analog to synthesise.', irreducible: 'Predicted ≠ holo pocket; every candidate is still synthesised and assayed — a Kd is measured.' },
     { n: '4', title: 'Immunotherapy', proven: 'Checkpoint inhibitors; CAR-T (Kymriah, 2017); mRNA neoantigen vaccine −49% melanoma recurrence (KEYNOTE-942, investigational).', ai: 'Neoantigen prediction (NetMHCpan) pre-filters which mutations go in the vaccine.', irreducible: 'The immune response, per-patient manufacturing, and the trial.' },
-    { n: '5', title: 'Resistance & combinations', proven: 'EGFR T790M answered by osimertinib; combinations extend control.', ai: 'Predict resistance mutations and model the mutant to design the next-gen inhibitor early.', irreducible: 'Folding ΔΔG ≠ binding effect; somatic evolution is read out in patients.' },
+    { n: '5', title: 'Resistance & combinations', proven: 'EGFR T790M answered by osimertinib; combinations extend control.', ai: 'Predict resistance mutations and model the mutant to design the next-gen inhibitor early.', irreducible: 'Folding ΔΔG ≠ binding effect; somatic evolution is read out in patients.', link: { to: '/resistance', label: 'See the per-target resistance landscape — the specific gap a next-gen molecule must cover →' } },
     { n: '6', title: 'Translation & access', proven: 'Biomarker-guided trials and patient stratification.', ai: 'Biomarker discovery and trial-patient matching shrink the search for who benefits.', irreducible: 'Efficacy & safety only in Phase 1–3 trials (~3.4% oncology PoS); approval, manufacturing, access.' },
   ];
 

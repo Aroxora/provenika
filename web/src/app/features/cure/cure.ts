@@ -9,6 +9,7 @@ interface Pillar {
   ai: AiSave[];
   irreducible: string;
   terminal?: boolean;
+  link?: { to: string; label: string };
 }
 
 @Component({
@@ -59,6 +60,10 @@ interface Pillar {
           <h3>Still irreducibly experimental</h3>
           <p>{{ p.irreducible }}</p>
         </div>
+
+        @if (p.link) {
+          <a class="pillar-link" [routerLink]="p.link.to">{{ p.link.label }}</a>
+        }
       </section>
     }
 
@@ -104,6 +109,8 @@ interface Pillar {
     .block p, .block li { font-size:.92rem; line-height:1.5; color:var(--text); }
     .block ul { margin:.2rem 0 0; padding-left:1.1rem; } .block li { margin-bottom:.35rem; }
     .cite { color:var(--text-dim); font-size:.82rem; }
+    .pillar-link { display:inline-block; margin-top:.3rem; font-size:.88rem; font-weight:600; color:var(--accent);
+      text-decoration:none; border-bottom:1px solid transparent; } .pillar-link:hover { border-bottom-color:var(--accent); }
 
     .payoff { max-width:880px; margin-top:1.4rem; }
     .payoff h2 { font-size:1.3rem; } .payoff > p { font-size:1.02rem; line-height:1.55; max-width:78ch; }
@@ -156,6 +163,7 @@ export class Cure {
         { method: 'Predict resistance mutations + model the mutant', saves: 'lets chemists design the next-generation inhibitor before the clinic needs it', cite: '(AlphaFold / stability-ΔΔG predictors)' },
       ],
       irreducible: 'Folding-stability ΔΔG is not the effect on drug binding (many resistance mutations reshape the pocket, not the fold); somatic evolution is read out in patients; and each next-gen drug still runs the entire pipeline.',
+      link: { to: '/resistance', label: 'The per-target resistance landscape — which specific mutation a next-gen molecule must cover (EGFR C797S · BTK post-pirtobrutinib · KRAS Y96 …) →' },
     },
     {
       n: '6', title: 'Translation & access — the irreducible clinic',
