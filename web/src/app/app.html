@@ -1,7 +1,7 @@
 <div class="honest-strip">
-  <span class="hs-key">The honest boundary</span>
-  Compute alone can't cure cancer — it compresses the in-silico front into hypotheses, faster; the cure is made at the bench and in the clinic. In China, prevention leads.
-  <a routerLink="/cure">Why →</a>
+  <span class="hs-key">{{ t('The honest boundary', '诚实的边界') }}</span>
+  {{ t('Compute alone can\'t cure cancer — it compresses the in-silico front into hypotheses, faster; the cure is made at the bench and in the clinic. In China, prevention leads.', '仅靠算力无法治愈癌症——它只是更快地把计算前端压缩成假设；真正的治愈在实验台与临床完成。在中国，预防为先。') }}
+  <a routerLink="/cure">{{ t('Why →', '为什么 →') }}</a>
 </div>
 
 <header class="topbar">
@@ -9,22 +9,23 @@
     <span class="logo">⬡</span>
     <div>
       <div class="title">Provenika</div>
-      <div class="sub muted">How cancer is cured — and where AI saves the experiment</div>
+      <div class="sub muted">{{ t('How cancer is cured — and where AI saves the experiment', '癌症如何被治愈——以及 AI 在何处节省实验') }}</div>
     </div>
   </a>
 
   <nav class="main-nav" aria-label="Main">
-    <a routerLink="/cure" routerLinkActive="active">The Cure</a>
-    <a routerLink="/targets" routerLinkActive="active">Targets</a>
-    <a routerLink="/china" routerLinkActive="active">China</a>
-    <a routerLink="/resistance" routerLinkActive="active">Resistance</a>
-    <a routerLink="/impact" routerLinkActive="active">Impact</a>
-    <a routerLink="/explore" routerLinkActive="active">Explore</a>
-    <a routerLink="/bench" routerLinkActive="active">To the Bench</a>
-    <a routerLink="/portfolio" routerLinkActive="active">Portfolio</a>
-    <a routerLink="/log" routerLinkActive="active">Agent Log</a>
-    <a routerLink="/investors" routerLinkActive="active">Investors</a>
+    <a routerLink="/cure" routerLinkActive="active">{{ t('The Cure', '治愈之道') }}</a>
+    <a routerLink="/targets" routerLinkActive="active">{{ t('Targets', '靶点') }}</a>
+    <a routerLink="/china" routerLinkActive="active">{{ t('China', '中国') }}</a>
+    <a routerLink="/resistance" routerLinkActive="active">{{ t('Resistance', '耐药') }}</a>
+    <a routerLink="/impact" routerLinkActive="active">{{ t('Impact', '成果') }}</a>
+    <a routerLink="/explore" routerLinkActive="active">{{ t('Explore', '探索') }}</a>
+    <a routerLink="/bench" routerLinkActive="active">{{ t('To the Bench', '走向实验台') }}</a>
+    <a routerLink="/portfolio" routerLinkActive="active">{{ t('Portfolio', '项目组合') }}</a>
+    <a routerLink="/log" routerLinkActive="active">{{ t('Agent Log', '智能体日志') }}</a>
+    <a routerLink="/investors" routerLinkActive="active">{{ t('Investors', '投资者') }}</a>
     <a href="https://github.com/Aroxora/provenika" target="_blank" rel="noopener" class="ext">GitHub ↗</a>
+    <button type="button" class="lang-toggle" (click)="i18n.toggle()" aria-label="Language / 语言">{{ i18n.lang() === 'zh' ? 'EN' : '中文' }}</button>
   </nav>
 
   @if (showTargetBar()) {
@@ -33,12 +34,12 @@
         <input
           [value]="draft()"
           (input)="draft.set($any($event.target).value)"
-          placeholder="Target (e.g. EGFR)"
+          [placeholder]="t('Target (e.g. EGFR)', '靶点（例如 EGFR）')"
           aria-label="Current target gene symbol"
           class="target-input" />
-        <button type="submit" class="primary sm">Update</button>
-        <button type="button" class="ghost sm" (click)="copyLink()" [title]="'Share ' + target()">
-          {{ copied() ? '✓' : 'Share' }}
+        <button type="submit" class="primary sm">{{ t('Update', '更新') }}</button>
+        <button type="button" class="ghost sm" (click)="copyLink()" [title]="t('Share', '分享') + ' ' + target()">
+          {{ copied() ? '✓' : t('Share', '分享') }}
         </button>
       </form>
       <div class="examples">
@@ -56,18 +57,18 @@
 
 <footer class="global-foot">
   <div class="disclaimer">
-    <strong>Research &amp; decision-support only — not medical advice.</strong>
-    All numbers are fetched live from public sources (ChEMBL, UniProt, RCSB, etc.) or computed deterministically.
-    Verify anything yourself with <code>python3 cad/verify.py --target EGFR</code>.
+    <strong>{{ t('Research & decision-support only — not medical advice.', '仅供研究与决策支持，非医疗建议。') }}</strong>
+    {{ t('All numbers are fetched live from public sources (ChEMBL, UniProt, RCSB, etc.) or computed deterministically.', '所有数据均实时取自公开来源（ChEMBL、UniProt、RCSB 等）或经确定性计算得出。') }}
+    {{ t('Verify anything yourself with', '可自行复核：') }} <code>python3 cad/verify.py --target EGFR</code>.
   </div>
   <div class="contact">
     Bo Shang · <a href="mailto:bo@shang.software">bo@shang.software</a> ·
     <a href="mailto:bo@trenchwork.org">bo@trenchwork.org</a> ·
     <a href="tel:+15082600326">+1 508-260-0326</a> ·
-    <a routerLink="/about">About &amp; provenance</a>
+    <a routerLink="/about">{{ t('About & provenance', '关于与溯源') }}</a>
   </div>
   <div class="builtby">
-    Built in Beijing by Bo Shang at <a href="https://erosolarai.com" target="_blank" rel="noopener">ErosolarAI</a>
+    {{ t('Built in Beijing by Bo Shang at', '由 Bo Shang 在北京构建 ·') }} <a href="https://erosolarai.com" target="_blank" rel="noopener">ErosolarAI</a>
   </div>
   <div class="related">
     <a href="https://defense-osint.org/" target="_blank" rel="noopener">defense-osint.org</a> ·

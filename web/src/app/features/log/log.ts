@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { LangService } from '../../core/lang.service';
 
 interface TimelineEvent { date: string; event: string; label?: string; }
 interface OutreachEntry {
@@ -29,11 +30,15 @@ interface StatusDoc {
   imports: [RouterLink],
   template: `
     <div class="hero">
-      <h1>Agent activity — in the open</h1>
+      <h1>{{ t('Agent activity — in the open', '代理活动 —— 全程公开') }}</h1>
       <p class="lead">
-        This project practices what it preaches. An autonomous agent runs outreach on behalf of the founder.
-        Every redacted contact, reply, and system health state is published here so anyone can audit the process.
-        <strong>No email addresses or message bodies are ever made public.</strong>
+        @if (i18n.isZh()) {
+          本项目言行一致。一个自主代理代表创始人开展外联。每一条经脱敏的联系记录、回复以及系统健康状态都在此公开，任何人都可以审计这一流程。<strong>电子邮件地址与邮件正文从不对外公开。</strong>
+        } @else {
+          This project practices what it preaches. An autonomous agent runs outreach on behalf of the founder.
+          Every redacted contact, reply, and system health state is published here so anyone can audit the process.
+          <strong>No email addresses or message bodies are ever made public.</strong>
+        }
       </p>
     </div>
 
@@ -42,28 +47,37 @@ interface StatusDoc {
       <div class="state-banner card" [class.paused]="isPaused()">
         @if (isPaused()) {
           <div class="banner-head">
-            <span class="pill paused">PAUSED</span>
-            <strong>Agent is currently paused by the owner</strong>
+            <span class="pill paused">{{ t('PAUSED', '已暂停') }}</span>
+            <strong>{{ t('Agent is currently paused by the owner', '代理当前已被所有者暂停') }}</strong>
           </div>
           <p class="banner-body">
-            Send + auto-reply are <strong>OFF</strong>. {{ s.pipeline.drafts }} drafts are prepared for {{ s.pipeline.contacts }} contacts.
-            No messages have been sent. This is the normal resting state.
+            @if (i18n.isZh()) {
+              发送 + 自动回复均为<strong>关闭</strong>。已为 {{ s.pipeline.contacts }} 个联系人准备了 {{ s.pipeline.drafts }} 份草稿。尚未发送任何邮件。这是正常的静默状态。
+            } @else {
+              Send + auto-reply are <strong>OFF</strong>. {{ s.pipeline.drafts }} drafts are prepared for {{ s.pipeline.contacts }} contacts.
+              No messages have been sent. This is the normal resting state.
+            }
           </p>
         } @else {
           <div class="banner-head">
-            <span class="pill" [class.active]="s.switch.send_enabled">ACTIVE</span>
-            <strong>Agent is running</strong>
+            <span class="pill" [class.active]="s.switch.send_enabled">{{ t('ACTIVE', '运行中') }}</span>
+            <strong>{{ t('Agent is running', '代理正在运行') }}</strong>
           </div>
-          <p class="banner-body muted">The 24/7 monitor is active and will send approved drafts within limits.</p>
+          <p class="banner-body muted">{{ t('The 24/7 monitor is active and will send approved drafts within limits.', '全天候监控已激活，将在限额内发送已批准的草稿。') }}</p>
         }
         <div class="banner-meta muted">
-          Data as of {{ s.generated }} · Switch source: {{ s.switch.source }}
-          · <a routerLink="/admin">Manage switch</a>
+          @if (i18n.isZh()) {
+            数据截至 {{ s.generated }} · 开关来源：{{ s.switch.source }}
+            · <a routerLink="/admin">管理开关</a>
+          } @else {
+            Data as of {{ s.generated }} · Switch source: {{ s.switch.source }}
+            · <a routerLink="/admin">Manage switch</a>
+          }
         </div>
       </div>
 
       <!-- Service health (neutral presentation) -->
-      <h2 class="sec">Service health</h2>
+      <h2 class="sec">{{ t('Service health', '服务健康状态') }}</h2>
       <div class="svcs">
         @for (svc of s.services; track svc.name) {
           <div class="svc card" [class]="svcStatusClass(svc)">
@@ -77,41 +91,47 @@ interface StatusDoc {
       </div>
 
       <!-- Pipeline snapshot -->
-      <h2 class="sec">Preparation &amp; activity</h2>
+      <h2 class="sec">{{ t('Preparation & activity', '准备与活动') }}</h2>
       <div class="pipe card">
         <div class="stat">
           <div class="n">{{ s.pipeline.contacts }}</div>
-          <div class="l muted">prospects in list</div>
+          <div class="l muted">{{ t('prospects in list', '名单中的潜在对象') }}</div>
         </div>
         <div class="stat">
           <div class="n">{{ s.pipeline.drafts }}</div>
-          <div class="l muted">drafts prepared</div>
+          <div class="l muted">{{ t('drafts prepared', '已准备草稿') }}</div>
         </div>
         <div class="stat">
           <div class="n">{{ s.pipeline.sent }}</div>
-          <div class="l muted">sent</div>
+          <div class="l muted">{{ t('sent', '已发送') }}</div>
         </div>
         <div class="stat">
           <div class="n">{{ s.pipeline.replied }}</div>
-          <div class="l muted">replied</div>
+          <div class="l muted">{{ t('replied', '已回复') }}</div>
         </div>
         <div class="stat">
           <div class="n">{{ s.pipeline.bounced }}</div>
-          <div class="l muted">bounced</div>
+          <div class="l muted">{{ t('bounced', '已退信') }}</div>
         </div>
       </div>
     } @else if (statusMissing()) {
-      <p class="muted">No status file published yet.</p>
+      <p class="muted">{{ t('No status file published yet.', '尚未发布状态文件。') }}</p>
     }
 
     <!-- Outreach log -->
-    <h2 class="sec">Outreach log <span class="muted">— redacted &amp; public</span></h2>
+    <h2 class="sec">
+      @if (i18n.isZh()) {
+        外联日志 <span class="muted">—— 已脱敏并公开</span>
+      } @else {
+        Outreach log <span class="muted">— redacted &amp; public</span>
+      }
+    </h2>
     @if (log(); as l) {
       <div class="totals">
-        <div class="t card"><div class="n">{{ l.totals.in_pipeline }}</div><div class="l muted">in pipeline</div></div>
-        <div class="t card"><div class="n">{{ l.totals.contacted }}</div><div class="l muted">contacted</div></div>
-        <div class="t card"><div class="n">{{ l.totals.replied }}</div><div class="l muted">replied</div></div>
-        <div class="t card"><div class="n">{{ l.totals.interested || 0 }}</div><div class="l muted">interested</div></div>
+        <div class="t card"><div class="n">{{ l.totals.in_pipeline }}</div><div class="l muted">{{ t('in pipeline', '进行中') }}</div></div>
+        <div class="t card"><div class="n">{{ l.totals.contacted }}</div><div class="l muted">{{ t('contacted', '已联系') }}</div></div>
+        <div class="t card"><div class="n">{{ l.totals.replied }}</div><div class="l muted">{{ t('replied', '已回复') }}</div></div>
+        <div class="t card"><div class="n">{{ l.totals.interested || 0 }}</div><div class="l muted">{{ t('interested', '有意向') }}</div></div>
       </div>
 
       @if (l.entries && l.entries.length) {
@@ -130,39 +150,55 @@ interface StatusDoc {
                   <span class="ev" [class.reply]="ev.event === 'reply'">{{ ev.date }} {{ ev.event }}@if (ev.label){ <em>({{ ev.label }})</em> }</span>
                 }
               </div>
-              <div class="meta muted">{{ e.touches }} touches · last {{ e.last_update }}</div>
+              <div class="meta muted">
+                @if (i18n.isZh()) {
+                  {{ e.touches }} 次触达 · 最近 {{ e.last_update }}
+                } @else {
+                  {{ e.touches }} touches · last {{ e.last_update }}
+                }
+              </div>
             </div>
           }
         </div>
       } @else {
         <div class="empty-state card">
           <div class="empty-icon">◉</div>
-          <h3>No activity published yet</h3>
+          <h3>{{ t('No activity published yet', '尚无已公开的活动') }}</h3>
           <p>
-            This log only records real sends and inbound replies (fully redacted). 
-            When the owner flips the agent switch ON and approves the first drafts, 
-            the first entries will appear here automatically.
+            {{ t('This log only records real sends and inbound replies (fully redacted). When the owner flips the agent switch ON and approves the first drafts, the first entries will appear here automatically.', '本日志仅记录真实的发送与收到的回复（完全脱敏）。当所有者将代理开关置于开启并批准首批草稿后，首批条目将自动显示于此。') }}
           </p>
           <p class="muted small">
-            Updated {{ l.generated }}. The presence of this page — even when empty — is the point.
+            @if (i18n.isZh()) {
+              更新于 {{ l.generated }}。本页面的存在——即便为空——本身就是意义所在。
+            } @else {
+              Updated {{ l.generated }}. The presence of this page — even when empty — is the point.
+            }
           </p>
         </div>
       }
     } @else {
-      <p class="muted">Loading log…</p>
+      <p class="muted">{{ t('Loading log…', '正在加载日志…') }}</p>
     }
 
     <div class="explain card">
-      <h3>How the agent works</h3>
+      <h3>{{ t('How the agent works', '代理如何工作') }}</h3>
       <p>
-        A 24/7 monitor (Mac + launchd) watches an inbox via Proton Bridge. It reads the Firestore switch
-        (<code>control/outreach</code>), drafts first-touch emails for approved prospects, and auto-replies to inbound
-        within strict rate limits — <strong>only after human approval</strong> for cold outreach.
+        @if (i18n.isZh()) {
+          一个全天候监控程序（Mac + launchd）通过 Proton Bridge 监视收件箱。它读取 Firestore 开关（<code>control/outreach</code>），为已批准的潜在对象起草首次接触邮件，并在严格的速率限制内自动回复收到的邮件——对于主动冷外联，<strong>仅在人工批准之后</strong>才会进行。
+        } @else {
+          A 24/7 monitor (Mac + launchd) watches an inbox via Proton Bridge. It reads the Firestore switch
+          (<code>control/outreach</code>), drafts first-touch emails for approved prospects, and auto-replies to inbound
+          within strict rate limits — <strong>only after human approval</strong> for cold outreach.
+        }
       </p>
       <p class="muted small">
-        Everything that reaches the send stage or generates a reply is summarized into the public JSON files above.
-        Full source: <a href="https://github.com/Aroxora/provenika/tree/main/outreach" target="_blank" rel="noopener">outreach/</a> in the repo.
-        The same “compute or cite, never assert” rule applies to operations.
+        @if (i18n.isZh()) {
+          所有进入发送阶段或产生回复的内容，都会汇总到上面的公开 JSON 文件中。完整源代码：仓库中的 <a href="https://github.com/Aroxora/provenika/tree/main/outreach" target="_blank" rel="noopener">outreach/</a>。同样的“要么计算、要么引用，绝不臆断”原则也适用于运营。
+        } @else {
+          Everything that reaches the send stage or generates a reply is summarized into the public JSON files above.
+          Full source: <a href="https://github.com/Aroxora/provenika/tree/main/outreach" target="_blank" rel="noopener">outreach/</a> in the repo.
+          The same “compute or cite, never assert” rule applies to operations.
+        }
       </p>
     </div>
   `,
@@ -236,6 +272,8 @@ interface StatusDoc {
 })
 export class AgentLog {
   private http = inject(HttpClient);
+  protected readonly i18n = inject(LangService);
+  protected readonly t = this.i18n.t;
 
   readonly log = signal<OutreachLog | null>(null);
   readonly status = signal<StatusDoc | null>(null);
@@ -264,10 +302,10 @@ export class AgentLog {
   // Soften alarming labels when the agent is intentionally paused
   friendlyDetail(svc: Service): string {
     if (svc.name === 'Outreach monitor' && svc.detail === 'unavailable') {
-      return this.isPaused() ? 'paused (switch OFF)' : 'not running';
+      return this.isPaused() ? this.t('paused (switch OFF)', '已暂停（开关关闭）') : this.t('not running', '未运行');
     }
     if (svc.name === 'Firestore control' && svc.detail === 'degraded') {
-      return this.isPaused() ? 'paused (local source)' : svc.detail;
+      return this.isPaused() ? this.t('paused (local source)', '已暂停（本地源）') : svc.detail;
     }
     return svc.detail;
   }

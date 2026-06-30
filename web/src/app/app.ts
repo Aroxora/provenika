@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { TargetStore } from './core/target-store';
+import { LangService } from './core/lang.service';
 import { FaviconService } from './core/favicon.service';
 import { BusyService } from './core/busy.service';
 import { SeoService } from './core/seo.service';
@@ -15,6 +16,8 @@ import { track } from './core/firebase';
 })
 export class App {
   private store = inject(TargetStore);
+  protected readonly i18n = inject(LangService);
+  protected readonly t = this.i18n.t;
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private favicon = inject(FaviconService);

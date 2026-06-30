@@ -7,6 +7,7 @@ import { TriageService } from '../../core/triage.service';
 import { UniprotService } from '../../core/uniprot.service';
 import { CostBenefitService } from '../../core/cost-benefit.service';
 import { CheminformaticsService, ChemInfo } from '../../core/cheminformatics.service';
+import { LangService } from '../../core/lang.service';
 import { Scatter } from '../../shared/scatter';
 import { Dossier, TriageHit, UniprotSummary } from '../../core/models';
 import { track } from '../../core/firebase';
@@ -26,39 +27,45 @@ interface CostResult {
   template: `
     <div class="ex-head">
       <div>
-        <h1>Target Explorer</h1>
-        <p class="muted">Live public data + deterministic models. Change the target in the bar above — everything updates.</p>
+        <h1>{{ t('Target Explorer', '靶点浏览器') }}</h1>
+        <p class="muted">{{ t('Live public data + deterministic models. Change the target in the bar above — everything updates.', '实时公开数据 + 确定性模型。在上方栏中切换靶点——全部内容随之更新。') }}</p>
       </div>
       <div class="head-actions">
-        <button (click)="runAll()" [disabled]="anyLoading()">Refresh all</button>
-        <button class="primary" (click)="copyHypothesis()" [disabled]="!dossier()">Copy hypothesis</button>
+        <button (click)="runAll()" [disabled]="anyLoading()">{{ t('Refresh all', '全部刷新') }}</button>
+        <button class="primary" (click)="copyHypothesis()" [disabled]="!dossier()">{{ t('Copy hypothesis', '复制假设') }}</button>
       </div>
     </div>
 
     @if (target()) {
-      <div class="current">Current target: <strong class="mono accent">{{ target() }}</strong></div>
+      <div class="current">
+        @if (i18n.isZh()) {
+          当前靶点：<strong class="mono accent">{{ target() }}</strong>
+        } @else {
+          Current target: <strong class="mono accent">{{ target() }}</strong>
+        }
+      </div>
     }
 
     <div class="grid">
       <!-- 1. Dossier -->
       <div class="card dossier">
         <div class="card-h">
-          <h3>Dossier</h3>
+          <h3>{{ t('Dossier', '档案') }}</h3>
           <span class="src">ChEMBL + UniProt</span>
         </div>
         @if (dossierLoading()) {
-          <div><span class="spinner"></span> Loading dossier…</div>
+          <div><span class="spinner"></span> {{ t('Loading dossier…', '正在加载档案…') }}</div>
         } @else if (dossier(); as d) {
-          <div class="d-row"><span class="k">Target</span> <span class="v mono">{{ d.target.pref_name }}</span></div>
+          <div class="d-row"><span class="k">{{ t('Target', '靶点') }}</span> <span class="v mono">{{ d.target.pref_name }}</span></div>
           <div class="d-row"><span class="k">ChEMBL ID</span> <a class="mono" [href]="'https://www.ebi.ac.uk/chembl/target_report_card/' + d.target.target_chembl_id + '/'" target="_blank">{{ d.target.target_chembl_id }}</a></div>
           @if (d.uniprot) {
             <div class="d-row"><span class="k">UniProt</span> <a class="mono" [href]="'https://www.uniprot.org/uniprotkb/' + d.uniprot.accession" target="_blank">{{ d.uniprot.accession }}</a> · {{ d.uniprot.name }}</div>
-            <div class="d-row"><span class="k">Function</span> <span class="v">{{ (d.uniprot.function || '').slice(0, 240) }}{{ (d.uniprot.function || '').length > 240 ? '…' : '' }}</span></div>
+            <div class="d-row"><span class="k">{{ t('Function', '功能') }}</span> <span class="v">{{ (d.uniprot.function || '').slice(0, 240) }}{{ (d.uniprot.function || '').length > 240 ? '…' : '' }}</span></div>
           }
-          <div class="d-row"><span class="k">Potent activities</span> <span class="v">{{ d.potentActivityCount | number }} measured (IC50/Ki/Kd)</span></div>
+          <div class="d-row"><span class="k">{{ t('Potent activities', '强效活性') }}</span> <span class="v">{{ d.potentActivityCount | number }} {{ t('measured (IC50/Ki/Kd)', '项实测（IC50/Ki/Kd）') }}</span></div>
           @if (d.knownDrugs && d.knownDrugs.length) {
             <div class="drugs">
-              <div class="k" style="margin-bottom:.2rem">Known modulators (top)</div>
+              <div class="k" style="margin-bottom:.2rem">{{ t('Known modulators (top)', '已知调节剂（精选）') }}</div>
               @for (dr of d.knownDrugs.slice(0,8); track dr.molecule_chembl_id) {
                 <span class="pill" [class.green]="dr.devPhase?.includes('approved')">
                   {{ dr.name || dr.molecule_chembl_id }} <span class="tiny">{{ dr.devPhase || '' }}</span>
@@ -68,31 +75,31 @@ interface CostResult {
           }
           <div class="readout">{{ d.readout }}</div>
         } @else {
-          <p class="muted">Enter a valid oncology target gene symbol (e.g. EGFR, BTK).</p>
+          <p class="muted">{{ t('Enter a valid oncology target gene symbol (e.g. EGFR, BTK).', '请输入有效的肿瘤学靶点基因符号（例如 EGFR、BTK）。') }}</p>
         }
       </div>
 
       <!-- 2. Ligand Triage (real + interactive) -->
       <div class="card triage">
         <div class="card-h">
-          <h3>Ligand Triage</h3>
-          <span class="src">ChEMBL live + computed scores</span>
+          <h3>{{ t('Ligand Triage', '配体分诊') }}</h3>
+          <span class="src">{{ t('ChEMBL live + computed scores', 'ChEMBL 实时数据 + 计算评分') }}</span>
         </div>
 
         <div class="tri-controls">
-          <label>min pChEMBL <input type="number" [value]="minP()" (input)="minP.set(+$any($event.target).value)" step="0.5" style="width:70px"></label>
-          <label>limit <input type="number" [value]="lim()" (input)="lim.set(+$any($event.target).value)" style="width:60px"></label>
-          <label class="check"><input type="checkbox" [checked]="novelOnly()" (change)="novelOnly.set($any($event.target).checked)"> novel only</label>
-          <button (click)="runTriage()" [disabled]="triageLoading()">Run</button>
+          <label>{{ t('min pChEMBL', '最小 pChEMBL') }} <input type="number" [value]="minP()" (input)="minP.set(+$any($event.target).value)" step="0.5" style="width:70px"></label>
+          <label>{{ t('limit', '数量上限') }} <input type="number" [value]="lim()" (input)="lim.set(+$any($event.target).value)" style="width:60px"></label>
+          <label class="check"><input type="checkbox" [checked]="novelOnly()" (change)="novelOnly.set($any($event.target).checked)"> {{ t('novel only', '仅显示新颖') }}</label>
+          <button (click)="runTriage()" [disabled]="triageLoading()">{{ t('Run', '运行') }}</button>
           <button (click)="downloadTriageCsv()" [disabled]="!triageHits().length">CSV</button>
         </div>
 
         @if (triageLoading()) {
-          <div><span class="spinner"></span> Scanning ChEMBL…</div>
+          <div><span class="spinner"></span> {{ t('Scanning ChEMBL…', '正在扫描 ChEMBL…') }}</div>
         } @else if (triageError()) {
           <div class="error">{{ triageError() }}</div>
         } @else if (triageHits().length) {
-          <div class="meta-line">{{ triageHits().length }} ranked ligands · top-right quadrant = potent + drug-like</div>
+          <div class="meta-line">{{ triageHits().length }} {{ t('ranked ligands · top-right quadrant = potent + drug-like', '个已排序配体 · 右上象限 = 强效且类药') }}</div>
 
           <div class="scatter-wrap">
             <app-scatter [hits]="triageHits()" [selectedId]="selectedHit()?.chembl_id || ''" (select)="selectHit($event)" />
@@ -104,40 +111,40 @@ interface CostResult {
                 <span class="score">{{ h.score | number:'1.2-2' }}</span>
                 <span class="mono">{{ h.chembl_id }}</span>
                 <span>{{ h.name || '—' }}</span>
-                <span class="muted">pChEMBL {{ h.pchembl_median | number:'1.1-1' }}@if (h.n_measurements) {<span> (n={{ h.n_measurements }})</span>}@if (h.potency_suspect) {<span title="near-ceiling potency from <2 measurements — verify">&nbsp;⚠️</span>}</span>
+                <span class="muted">pChEMBL {{ h.pchembl_median | number:'1.1-1' }}@if (h.n_measurements) {<span> (n={{ h.n_measurements }})</span>}@if (h.potency_suspect) {<span [title]="t('near-ceiling potency from <2 measurements — verify', '强效值接近上限，且基于少于 2 次测量——请核实')">&nbsp;⚠️</span>}</span>
               </div>
             }
           </div>
 
           @if (selectedChem(); as c) {
             <div class="chem-liab" style="margin-top:.5rem;display:flex;gap:.35rem;flex-wrap:wrap;align-items:center">
-              <span class="k">RDKit liabilities · {{ selectedHit()?.chembl_id }}</span>
+              <span class="k">{{ t('RDKit liabilities', 'RDKit 结构警示') }} · {{ selectedHit()?.chembl_id }}</span>
               <span class="pill" [class.green]="c.painsAlerts === 0">PAINS {{ c.painsAlerts }}</span>
               <span class="pill" [class.green]="c.brenkAlerts === 0">Brenk {{ c.brenkAlerts }}</span>
-              <span class="pill" [class.green]="c.eganOk">Egan {{ c.eganOk ? 'ok' : '✗' }}</span>
-              <span class="pill" [class.green]="c.gskOk">GSK 4/400 {{ c.gskOk ? 'ok' : '✗' }}</span>
-              <span class="pill" [class.green]="!c.pfizerToxRisk">Pfizer 3/75 {{ c.pfizerToxRisk ? 'risk' : 'ok' }}</span>
+              <span class="pill" [class.green]="c.eganOk">Egan {{ c.eganOk ? t('ok', '通过') : '✗' }}</span>
+              <span class="pill" [class.green]="c.gskOk">GSK 4/400 {{ c.gskOk ? t('ok', '通过') : '✗' }}</span>
+              <span class="pill" [class.green]="!c.pfizerToxRisk">Pfizer 3/75 {{ c.pfizerToxRisk ? t('risk', '有风险') : t('ok', '通过') }}</span>
               @if (c.le != null) { <span class="tiny">LE {{ c.le | number:'1.2-2' }}</span> }
               @if (c.lle != null) { <span class="tiny">LLE {{ c.lle | number:'1.2-2' }}</span> }
               @if (c.saScore != null) { <span class="tiny">SA {{ c.saScore | number:'1.1-2' }}</span> }
-              @if (c.scaffold) { <span class="tiny mono">scaffold {{ c.scaffold }}</span> }
+              @if (c.scaffold) { <span class="tiny mono">{{ t('scaffold', '骨架') }} {{ c.scaffold }}</span> }
             </div>
           } @else if (selectedHit()) {
-            <p class="tiny muted" style="margin-top:.5rem">No precomputed RDKit liabilities for this target (generated by cad/precompute_site_data.py for a curated set).</p>
+            <p class="tiny muted" style="margin-top:.5rem">{{ t('No precomputed RDKit liabilities for this target (generated by cad/precompute_site_data.py for a curated set).', '该靶点暂无预计算的 RDKit 结构警示（由 cad/precompute_site_data.py 针对精选集合生成）。') }}</p>
           }
         } @else {
-          <p class="muted">No potent ligands found at current threshold. Lower min pChEMBL and rerun.</p>
+          <p class="muted">{{ t('No potent ligands found at current threshold. Lower min pChEMBL and rerun.', '在当前阈值下未找到强效配体。请降低最小 pChEMBL 后重新运行。') }}</p>
         }
       </div>
 
       <!-- 3. Structure -->
       <div class="card structure">
         <div class="card-h">
-          <h3>Best experimental structure</h3>
+          <h3>{{ t('Best experimental structure', '最佳实验结构') }}</h3>
           <span class="src">UniProt → RCSB PDB</span>
         </div>
         @if (structLoading()) {
-          <div><span class="spinner"></span> Finding structures…</div>
+          <div><span class="spinner"></span> {{ t('Finding structures…', '正在查找结构…') }}</div>
         } @else if (structError()) {
           <div class="error">{{ structError() }}</div>
         } @else if (bestPdb()) {
@@ -147,7 +154,7 @@ interface CostResult {
             <a [href]="'https://files.rcsb.org/download/' + bestPdb() + '.pdb'" target="_blank">.pdb ↗</a>
           </div>
           <div class="viewer">
-            <iframe [src]="viewerSrc()" title="Mol* structure viewer" loading="lazy"></iframe>
+            <iframe [src]="viewerSrc()" [title]="t('Mol* structure viewer', 'Mol* 结构查看器')" loading="lazy"></iframe>
           </div>
           @if (uni(); as u) {
             <div class="pdb-chips">
@@ -158,9 +165,13 @@ interface CostResult {
           }
         } @else {
           <div class="muted">
-            No experimental structure cross-referenced.
+            {{ t('No experimental structure cross-referenced.', '未交叉引用到实验结构。') }}
             @if (uni()?.accession) {
-              Try <a [href]="'https://alphafold.ebi.ac.uk/entry/' + uni()!.accession" target="_blank">AlphaFold model ↗</a>
+              @if (i18n.isZh()) {
+                可尝试 <a [href]="'https://alphafold.ebi.ac.uk/entry/' + uni()!.accession" target="_blank">AlphaFold 模型 ↗</a>
+              } @else {
+                Try <a [href]="'https://alphafold.ebi.ac.uk/entry/' + uni()!.accession" target="_blank">AlphaFold model ↗</a>
+              }
             }
           </div>
         }
@@ -169,52 +180,57 @@ interface CostResult {
       <!-- 4. Feasibility / Cost-Benefit -->
       <div class="card feasibility">
         <div class="card-h">
-          <h3>Feasibility snapshot</h3>
-          <span class="src">Public benchmarks (cost, PoS, timelines)</span>
+          <h3>{{ t('Feasibility snapshot', '可行性快照') }}</h3>
+          <span class="src">{{ t('Public benchmarks (cost, PoS, timelines)', '公开基准数据（成本、PoS、时间线）') }}</span>
         </div>
 
         <div class="cb-grid">
           <div>
-            <label>Modality
+            <label>{{ t('Modality', '药物模态') }}
               <select [value]="modality()" (change)="setModality($any($event.target).value)">
-                <option value="small_molecule">small molecule</option>
-                <option value="mab">mAb</option>
+                <option value="small_molecule">{{ t('small molecule', '小分子') }}</option>
+                <option value="mab">{{ t('mAb', '单抗') }}</option>
                 <option value="adc">ADC</option>
                 <option value="car_t">CAR-T</option>
-                <option value="gene_therapy">gene therapy</option>
+                <option value="gene_therapy">{{ t('gene therapy', '基因治疗') }}</option>
               </select>
             </label>
-            <label>Current phase
+            <label>{{ t('Current phase', '当前阶段') }}
               <select [value]="phase()" (change)="setPhase($any($event.target).value)">
-                @for (p of phases; track p) { <option [value]="p">{{ p }}</option> }
+                @for (p of phaseOptions(); track p.value) { <option [value]="p.value">{{ p.label }}</option> }
               </select>
             </label>
-            <label>Incidence (patients/yr)
+            <label>{{ t('Incidence (patients/yr)', '发病人数（患者/年）') }}
               <input type="number" [value]="incidence()" (input)="setIncidence(+$any($event.target).value)" />
             </label>
-            <label>Price per year (USD)
+            <label>{{ t('Price per year (USD)', '年治疗价格（美元）') }}
               <input type="number" [value]="price()" (input)="setPrice(+$any($event.target).value)" />
             </label>
           </div>
           <div class="cb-results">
             @if (costResult(); as r) {
-              <div class="big-num">{{ r.probabilityOfApproval * 100 | number:'1.0-1' }}% <span class="small muted">P(approval)</span></div>
-              <div class="big-num">\${{ r.expectedCostMusd | number:'1.0-0' }}M <span class="small muted">expected remaining cost</span></div>
-              <div class="big-num">{{ r.expectedTimeYears }} yr <span class="small muted">to market</span></div>
+              <div class="big-num">{{ r.probabilityOfApproval * 100 | number:'1.0-1' }}% <span class="small muted">{{ t('P(approval)', '获批概率') }}</span></div>
+              <div class="big-num">\${{ r.expectedCostMusd | number:'1.0-0' }}M <span class="small muted">{{ t('expected remaining cost', '预计剩余成本') }}</span></div>
+              <div class="big-num">{{ r.expectedTimeYears }} {{ t('yr', '年') }} <span class="small muted">{{ t('to market', '至上市') }}</span></div>
               <div class="bcr" [class.good]="r.benefitCostRatio >= 1.4" [class.bad]="r.benefitCostRatio < 0.85">
-                Benefit/cost {{ r.benefitCostRatio | number:'1.1-1' }}
+                {{ t('Benefit/cost', '效益/成本') }} {{ r.benefitCostRatio | number:'1.1-1' }}
               </div>
               <div class="verdict">{{ r.verdict }}</div>
             }
           </div>
         </div>
-        <p class="tiny muted">Order-of-magnitude planning only. Not financial advice. Oncology factor applied by default.</p>
+        <p class="tiny muted">{{ t('Order-of-magnitude planning only. Not financial advice. Oncology factor applied by default.', '仅供数量级规划。非财务建议。默认已应用肿瘤学系数。') }}</p>
       </div>
     </div>
 
     <p class="foot muted">
-      All data fetched live or computed deterministically from public sources. Scores rank hypotheses, not clinical outcomes.
-      <a routerLink="/log">See how the autonomous agent is doing right now →</a>
+      @if (i18n.isZh()) {
+        所有数据均实时获取，或基于公开来源确定性计算。评分用于对假设排序，而非临床结局。
+        <a routerLink="/log">查看自主智能体此刻的运行情况 →</a>
+      } @else {
+        All data fetched live or computed deterministically from public sources. Scores rank hypotheses, not clinical outcomes.
+        <a routerLink="/log">See how the autonomous agent is doing right now →</a>
+      }
     </p>
   `,
   styles: [`
@@ -274,6 +290,8 @@ export class Explorer {
   private uniSvc = inject(UniprotService);
   private costSvc = inject(CostBenefitService);
   private chemSvc = inject(CheminformaticsService);
+  protected readonly i18n = inject(LangService);
+  protected readonly t = this.i18n.t;
 
   readonly target = this.store.target;
 
@@ -313,7 +331,14 @@ export class Explorer {
   phase = signal('phase1');
   incidence = signal(18000);
   price = signal(180000);
-  readonly phases = ['preclinical', 'phase1', 'phase2', 'phase3', 'filed'];
+  // computed() so the t() labels re-evaluate when the language toggles; the value keys stay technical.
+  readonly phaseOptions = computed(() => [
+    { value: 'preclinical', label: this.t('preclinical', '临床前') },
+    { value: 'phase1', label: this.t('phase1', '1 期') },
+    { value: 'phase2', label: this.t('phase2', '2 期') },
+    { value: 'phase3', label: this.t('phase3', '3 期') },
+    { value: 'filed', label: this.t('filed', '申报中') },
+  ]);
   readonly costResult = signal<CostResult | null>(null);
 
   constructor() {

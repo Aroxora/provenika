@@ -2,6 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { RouterLink } from '@angular/router';
+import { LangService } from '../../core/lang.service';
 
 interface Mutation { mut: string; confers: string; covered_by: string; ref: string; url?: string; }
 interface TargetEntry { symbol: string; context: string; mutations: Mutation[]; unmet: string; }
@@ -18,41 +19,54 @@ interface Landscape {
   imports: [RouterLink],
   template: `
     <section class="hero">
-      <div class="badge">The 5th lever · stay ahead of resistance · curated &amp; cited</div>
-      <h1>A potent binder isn't enough —<br><span class="accent">cover the resistance the approved drugs don't.</span></h1>
-      <p class="lead">
-        Targeted therapies rarely fail because they never worked; they fail because the tumour evolves a
-        <strong>resistance mutation</strong>. So the highest-value new molecule for an already-drugged
-        target is the one that covers what today's drugs miss — <strong>osimertinib</strong> mattered
-        because it covered EGFR <span class="mono">T790M</span>; <strong>pirtobrutinib</strong> because it
-        covered BTK <span class="mono">C481S</span>; <strong>ponatinib/asciminib</strong> because they
-        cover ABL1 <span class="mono">T315I</span>. This turns "another potent binder" into a
-        <strong>specific, unmet-need-anchored hypothesis</strong>.
-      </p>
+      @if (i18n.isZh()) {
+        <div class="badge">第五个杠杆 · 领先于耐药 · 精选并引用</div>
+        <h1>仅有强效结合还不够 —<br><span class="accent">要覆盖已获批药物未能覆盖的耐药。</span></h1>
+        <p class="lead">
+          靶向治疗很少是因为从未起效而失败；它们失败，往往是因为肿瘤演化出了<strong>耐药突变</strong>。
+          因此，对一个已有药物的靶点而言，最具价值的新分子，正是能覆盖当今药物所遗漏之处的那一个——
+          <strong>osimertinib</strong>（奥希替尼）之所以重要，是因为它覆盖了 EGFR <span class="mono">T790M</span>；
+          <strong>pirtobrutinib</strong> 之所以重要，是因为它覆盖了 BTK <span class="mono">C481S</span>；
+          <strong>ponatinib/asciminib</strong> 之所以重要，是因为它们覆盖了 ABL1 <span class="mono">T315I</span>。
+          这就把“又一个强效结合物”变成了一个<strong>具体的、锚定于未满足需求的假设</strong>。
+        </p>
+      } @else {
+        <div class="badge">The 5th lever · stay ahead of resistance · curated &amp; cited</div>
+        <h1>A potent binder isn't enough —<br><span class="accent">cover the resistance the approved drugs don't.</span></h1>
+        <p class="lead">
+          Targeted therapies rarely fail because they never worked; they fail because the tumour evolves a
+          <strong>resistance mutation</strong>. So the highest-value new molecule for an already-drugged
+          target is the one that covers what today's drugs miss — <strong>osimertinib</strong> mattered
+          because it covered EGFR <span class="mono">T790M</span>; <strong>pirtobrutinib</strong> because it
+          covered BTK <span class="mono">C481S</span>; <strong>ponatinib/asciminib</strong> because they
+          cover ABL1 <span class="mono">T315I</span>. This turns "another potent binder" into a
+          <strong>specific, unmet-need-anchored hypothesis</strong>.
+        </p>
+      }
     </section>
 
     @if (landscape(); as l) {
       <section class="grid">
-        @for (t of l.targets; track t.symbol) {
+        @for (tg of l.targets; track tg.symbol) {
           <article class="card">
             <header class="chead">
-              <h2>{{ t.symbol }}</h2>
-              @if (inPortfolio(t.symbol)) {
-                <a class="bench-chip" routerLink="/portfolio" title="we have a bench-ready hypothesis for this target">in portfolio →</a>
+              <h2>{{ tg.symbol }}</h2>
+              @if (inPortfolio(tg.symbol)) {
+                <a class="bench-chip" routerLink="/portfolio" [title]="t('we have a bench-ready hypothesis for this target', '我们已为该靶点准备好可进入实验台验证的假设')">{{ t('in portfolio →', '已纳入组合 →') }}</a>
               }
-              <span class="ctx muted">{{ t.context }}</span>
+              <span class="ctx muted">{{ tg.context }}</span>
             </header>
 
             <div class="muts">
-              @for (m of t.mutations; track m.mut) {
+              @for (m of tg.mutations; track m.mut) {
                 <div class="mut" [class.gap]="isGap(m)">
                   <div class="mtop">
                     <span class="mname mono">{{ m.mut }}</span>
-                    @if (isGap(m)) { <span class="gap-chip">open gap</span> }
+                    @if (isGap(m)) { <span class="gap-chip">{{ t('open gap', '未覆盖缺口') }}</span> }
                   </div>
-                  <p class="confers"><span class="lbl">Confers</span> {{ m.confers }}</p>
+                  <p class="confers"><span class="lbl">{{ t('Confers', '赋予') }}</span> {{ m.confers }}</p>
                   <p class="covered">
-                    <span class="lbl">{{ isGap(m) ? 'Not yet covered' : 'Covered by' }}</span> {{ m.covered_by }}
+                    <span class="lbl">{{ isGap(m) ? t('Not yet covered', '尚未覆盖') : t('Covered by', '覆盖药物') }}</span> {{ m.covered_by }}
                   </p>
                   <p class="ref muted">
                     @if (m.url) {
@@ -63,29 +77,46 @@ interface Landscape {
               }
             </div>
 
-            <p class="unmet"><span class="ulbl">Unmet need</span> {{ t.unmet }}</p>
+            <p class="unmet"><span class="ulbl">{{ t('Unmet need', '未满足的需求') }}</span> {{ tg.unmet }}</p>
           </article>
         }
       </section>
 
       <section class="cta">
-        <p>
-          Pick the gene by human genetics on <a routerLink="/targets">Targets →</a>, see which we've
-          already worked into a cited hypothesis on the <a routerLink="/portfolio">Portfolio →</a>, and
-          how any candidate would be tested on <a routerLink="/bench">To the Bench →</a>.
-        </p>
-        <p class="repro muted">
-          Curated snapshot{{ l.generated ? ' (' + l.generated + ')' : '' }} from {{ l.source }}
-          Reproduce or extend it: <code class="mono">python3 cad/resistance.py --json</code> — the same
-          table also rides along in every <code class="mono">cad/validation_package.py</code> request.
-        </p>
+        @if (i18n.isZh()) {
+          <p>
+            在 <a routerLink="/targets">靶点 →</a> 上按人类遗传学挑选基因，在 <a routerLink="/portfolio">组合 →</a>
+            上查看我们已写入引用假设的靶点，并在 <a routerLink="/bench">走向实验台 →</a> 上了解任一候选物将如何被验证。
+          </p>
+          <p class="repro muted">
+            精选快照{{ l.generated ? '（' + l.generated + '）' : '' }}，来自 {{ l.source }}
+            复现或扩展它：<code class="mono">python3 cad/resistance.py --json</code> —— 同一张表也会随每一次
+            <code class="mono">cad/validation_package.py</code> 请求一同传递。
+          </p>
+        } @else {
+          <p>
+            Pick the gene by human genetics on <a routerLink="/targets">Targets →</a>, see which we've
+            already worked into a cited hypothesis on the <a routerLink="/portfolio">Portfolio →</a>, and
+            how any candidate would be tested on <a routerLink="/bench">To the Bench →</a>.
+          </p>
+          <p class="repro muted">
+            Curated snapshot{{ l.generated ? ' (' + l.generated + ')' : '' }} from {{ l.source }}
+            Reproduce or extend it: <code class="mono">python3 cad/resistance.py --json</code> — the same
+            table also rides along in every <code class="mono">cad/validation_package.py</code> request.
+          </p>
+        }
         <p class="disc muted">{{ l.disclaimer }}</p>
       </section>
     } @else if (failed()) {
-      <p class="muted">Couldn't load the resistance landscape snapshot. Reproduce it locally with
-        <code class="mono">python3 cad/resistance.py --json</code>.</p>
+      @if (i18n.isZh()) {
+        <p class="muted">无法加载耐药全景快照。可在本地复现：
+          <code class="mono">python3 cad/resistance.py --json</code>。</p>
+      } @else {
+        <p class="muted">Couldn't load the resistance landscape snapshot. Reproduce it locally with
+          <code class="mono">python3 cad/resistance.py --json</code>.</p>
+      }
     } @else {
-      <p class="muted">Loading the resistance landscape…</p>
+      <p class="muted">{{ t('Loading the resistance landscape…', '正在加载耐药全景…') }}</p>
     }
   `,
   styles: [`
@@ -130,6 +161,8 @@ interface Landscape {
   `]
 })
 export class Resistance {
+  protected readonly i18n = inject(LangService);
+  protected readonly t = this.i18n.t;
   private http = inject(HttpClient);
   readonly landscape = signal<Landscape | null>(null);
   readonly failed = signal(false);

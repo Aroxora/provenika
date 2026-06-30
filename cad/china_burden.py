@@ -150,13 +150,48 @@ _TOTALS = {"new_cases_2022": 4824700, "deaths_2022": 2574200,
            "top5_death_share_pct": 67.5, "top5_case_share_pct": 57.4}
 
 
+# Simplified-Chinese renderings of the per-cancer narrative fields (driver / prevention / note), keyed by
+# `key`. Faithful translations of the cited English above — same facts, same sources; nothing new added.
+_CANCER_ZH = {
+    "lung": {
+        "driver_zh": "烟草 + 室外/室内空气污染",
+        "prevention_zh": "控烟／戒烟（最主要的可改变风险）",
+        "note_zh": "中国新发与死亡均居首位的癌症。EGFR 激活突变在东亚/中国 NSCLC 中（约 38–53%）远比西方"
+                   "（约 10–15%）常见，因此 EGFR 靶向治疗能惠及不成比例的大量中国患者。"},
+    "liver": {
+        "driver_zh": "慢性乙型肝炎（HBV）；黄曲霉毒素、酒精、非酒精性脂肪肝（NAFLD）",
+        "prevention_zh": "乙肝疫苗接种——预防绝大多数中国 HCC 背后的慢性感染（首个“抗癌疫苗”；WHO/IARC）；"
+                         "并辅以慢性 HBV 的抗病毒治疗",
+        "note_zh": "因 HBV 地方性流行，肝癌在中国格外高发。预防（乙肝疫苗）是已证实、影响最大的杠杆；HCC 难以用"
+                   "小分子靶向——FGFR4（FGF19–FGFR4 轴）是最具选择性的新兴靶点。"},
+    "stomach": {
+        "driver_zh": "幽门螺杆菌；饮食（高盐、腌制食品）",
+        "prevention_zh": "幽门螺杆菌“检测并根除”——清除这一 IARC 一类致癌物可降低胃癌风险（Choi, NEJM 2020；Cochrane）",
+        "note_zh": "全球国家负担最高之一；根除幽门螺杆菌是已证实的预防杠杆。可靶向亚型：HER2/ERBB2、FGFR2。"},
+    "colorectal": {
+        "driver_zh": "饮食/生活方式、肥胖；在中国发病率上升",
+        "prevention_zh": "筛查（结肠镜／FIT）并切除腺瘤——中断“腺瘤→癌”的进程",
+        "note_zh": "中国第 2 高发的新发癌症（2022）且仍在上升——目标人群不断扩大（KRAS/NRAS/BRAF/EGFR 生物学）。"},
+    "esophagus": {
+        "driver_zh": "过烫饮品、酒精/烟草、饮食；区域性“癌症高发带”",
+        "prevention_zh": "避免过烫饮品、烟草与大量饮酒；干预区域性风险因素",
+        "note_zh": "中国承担了全球食管癌中很大的份额；以鳞状细胞为主，目前靶向治疗选择有限——以预防为主。"},
+    "breast": {
+        "driver_zh": "按发病率为中国女性首位癌症",
+        "prevention_zh": "筛查（乳腺钼靶）以早期发现",
+        "note_zh": "女性首位癌症；目标人群庞大（HER2/PIK3CA/ER 生物学）。"},
+}
+
+
 def china_payload() -> dict:
     """The China web snapshot the site surfaces at /china — built only from this module's cited burden
-    table plus (best-effort) cn_labs' verified domestic CRO/supplier routes. Nothing is fetched or
-    fabricated; deterministic (no date), so it is safe to assert in tests."""
+    table plus (best-effort) cn_labs' verified domestic CRO/supplier routes. Carries both English and a
+    faithful Simplified-Chinese rendering of every narrative field so the page is fully bilingual. Nothing
+    is fetched or fabricated; deterministic (no date), so it is safe to assert in tests."""
     cancers = [
-        {k: c.get(k) for k in ("key", "name", "cn", "mortality_rank", "new_cases_2022", "asmr_2022",
-                               "driver", "prevention", "druggable", "china_note")}
+        {**{k: c.get(k) for k in ("key", "name", "cn", "mortality_rank", "new_cases_2022", "asmr_2022",
+                                  "driver", "prevention", "druggable", "china_note")},
+         **_CANCER_ZH.get(c["key"], {})}
         for c in sorted(CHINA_TOP_CANCERS, key=_rank_value)
     ]
     prevention_first = [c["name"] for c in CHINA_TOP_CANCERS if not c.get("druggable")]
@@ -171,10 +206,17 @@ def china_payload() -> dict:
             "prevention (HBV vaccination; reducing exposures), not a new small molecule — these cancers "
             "are hard to drug. Lung, colorectal, gastric and breast carry genuine small-molecule target "
             "biology, which is where this pipeline contributes most."),
+        "prevention_readout_zh": (
+            "对于肝癌（HCC）、食管癌，中国已证实、影响最大的杠杆是预防（乙肝疫苗；减少暴露），而非一种新的小分子"
+            "——这些癌症很难成药。肺癌、结直肠癌、胃癌与乳腺癌具有真实的小分子靶点生物学，这正是本流水线贡献最大"
+            "的地方。"),
         "disclaimer": (
             "National 2022 estimates (Han et al.), not per-program forecasts; the target↔cancer mapping "
             "is a relevance heuristic, not a claim a target cures that cancer. Research only; not medical "
             "advice. 仅供研究，非医疗建议。"),
+        "disclaimer_zh": (
+            "2022 年全国估算（Han 等），并非针对具体项目的预测；靶点↔癌症的映射是相关性启发式，并非声称某靶点"
+            "能治愈该癌症。仅供研究，非医疗建议。"),
     }
     # Domestic experimental path — verified Chinese CROs/suppliers. Best-effort: the burden brief stands
     # on its own if cn_labs is unavailable.
