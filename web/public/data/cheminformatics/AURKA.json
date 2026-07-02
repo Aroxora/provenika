@@ -2,9 +2,9 @@
   "target": "AURKA",
   "targetId": "CHEMBL4722",
   "targetName": "Aurora kinase A",
-  "generated": "2026-06-26",
+  "generated": "2026-07-02",
   "count": 25,
-  "clusterCount": 13,
+  "clusterCount": 12,
   "byChembl": {
     "CHEMBL4443279": {
       "painsAlerts": 0,
@@ -84,7 +84,7 @@
       "saScore": 3.28,
       "le": 0.475,
       "lle": 6.9,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL3685304": {
       "painsAlerts": 0,
@@ -100,7 +100,7 @@
       "saScore": 2.85,
       "le": 0.457,
       "lle": 7.0,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL4225923": {
       "painsAlerts": 0,
@@ -132,23 +132,7 @@
       "saScore": 2.73,
       "le": 0.453,
       "lle": 5.89,
-      "cluster": 0
-    },
-    "CHEMBL2170419": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(Nc2ccnc(Nc3ccccc3)n2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.0,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 2.03,
-      "le": 0.532,
-      "lle": 5.25,
-      "cluster": 12
+      "cluster": 1
     },
     "CHEMBL3685248": {
       "painsAlerts": 0,
@@ -164,7 +148,7 @@
       "saScore": 2.23,
       "le": 0.448,
       "lle": 5.94,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3675443": {
       "painsAlerts": 0,
@@ -180,7 +164,7 @@
       "saScore": 3.61,
       "le": 0.417,
       "lle": 5.39,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL3680547": {
       "painsAlerts": 0,
@@ -196,7 +180,7 @@
       "saScore": 3.28,
       "le": 0.445,
       "lle": 6.24,
-      "cluster": 0
+      "cluster": 1
     },
     "CHEMBL3685256": {
       "painsAlerts": 0,
@@ -292,7 +276,7 @@
       "saScore": 2.16,
       "le": 0.442,
       "lle": 6.1,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3685262": {
       "painsAlerts": 0,
@@ -308,7 +292,7 @@
       "saScore": 2.13,
       "le": 0.446,
       "lle": 5.85,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3680429": {
       "painsAlerts": 0,
@@ -334,14 +318,14 @@
       "brenkAlerts": 0,
       "brenk": [],
       "scaffold": "c1ccc(OC2CCC(Cc3cccc(Nc4cc[nH]n4)n3)CC2)cc1",
-      "eganOk": false,
-      "fractionCsp3": 0.333,
-      "clean": false,
+      "eganOk": true,
+      "fractionCsp3": 0.318,
+      "clean": true,
       "gskOk": false,
       "pfizerToxRisk": false,
-      "saScore": 3.31,
-      "le": 0.354,
-      "lle": 4.21,
+      "saScore": 3.17,
+      "le": 0.434,
+      "lle": 4.84,
       "cluster": 7
     },
     "CHEMBL3680542": {
@@ -390,7 +374,7 @@
       "saScore": 2.6,
       "le": 0.4,
       "lle": 6.31,
-      "cluster": 1
+      "cluster": 0
     },
     "CHEMBL3680548": {
       "painsAlerts": 0,
@@ -407,6 +391,22 @@
       "le": 0.493,
       "lle": 6.18,
       "cluster": 2
+    },
+    "CHEMBL3685305": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(Nc1cccc(CNc2ncnc3ccccc23)c1)c1ccccc1",
+      "eganOk": true,
+      "fractionCsp3": 0.043,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.44,
+      "le": 0.419,
+      "lle": 5.58,
+      "cluster": 0
     }
   }
 }

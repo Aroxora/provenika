@@ -2,7 +2,7 @@
   "target": "IDH2",
   "targetId": "CHEMBL3991501",
   "targetName": "Isocitrate dehydrogenase [NADP], mitochondrial",
-  "generated": "2026-06-26",
+  "generated": "2026-07-02",
   "count": 25,
   "clusterCount": 12,
   "byChembl": {
@@ -24,22 +24,6 @@
       "lle": 4.39,
       "cluster": 2
     },
-    "CHEMBL4280772": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2nc(NC3CCC3)nc(NC3CCC3)n2)nc1",
-      "eganOk": true,
-      "fractionCsp3": 0.529,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.22,
-      "le": 0.389,
-      "lle": 4.15,
-      "cluster": 11
-    },
     "CHEMBL6147051": {
       "painsAlerts": 0,
       "pains": [],
@@ -54,7 +38,7 @@
       "saScore": 3.43,
       "le": 0.457,
       "lle": 3.67,
-      "cluster": 10
+      "cluster": 11
     },
     "CHEMBL4292293": {
       "painsAlerts": 0,
@@ -70,7 +54,7 @@
       "saScore": 2.66,
       "le": 0.416,
       "lle": 4.29,
-      "cluster": 9
+      "cluster": 10
     },
     "CHEMBL6142043": {
       "painsAlerts": 0,
@@ -88,6 +72,38 @@
       "lle": 4.82,
       "cluster": 0
     },
+    "CHEMBL4284907": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-c2ncncn2)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.529,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.83,
+      "le": 0.387,
+      "lle": 2.97,
+      "cluster": 9
+    },
+    "CHEMBL6147083": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "C1=C(c2ncncn2)CCCC1",
+      "eganOk": true,
+      "fractionCsp3": 0.667,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 3.9,
+      "le": 0.419,
+      "lle": 3.38,
+      "cluster": 8
+    },
     "CHEMBL4278828": {
       "painsAlerts": 0,
       "pains": [],
@@ -104,36 +120,20 @@
       "lle": 3.48,
       "cluster": 2
     },
-    "CHEMBL4284907": {
+    "CHEMBL4280772": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "c1ccc(-c2ncncn2)nc1",
+      "scaffold": "c1ccc(-c2nc(NC3CCC3)nc(NC3CCC3)n2)nc1",
       "eganOk": true,
       "fractionCsp3": 0.529,
       "clean": true,
       "gskOk": false,
       "pfizerToxRisk": false,
-      "saScore": 2.83,
-      "le": 0.387,
-      "lle": 2.97,
-      "cluster": 8
-    },
-    "CHEMBL6147083": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "C1=C(c2ncncn2)CCCC1",
-      "eganOk": true,
-      "fractionCsp3": 0.667,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": true,
-      "saScore": 3.9,
-      "le": 0.419,
-      "lle": 3.38,
+      "saScore": 3.22,
+      "le": 0.389,
+      "lle": 4.15,
       "cluster": 7
     },
     "CHEMBL6165219": {
@@ -232,22 +232,6 @@
       "lle": 3.96,
       "cluster": 0
     },
-    "CHEMBL4280463": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2ncnc(NC3CCOCC3)n2)nc1",
-      "eganOk": true,
-      "fractionCsp3": 0.556,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 2.75,
-      "le": 0.357,
-      "lle": 3.69,
-      "cluster": 6
-    },
     "CHEMBL4278845": {
       "painsAlerts": 0,
       "pains": [],
@@ -284,6 +268,22 @@
       "lle": 3.84,
       "cluster": 1
     },
+    "CHEMBL4280463": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1ccc(-c2ncnc(NC3CCOCC3)n2)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.556,
+      "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 2.75,
+      "le": 0.357,
+      "lle": 3.69,
+      "cluster": 6
+    },
     "CHEMBL4283785": {
       "painsAlerts": 0,
       "pains": [],
@@ -302,38 +302,6 @@
       "lle": 3.79,
       "cluster": 1
     },
-    "CHEMBL4285495": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cnc(-c2nc(NCC3CC3)nc(NCC3CC3)n2)nc1",
-      "eganOk": true,
-      "fractionCsp3": 0.611,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.66,
-      "le": 0.357,
-      "lle": 3.53,
-      "cluster": 2
-    },
-    "CHEMBL4290152": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2nc(NCC3CC3)nc(NCC3CC3)n2)cc1",
-      "eganOk": true,
-      "fractionCsp3": 0.55,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": true,
-      "saScore": 3.33,
-      "le": 0.37,
-      "lle": 3.19,
-      "cluster": 5
-    },
     "CHEMBL4280132": {
       "painsAlerts": 0,
       "pains": [],
@@ -350,7 +318,7 @@
       "saScore": 3.92,
       "le": 0.388,
       "lle": 3.43,
-      "cluster": 4
+      "cluster": 5
     },
     "CHEMBL6142056": {
       "painsAlerts": 0,
@@ -386,6 +354,22 @@
       "lle": 3.06,
       "cluster": 3
     },
+    "CHEMBL4285495": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1cnc(-c2nc(NCC3CC3)nc(NCC3CC3)n2)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.611,
+      "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.66,
+      "le": 0.357,
+      "lle": 3.53,
+      "cluster": 2
+    },
     "CHEMBL6161771": {
       "painsAlerts": 0,
       "pains": [],
@@ -417,6 +401,22 @@
       "le": 0.379,
       "lle": 3.93,
       "cluster": 0
+    },
+    "CHEMBL4281625": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1cnc(-c2nc(NC3CCC3)nc(NC3CCC3)n2)nc1",
+      "eganOk": true,
+      "fractionCsp3": 0.562,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.43,
+      "le": 0.345,
+      "lle": 3.61,
+      "cluster": 4
     }
   }
 }

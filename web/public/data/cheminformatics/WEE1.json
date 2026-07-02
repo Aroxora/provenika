@@ -2,7 +2,7 @@
   "target": "WEE1",
   "targetId": "CHEMBL5491",
   "targetName": "Wee1-like protein kinase",
-  "generated": "2026-06-26",
+  "generated": "2026-07-02",
   "count": 25,
   "clusterCount": 8,
   "byChembl": {
@@ -41,24 +41,6 @@
       "le": 0.415,
       "lle": 6.29,
       "cluster": 0
-    },
-    "CHEMBL379975": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "phthalimide"
-      ],
-      "scaffold": "O=C1NC(=O)c2c1c(-c1ccccc1)cc1[nH]c3ccccc3c21",
-      "eganOk": true,
-      "fractionCsp3": 0.0,
-      "clean": false,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 2.53,
-      "le": 0.506,
-      "lle": 5.37,
-      "cluster": 7
     },
     "CHEMBL5963536": {
       "painsAlerts": 1,
@@ -99,24 +81,6 @@
       "le": 0.38,
       "lle": 6.22,
       "cluster": 0
-    },
-    "CHEMBL4443172": {
-      "painsAlerts": 1,
-      "pains": [
-        "anil_di_alk_A(478)"
-      ],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=c1c(-c2ccccc2)c[nH]c2nc(Nc3ccc(N4CCNCC4)cc3)ncc12",
-      "eganOk": true,
-      "fractionCsp3": 0.24,
-      "clean": false,
-      "gskOk": false,
-      "pfizerToxRisk": true,
-      "saScore": 2.61,
-      "le": 0.384,
-      "lle": 4.72,
-      "cluster": 6
     },
     "CHEMBL5776395": {
       "painsAlerts": 0,
@@ -344,7 +308,7 @@
       "saScore": 3.17,
       "le": 0.352,
       "lle": 6.51,
-      "cluster": 4
+      "cluster": 7
     },
     "CHEMBL5950374": {
       "painsAlerts": 0,
@@ -362,22 +326,6 @@
       "lle": 5.29,
       "cluster": 2
     },
-    "CHEMBL4878479": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=c1[nH]n(-c2cccc(C3CC3)n2)c2nc(Nc3ccc4c(c3)CCNC4)ncc12",
-      "eganOk": true,
-      "fractionCsp3": 0.37,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.49,
-      "le": 0.343,
-      "lle": 5.32,
-      "cluster": 5
-    },
     "CHEMBL4873514": {
       "painsAlerts": 0,
       "pains": [],
@@ -392,6 +340,22 @@
       "saScore": 3.91,
       "le": 0.343,
       "lle": 5.57,
+      "cluster": 5
+    },
+    "CHEMBL4878479": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]n(-c2cccc(C3CC3)n2)c2nc(Nc3ccc4c(c3)CCNC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.37,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.49,
+      "le": 0.343,
+      "lle": 5.32,
       "cluster": 5
     },
     "CHEMBL5941156": {
@@ -412,23 +376,23 @@
       "lle": 5.46,
       "cluster": 0
     },
-    "CHEMBL4862622": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "isolated_alkene"
+    "CHEMBL400146": {
+      "painsAlerts": 1,
+      "pains": [
+        "quinone_A(370)"
       ],
-      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc4c(c3)CNCC4)ncc12",
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1c2ccccc2C(=O)c2c1ccc1c(=O)ccoc21",
       "eganOk": true,
-      "fractionCsp3": 0.308,
+      "fractionCsp3": 0.056,
       "clean": false,
-      "gskOk": false,
+      "gskOk": true,
       "pfizerToxRisk": false,
-      "saScore": 3.13,
-      "le": 0.352,
-      "lle": 5.88,
-      "cluster": 4
+      "saScore": 2.81,
+      "le": 0.486,
+      "lle": 6.88,
+      "cluster": 6
     },
     "CHEMBL5273079": {
       "painsAlerts": 1,
@@ -447,6 +411,42 @@
       "le": 0.345,
       "lle": 4.57,
       "cluster": 1
+    },
+    "CHEMBL5909083": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2cnccn2)c2nc(Nc3ccccc3)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.15,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.33,
+      "le": 0.379,
+      "lle": 6.05,
+      "cluster": 0
+    },
+    "CHEMBL5769523": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "O=c1[nH]n(-c2ccccn2)c2nc(Nc3ccc4c(c3)CCNC4)ncc12",
+      "eganOk": true,
+      "fractionCsp3": 0.28,
+      "clean": false,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 3.18,
+      "le": 0.363,
+      "lle": 6.22,
+      "cluster": 4
     }
   }
 }

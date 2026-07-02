@@ -2,7 +2,7 @@
   "target": "CDK4",
   "targetId": "CHEMBL331",
   "targetName": "Cyclin-dependent kinase 4",
-  "generated": "2026-06-26",
+  "generated": "2026-07-02",
   "count": 25,
   "clusterCount": 16,
   "byChembl": {
@@ -406,20 +406,20 @@
       "lle": 4.67,
       "cluster": 4
     },
-    "CHEMBL3698649": {
+    "CHEMBL3702158": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "c1cc2c3cnc(Nc4ccc(N5CCCCC5)nn4)nc3n(C3CCCC3)c2cn1",
+      "scaffold": "C1=C(c2ccc(Nc3ncc4c5ccncc5n(C5CCCC5)c4n3)nc2)CCNC1",
       "eganOk": true,
-      "fractionCsp3": 0.48,
+      "fractionCsp3": 0.333,
       "clean": true,
       "gskOk": false,
       "pfizerToxRisk": false,
-      "saScore": 2.9,
-      "le": 0.363,
-      "lle": 4.84,
+      "saScore": 2.99,
+      "le": 0.393,
+      "lle": 4.28,
       "cluster": 3
     }
   }

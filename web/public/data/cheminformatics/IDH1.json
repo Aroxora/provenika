@@ -2,9 +2,9 @@
   "target": "IDH1",
   "targetId": "CHEMBL2007625",
   "targetName": "Isocitrate dehydrogenase [NADP] cytoplasmic",
-  "generated": "2026-06-26",
+  "generated": "2026-07-02",
   "count": 25,
-  "clusterCount": 15,
+  "clusterCount": 13,
   "byChembl": {
     "CHEMBL4279047": {
       "painsAlerts": 0,
@@ -24,22 +24,6 @@
       "lle": 6.09,
       "cluster": 2
     },
-    "CHEMBL4297610": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=c1[nH]c2ccccc2cc1CNc1ccc[nH]c1=O",
-      "eganOk": true,
-      "fractionCsp3": 0.167,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.19,
-      "le": 0.493,
-      "lle": 6.08,
-      "cluster": 1
-    },
     "CHEMBL4278845": {
       "painsAlerts": 0,
       "pains": [],
@@ -57,38 +41,6 @@
       "le": 0.487,
       "lle": 5.29,
       "cluster": 2
-    },
-    "CHEMBL4442678": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=c1[nH]c2ccccc2cc1CNc1ncccn1",
-      "eganOk": true,
-      "fractionCsp3": 0.222,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.22,
-      "le": 0.457,
-      "lle": 5.97,
-      "cluster": 4
-    },
-    "CHEMBL4280772": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2nc(NC3CCC3)nc(NC3CCC3)n2)nc1",
-      "eganOk": true,
-      "fractionCsp3": 0.529,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.22,
-      "le": 0.411,
-      "lle": 4.63,
-      "cluster": 14
     },
     "CHEMBL4283785": {
       "painsAlerts": 0,
@@ -108,22 +60,6 @@
       "lle": 5.21,
       "cluster": 2
     },
-    "CHEMBL4278828": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1ccc(-c2nc(NCC3CC3)nc(NCC3CC3)n2)nc1",
-      "eganOk": true,
-      "fractionCsp3": 0.579,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.55,
-      "le": 0.426,
-      "lle": 4.33,
-      "cluster": 13
-    },
     "CHEMBL5631247": {
       "painsAlerts": 0,
       "pains": [],
@@ -140,22 +76,6 @@
       "lle": 5.17,
       "cluster": 12
     },
-    "CHEMBL4437754": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=c1[nH]c2ccccc2cc1CNc1ccc[nH]c1=O",
-      "eganOk": true,
-      "fractionCsp3": 0.211,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.29,
-      "le": 0.426,
-      "lle": 5.47,
-      "cluster": 1
-    },
     "CHEMBL5798634": {
       "painsAlerts": 0,
       "pains": [],
@@ -170,7 +90,7 @@
       "saScore": 4.37,
       "le": 0.345,
       "lle": 3.91,
-      "cluster": 6
+      "cluster": 1
     },
     "CHEMBL5895467": {
       "painsAlerts": 0,
@@ -186,38 +106,38 @@
       "saScore": 4.37,
       "le": 0.345,
       "lle": 3.91,
-      "cluster": 6
+      "cluster": 1
     },
-    "CHEMBL3909586": {
+    "CHEMBL5883070": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "O=C1OCCN1c1ccnc(NCc2cn(-c3ccccc3)cn2)n1",
+      "scaffold": "O=C(C1CCCCO1)N1Cc2cccnc2Nc2ccc(C3CCOC3)cc21",
       "eganOk": true,
-      "fractionCsp3": 0.333,
+      "fractionCsp3": 0.538,
       "clean": true,
       "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 4.17,
-      "le": 0.385,
-      "lle": 4.54,
-      "cluster": 3
+      "pfizerToxRisk": true,
+      "saScore": 4.34,
+      "le": 0.341,
+      "lle": 3.68,
+      "cluster": 1
     },
-    "CHEMBL4456610": {
+    "CHEMBL6027793": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "O=c1[nH]c2cc(OCC3CC3)ccc2cc1CNc1ccc[nH]c1=O",
+      "scaffold": "O=C(C1CCCCO1)N1Cc2cccnc2Nc2ccc(C3=CCCOC3)cc21",
       "eganOk": true,
-      "fractionCsp3": 0.318,
+      "fractionCsp3": 0.462,
       "clean": true,
       "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.4,
-      "le": 0.397,
-      "lle": 4.99,
+      "pfizerToxRisk": true,
+      "saScore": 4.07,
+      "le": 0.341,
+      "lle": 3.77,
       "cluster": 1
     },
     "CHEMBL4280132": {
@@ -254,38 +174,6 @@
       "lle": 3.63,
       "cluster": 10
     },
-    "CHEMBL4444067": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C1OCCN1c1ccnc(NCc2ncn3c2CCc2ccccc2-3)n1",
-      "eganOk": true,
-      "fractionCsp3": 0.417,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 3.96,
-      "le": 0.352,
-      "lle": 4.07,
-      "cluster": 0
-    },
-    "CHEMBL4469477": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C1OCCN1c1ccnc(NCc2ncn3c2COc2ccccc2-3)n1",
-      "eganOk": true,
-      "fractionCsp3": 0.333,
-      "clean": true,
-      "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 4.27,
-      "le": 0.371,
-      "lle": 4.6,
-      "cluster": 0
-    },
     "CHEMBL5946895": {
       "painsAlerts": 0,
       "pains": [],
@@ -300,7 +188,7 @@
       "saScore": 5.14,
       "le": 0.324,
       "lle": 3.64,
-      "cluster": 5
+      "cluster": 0
     },
     "CHEMBL5805061": {
       "painsAlerts": 0,
@@ -316,23 +204,71 @@
       "saScore": 5.14,
       "le": 0.324,
       "lle": 3.64,
-      "cluster": 5
+      "cluster": 0
     },
-    "CHEMBL4467991": {
+    "CHEMBL5876602": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "O=C1OCCN1c1ccnc(NCc2ncn3c2CCc2ccccc2-3)n1",
+      "scaffold": "O=C(C1CCCCC1)N1Cc2cccnc2Nc2ccc(N3CC4CCC3CO4)cc21",
       "eganOk": true,
-      "fractionCsp3": 0.364,
+      "fractionCsp3": 0.556,
       "clean": true,
       "gskOk": false,
-      "pfizerToxRisk": false,
-      "saScore": 4.2,
-      "le": 0.37,
-      "lle": 4.37,
+      "pfizerToxRisk": true,
+      "saScore": 5.15,
+      "le": 0.322,
+      "lle": 3.64,
       "cluster": 0
+    },
+    "CHEMBL5842289": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(C1CCNCC1)N1Cc2cccnc2Nc2ccc(C3CCOCC3)cc21",
+      "eganOk": true,
+      "fractionCsp3": 0.52,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 2.94,
+      "le": 0.331,
+      "lle": 3.38,
+      "cluster": 9
+    },
+    "CHEMBL4442678": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=c1[nH]c2ccccc2cc1CNc1ncccn1",
+      "eganOk": true,
+      "fractionCsp3": 0.222,
+      "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.22,
+      "le": 0.457,
+      "lle": 5.97,
+      "cluster": 6
+    },
+    "CHEMBL5818713": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(C1CCCCC1)N1Cc2cccnc2Nc2ccc(N3CC4CC3CO4)cc21",
+      "eganOk": true,
+      "fractionCsp3": 0.556,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 4.66,
+      "le": 0.322,
+      "lle": 3.45,
+      "cluster": 5
     },
     "CHEMBL4526035": {
       "painsAlerts": 0,
@@ -348,6 +284,54 @@
       "saScore": 3.31,
       "le": 0.397,
       "lle": 4.59,
+      "cluster": 6
+    },
+    "CHEMBL6043230": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(C1CCCCC1)N1Cc2cccnc2Nc2ccc(S(=O)(=O)C3CC3)cc21",
+      "eganOk": true,
+      "fractionCsp3": 0.52,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 2.99,
+      "le": 0.336,
+      "lle": 3.51,
+      "cluster": 8
+    },
+    "CHEMBL4568809": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(C1CCCCC1)N1Cc2cccnc2Nc2ccc(N3CC4CC3CO4)cc21",
+      "eganOk": true,
+      "fractionCsp3": 0.556,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 4.76,
+      "le": 0.314,
+      "lle": 3.34,
+      "cluster": 5
+    },
+    "CHEMBL5871885": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(C1CCNCC1)N1Cc2cccnc2Nc2ccc(C3COCCO3)cc21",
+      "eganOk": true,
+      "fractionCsp3": 0.5,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": true,
+      "saScore": 3.58,
+      "le": 0.323,
+      "lle": 4.08,
       "cluster": 4
     },
     "CHEMBL3986241": {
@@ -366,23 +350,23 @@
       "lle": 4.23,
       "cluster": 3
     },
-    "CHEMBL4568809": {
+    "CHEMBL5959517": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
       "brenk": [],
-      "scaffold": "O=C(C1CCCCC1)N1Cc2cccnc2Nc2ccc(N3CC4CC3CO4)cc21",
+      "scaffold": "O=C(C1CCCCC1)N1Cc2cccnc2Nc2ccc(N3CC4CCC3CO4)cc21",
       "eganOk": true,
       "fractionCsp3": 0.556,
       "clean": true,
       "gskOk": false,
       "pfizerToxRisk": true,
-      "saScore": 4.76,
-      "le": 0.314,
+      "saScore": 5.14,
+      "le": 0.313,
       "lle": 3.34,
-      "cluster": 9
+      "cluster": 0
     },
-    "CHEMBL5871885": {
+    "CHEMBL5876888": {
       "painsAlerts": 0,
       "pains": [],
       "brenkAlerts": 0,
@@ -394,27 +378,41 @@
       "gskOk": false,
       "pfizerToxRisk": true,
       "saScore": 3.58,
-      "le": 0.323,
-      "lle": 4.08,
-      "cluster": 8
+      "le": 0.321,
+      "lle": 4.02,
+      "cluster": 4
     },
-    "CHEMBL4282989": {
+    "CHEMBL5093219": {
       "painsAlerts": 0,
       "pains": [],
-      "brenkAlerts": 1,
-      "brenk": [
-        "2-halo_pyridine"
-      ],
-      "scaffold": "c1ccc(-c2nc(NCC3CC3)nc(NCC3CC3)n2)nc1",
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(C1CCCCO1)N1Cc2cccnc2Nc2ccc(-c3cn[nH]c3)cc21",
       "eganOk": true,
-      "fractionCsp3": 0.6,
-      "clean": false,
+      "fractionCsp3": 0.4,
+      "clean": true,
       "gskOk": false,
       "pfizerToxRisk": false,
-      "saScore": 3.63,
-      "le": 0.426,
-      "lle": 3.61,
+      "saScore": 3.92,
+      "le": 0.335,
+      "lle": 4.13,
       "cluster": 7
+    },
+    "CHEMBL3909586": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C1OCCN1c1ccnc(NCc2cn(-c3ccccc3)cn2)n1",
+      "eganOk": true,
+      "fractionCsp3": 0.333,
+      "clean": true,
+      "gskOk": false,
+      "pfizerToxRisk": false,
+      "saScore": 4.17,
+      "le": 0.385,
+      "lle": 4.54,
+      "cluster": 3
     }
   }
 }

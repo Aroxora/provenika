@@ -2,9 +2,9 @@
   "target": "JAK2",
   "targetId": "CHEMBL2971",
   "targetName": "Tyrosine-protein kinase JAK2",
-  "generated": "2026-06-26",
+  "generated": "2026-07-02",
   "count": 25,
-  "clusterCount": 8,
+  "clusterCount": 9,
   "byChembl": {
     "CHEMBL3665130": {
       "painsAlerts": 0,
@@ -21,6 +21,22 @@
       "le": 0.557,
       "lle": 7.92,
       "cluster": 0
+    },
+    "CHEMBL3955948": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "c1nc(N2CCCC2)c2cc[nH]c2n1",
+      "eganOk": true,
+      "fractionCsp3": 0.429,
+      "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.28,
+      "le": 0.669,
+      "lle": 9.35,
+      "cluster": 8
     },
     "CHEMBL3665128": {
       "painsAlerts": 0,
@@ -54,6 +70,24 @@
       "lle": 7.89,
       "cluster": 0
     },
+    "CHEMBL3955757": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 1,
+      "brenk": [
+        "isolated_alkene"
+      ],
+      "scaffold": "c1nc(N2CCC(NC3CCCC3)C2)c2cc[nH]c2n1",
+      "eganOk": true,
+      "fractionCsp3": 0.556,
+      "clean": false,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.34,
+      "le": 0.611,
+      "lle": 7.29,
+      "cluster": 7
+    },
     "CHEMBL5768354": {
       "painsAlerts": 0,
       "pains": [],
@@ -68,7 +102,7 @@
       "saScore": 3.33,
       "le": 0.564,
       "lle": 7.52,
-      "cluster": 7
+      "cluster": 6
     },
     "CHEMBL3652404": {
       "painsAlerts": 0,
@@ -101,22 +135,6 @@
       "le": 0.583,
       "lle": 8.2,
       "cluster": 0
-    },
-    "CHEMBL1789941": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1nc(-c2cnn(CC3CCCC3)c2)c2cc[nH]c2n1",
-      "eganOk": true,
-      "fractionCsp3": 0.412,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.4,
-      "le": 0.622,
-      "lle": 6.97,
-      "cluster": 6
     },
     "CHEMBL3652402": {
       "painsAlerts": 0,
@@ -388,22 +406,6 @@
       "saScore": 3.29,
       "le": 0.492,
       "lle": 7.69,
-      "cluster": 0
-    },
-    "CHEMBL3665176": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "c1cnc(NC2CCCNC2)c(-c2cnc3[nH]ccc3n2)c1",
-      "eganOk": true,
-      "fractionCsp3": 0.353,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.62,
-      "le": 0.543,
-      "lle": 9.87,
       "cluster": 0
     }
   }
