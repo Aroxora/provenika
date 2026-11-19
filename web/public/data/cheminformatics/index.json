@@ -1,5 +1,5 @@
 {
-  "generated": "2026-11-05",
+  "generated": "2026-11-19",
   "targets": [
     {
       "target": "ABL1",
@@ -139,7 +139,7 @@
       "slug": "FLT3",
       "file": "FLT3.json",
       "count": 25,
-      "generated": "2026-11-05"
+      "generated": "2026-11-19"
     },
     {
       "target": "IDH1",

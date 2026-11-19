@@ -2,7 +2,7 @@
   "target": "FLT3",
   "targetId": "CHEMBL1974",
   "targetName": "Receptor-type tyrosine-protein kinase FLT3",
-  "generated": "2026-11-05",
+  "generated": "2026-11-19",
   "count": 25,
   "clusterCount": 16,
   "byChembl": {
@@ -106,22 +106,6 @@
       "lle": 8.03,
       "cluster": 4
     },
-    "CHEMBL5641673": {
-      "painsAlerts": 0,
-      "pains": [],
-      "brenkAlerts": 0,
-      "brenk": [],
-      "scaffold": "O=C(NC1CCCC1)c1ccc2[nH]nc(-c3nc4ccccc4[nH]3)c2c1",
-      "eganOk": true,
-      "fractionCsp3": 0.286,
-      "clean": true,
-      "gskOk": true,
-      "pfizerToxRisk": false,
-      "saScore": 3.28,
-      "le": 0.482,
-      "lle": 7.49,
-      "cluster": 0
-    },
     "CHEMBL6083120": {
       "painsAlerts": 0,
       "pains": [],
@@ -137,6 +121,22 @@
       "le": 0.476,
       "lle": 6.92,
       "cluster": 4
+    },
+    "CHEMBL5641673": {
+      "painsAlerts": 0,
+      "pains": [],
+      "brenkAlerts": 0,
+      "brenk": [],
+      "scaffold": "O=C(NC1CCCC1)c1ccc2[nH]nc(-c3nc4ccccc4[nH]3)c2c1",
+      "eganOk": true,
+      "fractionCsp3": 0.286,
+      "clean": true,
+      "gskOk": true,
+      "pfizerToxRisk": false,
+      "saScore": 3.28,
+      "le": 0.482,
+      "lle": 7.49,
+      "cluster": 0
     },
     "CHEMBL5195819": {
       "painsAlerts": 0,
