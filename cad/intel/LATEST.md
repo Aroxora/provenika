@@ -1,4 +1,4 @@
-# Research intelligence digest — 2026-11-16
+# Research intelligence digest — 2026-11-23
 
 _Auto-generated from Tavily news search (last 7 days). Headlines are **leads to verify at the primary source — not validated facts.** Each query is fact-check-gated by independent-source corroboration (≥2 distinct domains = corroborated). Tavily's AI-synthesized summary is shown only when corroborated and is itself a lead._
 
@@ -28,4 +28,4 @@ _Search failed: HTTPError_
 
 
 ---
-*0 items across 6 queries. Generated 2026-11-16 14:48 UTC. Verify before relying on any item.*
+*0 items across 6 queries. Generated 2026-11-23 17:24 UTC. Verify before relying on any item.*
